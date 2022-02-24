@@ -1,6 +1,6 @@
 # RvtLock3r
 
-Validate that certain properties have not been modified.
+Revit .NET C# add-in to validate that certain BIM element properties have not been modified.
 
 - [Checksum](https://en.wikipedia.org/wiki/Checksum) + encryption
 - [.NET MD5 Class](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.md5?view=net-6.0)
