@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RvtLock3r", "RvtLock3r\RvtLock3r.csproj", "{2AD7ACDD-8290-4976-B419-43DF2EED840A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AD7ACDD-8290-4976-B419-43DF2EED840A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AD7ACDD-8290-4976-B419-43DF2EED840A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AD7ACDD-8290-4976-B419-43DF2EED840A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AD7ACDD-8290-4976-B419-43DF2EED840A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D904BC75-8AC3-422E-90CA-4840C6803B26}
+	EndGlobalSection
+EndGlobal

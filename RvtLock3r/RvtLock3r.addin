@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>RvtLock3r</Text>
+    <Description>validate that certain properties have not been modified</Description>
+    <Assembly>RvtLock3r.dll</Assembly>
+    <FullClassName>RvtLock3r.Command</FullClassName>
+    <ClientId>c83ab35a-a84f-4c75-9fe2-8064335f7a5d</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application RvtLock3r</Name>
+    <Assembly>RvtLock3r.dll</Assembly>
+    <FullClassName>RvtLock3r.App</FullClassName>
+    <ClientId>86d5d459-990d-4773-8c5b-cd243bf898ec</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
