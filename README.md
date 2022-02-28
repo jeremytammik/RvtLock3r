@@ -6,8 +6,8 @@ Revit .NET C# add-in to validate that certain BIM element properties have not be
 - [.NET MD5 Class](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.md5?view=net-6.0)
 - [forge.wpf-csharp](https://github.com/Autodesk-Forge/forge.wpf.csharp/tree/secure-dev)
 - For more security and harder hacking, you can grab the values, calculate the checksum, aka signature, rotate a couple of bytes, breaking the signature, and implement the algorithm to know how to restore the proper order before decrypting, 
-- Sample model: <i>Z:\Users\jta\a\special\gypsum\test\british-gypsum-bim-a206a167-en.rvt</i>
-- Revit 2022 sample: <i>\Users\jta\a\special\gypsum\test\british-gypsum-bim-a206a167-en_2022.rvt</i>
+- Sample model: <i>Z:/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en.rvt</i>
+- Revit 2022 sample: <i>/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en_2022.rvt</i>
 
 ## Plan
 
