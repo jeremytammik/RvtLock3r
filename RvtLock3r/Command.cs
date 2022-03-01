@@ -15,7 +15,7 @@ using System.Text;
 
 namespace RvtLock3r
 {
-  [Transaction(TransactionMode.Manual)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class Command : IExternalCommand
   {
     public Result Execute(
