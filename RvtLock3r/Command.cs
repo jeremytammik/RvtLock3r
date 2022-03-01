@@ -38,7 +38,12 @@ namespace RvtLock3r
         = new FilteredElementCollector(doc)
           .WhereElementIsNotElementType()
           .OfCategory(BuiltInCategory.OST_Walls)
-          .OfClass(typeof(Wall));
+          .OfClass(typeof(Wall)); // this collects all walls, maybe thousands
+
+      // alternatively, filter for wall types instead of walls; then we get each type just once
+
+      // alternative 2: filtere for the walls we want, and collect all their types first;
+      // then, loop over the types, not the wall instances
 
       // Filtered element collector is iterable
 
@@ -47,21 +52,20 @@ namespace RvtLock3r
         //Get the elementTypeId
         ElementId elemTypeId = e.GetTypeId();
         //Get the ElementType
-        ElementType elemType = (ElementType)doc.GetElement(elemTypeId);
+        ElementType elemType = (ElementType)doc.GetElement(elemTypeId); // the wall type will maybe reappear many times; done like this, we need to skip wall types already processed
 
         //Gets a list of the ElementType Parameters
-        ShowParameters(e, elemType, "WallType Parameters: ");
+        ShowParameters(elemType, "WallType Parameters: ");
       }
       return Result.Succeeded;
     }
 
-    public void ShowParameters(Element e, ElementType eType, string header)
+    public void ShowParameters(Element e, /*ElementType eType,*/ string header)
     {
       string s = string.Empty;
-      //ChecksumData checksumData = new ChecksumData();
       List<ChecksumData> data = new List<ChecksumData>();
 
-      foreach (Parameter param in eType.Parameters)
+      foreach (Parameter param in e.Parameters)
       {
         if (param.IsShared)
         {
@@ -73,8 +77,8 @@ namespace RvtLock3r
           s += "\r\n" + name + " : " + val;
           data.Add(new ChecksumData()
           {
-            ElementId = e.Id.ToString(),
-            ElementParamName = name,
+            ElementId = e.Id.IntegerValue,
+            ElementParamId = param.Id.IntegerValue,
             ElementParamValue = val,
             Checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val)
           });
@@ -133,7 +137,7 @@ namespace RvtLock3r
       {
         case StorageType.Double:
           double dVal = param.AsDouble();
-          val = dVal.ToString();
+          val = dVal.ToString(); // what precision? add precision control?
           break;
         case StorageType.Integer:
           int iVal = param.AsInteger();
@@ -157,8 +161,8 @@ namespace RvtLock3r
 
   public class ChecksumData
   {
-    public string ElementId { get; set; }
-    public string ElementParamName { get; set; }
+    public int ElementId { get; set; } // not to confuse with ElementId class
+    public int ElementParamId { get; set; } // maybe better Definition element id, or shared param GUID
     public string ElementParamValue { get; set; }
     public string Checksum { get; set; }
 
