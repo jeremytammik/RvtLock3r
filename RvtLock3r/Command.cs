@@ -29,11 +29,11 @@ namespace RvtLock3r
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
-      List<string> log = new List<string>();
       string rvtpath = doc.PathName;
       string txtpath = rvtpath.Replace(".rvt", ".lock3r");
       string[] lines = File.ReadAllLines(txtpath);
-      foreach(string line in lines )
+      List<string> log = new List<string>();
+      foreach (string line in lines )
       {
         string[] triple = line.Split(null);
         ElementId eid = new ElementId(int.Parse(triple[0]));
@@ -45,8 +45,9 @@ namespace RvtLock3r
         string pchecksum = ComputeChecksum(pval);
         if( !checksum.Equals(pchecksum))
         {
-          log.Add("Validation error on element/parameter '{0}' -- '{1}'",
-            ElementDescription(e), p.Definition.Name);
+          log.Add(string.Format(
+            "Validation error on element/parameter '{0}' -- '{1}'",
+            ElementDescription(e), p.Definition.Name));
         }
       }
 
@@ -82,6 +83,13 @@ namespace RvtLock3r
         ShowParameters(elemType, "WallType Parameters: ");
       }
       */
+
+      if( 0 < log.Count )
+      {
+        // Report errors to user
+
+        return Result.Failed;
+      }
       return Result.Succeeded;
     }
 
