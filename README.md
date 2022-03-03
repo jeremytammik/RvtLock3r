@@ -9,6 +9,23 @@ Revit .NET C# add-in to validate that certain BIM element properties have not be
 - Original sample model: <i>Z:/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en.rvt</i>
 - Revit 2022 sample: <i>/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en_2022.rvt</i>
 
+## Validation
+
+The customer add-in reads a [ground truth](https://en.wikipedia.org/wiki/Ground_truth) inout text file.
+This file may be `JSON` formatted and may be encrypted; still to be decided.
+It contains a list of triples:
+
+- ElementId
+- ParameterId
+- Checksum
+
+The add-in iterates over all elements and parameters specified by this list, reads the corresponding parameter value, valculates its checksum and validates it by comparison with the ground truth value.
+
+Discrepancies are logged and a report is presented to the user.
+
+The add-in does not care what kind of elements or parameters are being examined.
+That worry is up to whoever creates the ground truth file.
+
 ## Plan
 
 Proposal:
