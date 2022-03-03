@@ -11,20 +11,20 @@ Revit .NET C# add-in to validate that certain BIM element properties have not be
 
 ## Validation
 
-The customer add-in reads a [ground truth](https://en.wikipedia.org/wiki/Ground_truth) inout text file.
+The customer add-in reads a [ground truth](https://en.wikipedia.org/wiki/Ground_truth) input text file.
 It may be `JSON` formatted and may be encrypted; still to be decided.
 It contains a list of triples:
 
-- ElementId
-- ParameterId
+- `ElementId`
+- Shared parameter `GUID`
 - Checksum
 
-The add-in iterates over all elements and parameters specified by this list, reads the corresponding parameter value, valculates its checksum and validates it by comparison with the ground truth value.
+The add-in iterates over all elements and shared parameters specified by these triples, reads the corresponding shared parameter value, calculates its checksum and validates it by comparison with the ground truth value.
 
 Discrepancies are logged and a report is presented to the user.
 
-The add-in does not care what kind of elements or parameters are being examined.
-That worry is up to whoever creates the ground truth file.
+The add-in does not care what kind of elements or shared parameters are being examined.
+That worry is left up to whoever creates the ground truth file.
 
 ## Plan
 
