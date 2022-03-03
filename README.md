@@ -12,7 +12,7 @@ Revit .NET C# add-in to validate that certain BIM element properties have not be
 ## Validation
 
 The customer add-in reads a [ground truth](https://en.wikipedia.org/wiki/Ground_truth) inout text file.
-This file may be `JSON` formatted and may be encrypted; still to be decided.
+It may be `JSON` formatted and may be encrypted; still to be decided.
 It contains a list of triples:
 
 - ElementId
