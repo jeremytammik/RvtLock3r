@@ -34,7 +34,7 @@ There are various possible approaches to prepare
 the [ground truth](https://en.wikipedia.org/wiki/Ground_truth) input text file,
 and they can be completely automated, more or less programmatically assisted, or fully manual.
 
-In all three cases, youi will first need to determine up front what elements and which shared parameters on them are to be checked. Retrieve the corresponding parameter values, compute their checksums, and save the above-mentioned triples.
+In all three cases, you will first need to determine up front what elements and which shared parameters on them are to be checked. Retrieve the corresponding parameter values, compute their checksums, and save the above-mentioned triples.
 
 ## Plan
 
