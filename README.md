@@ -26,6 +26,16 @@ Discrepancies are logged and a report is presented to the user.
 The add-in does not care what kind of elements or shared parameters are being examined.
 That worry is left up to whoever creates the ground truth file.
 
+In the initial proof of concept, the triples are simply space separated in individual lines in a text file.
+
+## Preparation
+
+There are various possible approaches to prepare
+the [ground truth](https://en.wikipedia.org/wiki/Ground_truth) input text file,
+and they can be completely automated, more or less prograsmmatically assisted, and fully manual.
+
+In all three cases, youi will first need to determine up front what elements and which shared parameters on them are to be checked. Retrieve the corresponding parameter values, compute their checksums, and save the above-mentioned triples.
+
 ## Plan
 
 Proposal:
