@@ -32,65 +32,74 @@ namespace RvtLock3r
 
       Selection sel = uidoc.Selection;
 
-      // Retrieve elements from database
+            // Retrieve elements from database
 
-      FilteredElementCollector col
-        = new FilteredElementCollector(doc)
-          .WhereElementIsNotElementType()
-          .OfCategory(BuiltInCategory.OST_Walls)
-          .OfClass(typeof(Wall)); // this collects all walls, maybe thousands
+            FilteredElementCollector col = new FilteredElementCollector(doc);
 
-      // alternatively, filter for wall types instead of walls; then we get each type just once
+            col.OfCategory(BuiltInCategory.OST_Walls)
+            //col.OfClass(typeof(WallType))
+                .WhereElementIsNotElementType().ToElements();
 
-      // alternative 2: filtere for the walls we want, and collect all their types first;
-      // then, loop over the types, not the wall instances
+           
+            List<ChecksumData> data = new List<ChecksumData>();
+            List<ChecksumData> allData = new List<ChecksumData>();
 
-      // Filtered element collector is iterable
+            foreach (Element e in col)
+                        {
+                Wall wall = (Wall)doc.GetElement(e.Id);
+                WallType wallType = wall.WallType;
 
-      foreach (Element e in col)
-      {
-        //Get the elementTypeId
-        ElementId elemTypeId = e.GetTypeId();
-        //Get the ElementType
-        ElementType elemType = (ElementType)doc.GetElement(elemTypeId); // the wall type will maybe reappear many times; done like this, we need to skip wall types already processed
+                // the wall type will maybe reappear many times; done like this, we need to skip wall types already processed
+                //ElementType elemType = (ElementType)doc.GetElement(elemTypeId);
 
-        //Gets a list of the ElementType Parameters
-        ShowParameters(elemType, "WallType Parameters: ");
-      }
-      return Result.Succeeded;
+                //Gets a list of the ElementType Parameters
+                data = ShowParameters(e, wallType);
+                allData.AddRange(data);
+                //allData.Add(data);
+                //wholeString += s;
+                //TaskDialog.Show("WallType Parameters: ", s);
+
+            }
+            //wholeString += s;
+
+            //TaskDialog.Show("All WallType Parameters: ", wholeString);
+            ExportToTextFile(allData);
+            return Result.Succeeded;
     }
 
-    public void ShowParameters(Element e, /*ElementType eType,*/ string header)
+    public List<ChecksumData> ShowParameters(Element e, WallType wallType)
     {
       string s = string.Empty;
       List<ChecksumData> data = new List<ChecksumData>();
 
-      foreach (Parameter param in e.Parameters)
+      foreach (Parameter param in wallType.Parameters)
       {
-        if (param.IsShared)
-        {
-          string name = param.Definition.Name;
+                if (param.IsShared)
+                {
+                    string name = param.Definition.Name;
 
           // To get the value, we need to parse the param depending on the storage type
           // see the helper function below
-          string val = ParameterToString(param);
-          s += "\r\n" + name + " : " + val;
-          data.Add(new ChecksumData()
-          {
-            ElementId = e.Id.IntegerValue,
-            ElementParamId = param.Id.IntegerValue,
-            ElementParamValue = val,
-            Checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val)
-          });
-        }
+                  string val = ParameterToString(param);
+                  s += "\r\n"+ e.Id.ToString() + " - " + name + " : " + val;
+                  data.Add(new ChecksumData()
+                  {
+                      Element_Id = e.Id.IntegerValue,
+                    ParamGuid = param.Id.IntegerValue,
+                    //SharedParamValue = val,
+                    Checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val)
+                  });
+                } 
       }
 
-      //export
+            //export
 
-      ExportToTextFile(data);
-      //TaskDialog.Show(header, s);
+            //ExportToTextFile(data);
+            //TaskDialog.Show(header, s);
+            return data;
+           
 
-    }
+        }
 
     private void ExportToTextFile(List<ChecksumData> data)
     {
@@ -161,9 +170,9 @@ namespace RvtLock3r
 
   public class ChecksumData
   {
-    public int ElementId { get; set; } // not to confuse with ElementId class
-    public int ElementParamId { get; set; } // maybe better Definition element id, or shared param GUID
-    public string ElementParamValue { get; set; }
+    public int Element_Id { get; set; } // not to confuse with ElementId class
+    public int ParamGuid { get; set; } // maybe better Definition element id, or shared param GUID
+    //public string SharedParamValue { get; set; }
     public string Checksum { get; set; }
 
   }
