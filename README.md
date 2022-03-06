@@ -36,6 +36,17 @@ and they can be completely automated, more or less programmatically assisted, or
 
 In all three cases, you will first need to determine up front what elements and which shared parameters on them are to be checked. Retrieve the corresponding parameter values, compute their checksums, and save the above-mentioned triples.
 
+## Storage
+
+Instead of storing the ground truth in an external file, it can also be stored internally directly in the `RVT` project file.
+Two options are available for storing custom data: shared parameters and extensible storage.
+The latter is more modern and explicitly tailored for use by applications and data that is not accessible to the end user or even Revit itself.
+That seems most suitable for our purpose here.
+Extensible storage can be added to any database element.
+However, it interferes least with Revit operation when placed on a dedicated `DataStorage` element,
+especially [in a worksharing environment](http://thebuildingcoder.typepad.com/blog/2015/02/extensible-storage-in-a-worksharing-environment.html).
+Creation and population of a `DataStorage` element is demonstrated by the [named GUID storage for project identification](https://thebuildingcoder.typepad.com/blog/2016/04/named-guid-storage-for-project-identification.html) sample.
+
 ## Plan
 
 Proposal:
