@@ -29,43 +29,27 @@ namespace RvtLock3r
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            string rvtpath = doc.PathName;
-            TaskDialog.Show("General File Path", rvtpath);
-            //string txtpath = rvtpath.Replace(".rvt", ".lock3r");
-            string txtpath = rvtpath.Replace(".rte", ".txt");
-
-            if (!File.Exists(txtpath))
-            {
-                File.Create(txtpath);
-                TextWriter tw = new StreamWriter(txtpath);
-                tw.WriteLine("The very first line!");
-                tw.Close();
-                //FileStream fs = new FileStream(txtpath, FileMode.CreateNew);
-                // Create the file, or overwrite if the file exists.
-
-            }
-            TaskDialog.Show("Changed File Path", txtpath);
-
-            string[] lines = File.ReadAllLines(txtpath);
-            List<string> log = new List<string>();
-            foreach (string line in lines)
-            {
-                string[] triple = line.Split(null);
-                ElementId eid = new ElementId(int.Parse(triple[0]));
-                Guid pid = new Guid(triple[1]);
-                string checksum = triple[2];
-
-                Element e = doc.GetElement(eid);
-                Parameter p = e.get_Parameter(pid);
-                string pval = ParameterToString(p);
-                string pchecksum = ComputeChecksum(pval);
-                if (!checksum.Equals(pchecksum))
-                {
-                    log.Add(string.Format(
-                      "Validation error on element/parameter '{0}' -- '{1}'",
-                      ElementDescription(e), p.Definition.Name));
-                }
-            }
+      string rvtpath = doc.PathName;
+      string txtpath = rvtpath.Replace(".rvt", ".lock3r");
+      string[] lines = File.ReadAllLines(txtpath);
+      List<string> log = new List<string>();
+      foreach (string line in lines )
+      {
+        string[] triple = line.Split(null);
+        ElementId eid = new ElementId(int.Parse(triple[0]));
+        Guid pid = new Guid(triple[1]);
+        string checksum = triple[2];
+        Element e = doc.GetElement(eid);
+        Parameter p = e.get_Parameter(pid);
+        string pval = ParameterToString(p);
+        string pchecksum = ComputeChecksum(pval);
+        if( !checksum.Equals(pchecksum))
+        {
+          log.Add(string.Format(
+            "Validation error on element/parameter '{0}' -- '{1}'",
+            ElementDescription(e), p.Definition.Name));
+        }
+      }
 
             /*
 
@@ -100,9 +84,9 @@ namespace RvtLock3r
             }
             */
 
-            if (0 < log.Count)
-            {
-                // Report errors to user
+      if( 0 < log.Count )
+      {
+        // Report errors to user
 
                 return Result.Failed;
             }
