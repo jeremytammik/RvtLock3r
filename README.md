@@ -9,6 +9,33 @@ Revit .NET C# add-in to validate that certain BIM element properties have not be
 - Original sample model: <i>Z:/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en.rvt</i>
 - Revit 2022 sample: <i>/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en_2022.rvt</i>
 
+## Validation
+
+The customer add-in reads a [ground truth](https://en.wikipedia.org/wiki/Ground_truth) input text file.
+It may be `JSON` formatted and may be encrypted; still to be decided.
+It contains a list of triples:
+
+- `ElementId`
+- Shared parameter `GUID`
+- Checksum
+
+The add-in iterates over all elements and shared parameters specified by these triples, reads the corresponding shared parameter value, calculates its checksum and validates it by comparison with the ground truth value.
+
+Discrepancies are logged and a report is presented to the user.
+
+The add-in does not care what kind of elements or shared parameters are being examined.
+That worry is left up to whoever creates the ground truth file.
+
+In the initial proof of concept, the triples are simply space separated in individual lines in a text file.
+
+## Preparation
+
+There are various possible approaches to prepare
+the [ground truth](https://en.wikipedia.org/wiki/Ground_truth) input text file,
+and they can be completely automated, more or less programmatically assisted, or fully manual.
+
+In all three cases, you will first need to determine up front what elements and which shared parameters on them are to be checked. Retrieve the corresponding parameter values, compute their checksums, and save the above-mentioned triples.
+
 ## Plan
 
 Proposal:
