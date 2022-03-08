@@ -29,27 +29,42 @@ namespace RvtLock3r
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-      string rvtpath = doc.PathName;
-      string txtpath = rvtpath.Replace(".rvt", ".lock3r");
-      string[] lines = File.ReadAllLines(txtpath);
-      List<string> log = new List<string>();
-      foreach (string line in lines )
-      {
-        string[] triple = line.Split(null);
-        ElementId eid = new ElementId(int.Parse(triple[0]));
-        Guid pid = new Guid(triple[1]);
-        string checksum = triple[2];
-        Element e = doc.GetElement(eid);
-        Parameter p = e.get_Parameter(pid);
-        string pval = ParameterToString(p);
-        string pchecksum = ComputeChecksum(pval);
-        if( !checksum.Equals(pchecksum))
-        {
-          log.Add(string.Format(
-            "Validation error on element/parameter '{0}' -- '{1}'",
-            ElementDescription(e), p.Definition.Name));
-        }
-      }
+            string rvtpath = doc.PathName;
+            string txtpath = rvtpath.Replace(".rvt", ".lock3r");
+            string[] lines = File.ReadAllLines(txtpath);
+
+            // Store validation error element and parameter ids
+
+            Dictionary<int, List<Guid>> errorLog
+              = new Dictionary<int, List<Guid>>();
+
+            foreach (string line in lines)
+            {
+                string[] triple = line.Split(null);
+                int i = int.Parse(triple[0]);
+                ElementId eid = new ElementId(i);
+                Guid pid = new Guid(triple[1]);
+                string checksum = triple[2];
+                Element e = doc.GetElement(eid);
+                Parameter p = e.get_Parameter(pid);
+
+                string pval = ParameterToString(p);
+                string pchecksum = ComputeChecksum(pval);
+                if (!checksum.Equals(pchecksum))
+                {
+                    //log.Add(string.Format(
+                    //  "Validation error on element/parameter '{0}' -- '{1}'",
+                    //  ElementDescription(e), p.Definition.Name));
+                    if (!errorLog.ContainsKey(i))
+                    {
+                        errorLog.Add(i, new List<Guid>());
+                    }
+                    if (!errorLog[i].Contains(pid))
+                    {
+                        errorLog[i].Add(pid);
+                    }
+                }
+            }
 
             /*
 
@@ -84,9 +99,17 @@ namespace RvtLock3r
             }
             */
 
-      if( 0 < log.Count )
-      {
-        // Report errors to user
+            int n = errorLog.Count;
+
+            if (0 < n)
+            {
+                // Report errors to user
+                // Set reference return values ElementSet elements and message
+
+                if (1 == n)
+                {
+
+                }
 
                 return Result.Failed;
             }
@@ -120,8 +143,8 @@ namespace RvtLock3r
 
             //export
 
-            //ExportToTextFile(data);
-            TaskDialog.Show(header, s);
+            ExportToTextFile(data);
+            //TaskDialog.Show(header, s);
 
         }
 
