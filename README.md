@@ -21,8 +21,9 @@ It may later be triggered automatically on opening or saving a document to notif
 
 ## Validation
 
-The customer add-in reads a [ground truth](https://en.wikipedia.org/wiki/Ground_truth) input text file.
-It may be `JSON` formatted and may be encrypted; still to be decided.
+The customer add-in reads a set of [ground truth](https://en.wikipedia.org/wiki/Ground_truth) data from some storage location.
+It may be an external text file; it may reside in extensible storage withing the `RVT` document; it may be `JSON` formatted; it may be encrypted; still to be decided, cf. [Storage](#storage).
+
 It contains a list of triples:
 
 - `ElementId`
