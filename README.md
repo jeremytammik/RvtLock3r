@@ -21,10 +21,7 @@ It may later be triggered automatically on opening or saving a document to notif
 
 ## Validation
 
-The customer add-in reads a set of [ground truth](https://en.wikipedia.org/wiki/Ground_truth) data from some storage location.
-It may be an external text file; it may reside in extensible storage withing the `RVT` document; it may be `JSON` formatted; it may be encrypted; still to be decided, cf. [Storage](#storage).
-
-It contains a list of triples:
+The customer add-in reads a set of [ground truth](https://en.wikipedia.org/wiki/Ground_truth) data from some [storage location](#storage). It contains a list of triples:
 
 - `ElementId`
 - Shared parameter `GUID`
@@ -49,8 +46,9 @@ In all three cases, you will first need to determine up front what elements and 
 
 ## Storage
 
-Instead of storing the ground truth in an external file, it can also be stored internally directly in the `RVT` project file.
-Two options are available for storing custom data: shared parameters and extensible storage.
+The ground truth data triples containing the data rerquired for integrity validation needs to be stored somewhere. That could be hard-wired directly into the add-in code for a specific BIM, stored in an external text file, within the `RVT` document, or elsewhere; it may be `JSON` formatted; it may be encrypted; still to be decided.
+
+Two options are available for storing custom data directly within the `RVT` project file: shared parameters and extensible storage.
 The latter is more modern and explicitly tailored for use by applications and data that is not accessible to the end user or even Revit itself.
 That seems most suitable for our purpose here.
 Extensible storage can be added to any database element.
