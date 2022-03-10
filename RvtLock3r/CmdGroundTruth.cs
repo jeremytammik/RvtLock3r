@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace RvtLock3r
 {
     [Transaction(TransactionMode.ReadOnly)]
-    public class GroundTruth : IExternalCommand
+    public class CmdGroundTruth : IExternalCommand
     {
         public Result Execute(
           ExternalCommandData commandData,
@@ -33,6 +33,8 @@ namespace RvtLock3r
             string rvtpath = doc.PathName;
             //this will be storage of the ground truth file, which u will read in the validation command.
             string txtpath = rvtpath.Replace(".rte", ".lock3r");
+            TaskDialog.Show("store ground truth file", txtpath);
+
 
             // Retrieve elements from database
 
@@ -81,12 +83,11 @@ namespace RvtLock3r
                     // see the helper function below
                     string val = ParameterToString(param);
                     string paramvalueChecksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
-                    s += "\r\n" + e.Id.ToString() + " " + param.GUID + " " + paramvalueChecksum;
+                    s += e.Id.ToString() + " " + param.GUID + " " + paramvalueChecksum + "\r\n";
                  
                 }
             }
 
-            
             return s;
 
 

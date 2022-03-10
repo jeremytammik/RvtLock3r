@@ -30,8 +30,11 @@ namespace RvtLock3r
             Document doc = uidoc.Document;
 
             string rvtpath = doc.PathName;
-            string txtpath = rvtpath.Replace(".rvt", ".lock3r");
+            string txtpath = rvtpath.Replace(".rte", ".lock3r");
+
             string[] lines = File.ReadAllLines(txtpath);
+
+
 
             // Store validation error element and parameter ids
 
@@ -45,74 +48,57 @@ namespace RvtLock3r
                 ElementId eid = new ElementId(i);
                 Guid pid = new Guid(triple[1]);
                 string checksum = triple[2];
+
                 Element e = doc.GetElement(eid);
                 Parameter p = e.get_Parameter(pid);
 
                 string pval = ParameterToString(p);
-                string pchecksum = ComputeChecksum(pval);
+
+
+                //string pchecksum = ComputeChecksum(pval);
+                string pchecksum = string.IsNullOrEmpty(pval) ? null : ComputeChecksum(pval);
+                //TaskDialog.Show("Line read with values", e.Id.ToString() + " " + p.GUID + " " + pchecksum);
+                //TaskDialog.Show("compare checksums", checksum + " " + " " + pchecksum);
+
+
+
                 if (!checksum.Equals(pchecksum))
                 {
+                    TaskDialog.Show("Parameter changed values",  e.Id.ToString() + " " + p.GUID + " " + checksum + " " + pchecksum);
                     //log.Add(string.Format(
                     //  "Validation error on element/parameter '{0}' -- '{1}'",
                     //  ElementDescription(e), p.Definition.Name));
-                    if (!errorLog.ContainsKey(i))
-                    {
-                        errorLog.Add(i, new List<Guid>());
-                    }
-                    if (!errorLog[i].Contains(pid))
-                    {
-                        errorLog[i].Add(pid);
-                    }
+                    //if (!errorLog.ContainsKey(i))
+                    //{
+                    //    errorLog.Add(i, new List<Guid>());
+                    //}
+                    //if (!errorLog[i].Contains(pid))
+                    //{
+                    //    errorLog[i].Add(pid);
+                    //}
                 }
-            }
-
-            /*
-
-            // Access current selection
-
-            Selection sel = uidoc.Selection;
-
-            // Retrieve elements from database
-
-            FilteredElementCollector col
-              = new FilteredElementCollector(doc)
-                .WhereElementIsNotElementType()
-                .OfCategory(BuiltInCategory.OST_Walls)
-                .OfClass(typeof(Wall)); // this collects all walls, maybe thousands
-
-            // alternatively, filter for wall types instead of walls; then we get each type just once
-
-            // alternative 2: filtere for the walls we want, and collect all their types first;
-            // then, loop over the types, not the wall instances
-
-            // Filtered element collector is iterable
-
-            foreach (Element e in col)
-            {
-              //Get the elementTypeId
-              ElementId elemTypeId = e.GetTypeId();
-              //Get the ElementType
-              ElementType elemType = (ElementType)doc.GetElement(elemTypeId); // the wall type will maybe reappear many times; done like this, we need to skip wall types already processed
-
-              //Gets a list of the ElementType Parameters
-              ShowParameters(elemType, "WallType Parameters: ");
-            }
-            */
-
-            int n = errorLog.Count;
-
-            if (0 < n)
-            {
-                // Report errors to user
-                // Set reference return values ElementSet elements and message
-
-                if (1 == n)
+                else
                 {
+                    TaskDialog.Show("No Parameter changed", "No modification");
 
                 }
-
-                return Result.Failed;
             }
+
+
+            //int n = errorLog.Count;
+
+            //if (0 < n)
+            //{
+            //    // Report errors to user
+            //    // Set reference return values ElementSet elements and message
+
+            //    if (1 == n)
+            //    {
+
+            //    }
+
+            //    return Result.Failed;
+            //}
             return Result.Succeeded;
         }
 
@@ -141,27 +127,10 @@ namespace RvtLock3r
                 }
             }
 
-            //export
-
-            ExportToTextFile(data);
-            //TaskDialog.Show(header, s);
-
+            
         }
 
-        private void ExportToTextFile(List<ChecksumData> data)
-        {
-            if (File.Exists(@"D:\CheckSum\checksum.txt"))
-            {
-                File.Delete(@"D:\CheckSum\checksum.txt");
-            }
-            //open file stream
-            using (StreamWriter file = File.CreateText(@"D:\CheckSum\checksum.txt"))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                //serialize object directly into file stream
-                serializer.Serialize(file, data);
-            }
-        }
+       
 
         private string ComputeChecksum(string s)
         {
@@ -184,6 +153,7 @@ namespace RvtLock3r
 
             if (param == null)
             {
+
                 return val;
             }
 
@@ -210,6 +180,7 @@ namespace RvtLock3r
                 case StorageType.None:
                     break;
             }
+            
             return val;
         }
 

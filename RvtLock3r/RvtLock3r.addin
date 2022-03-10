@@ -9,6 +9,15 @@
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
   </AddIn>
+	<AddIn Type="Command">
+		<Text>Ground Truth</Text>
+		<Description>Generating Ground Truth File</Description>
+		<Assembly>RvtLock3r.dll</Assembly>
+		<FullClassName>RvtLock3r.CmdGroundTruth</FullClassName>
+		<ClientId>c83ab35a-a84f-4c75-9fe2-8064335f7a5b</ClientId>
+		<VendorId>com.typepad.thebuildingcoder</VendorId>
+		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+	</AddIn>
   <AddIn Type="Application">
     <Name>Application RvtLock3r</Name>
     <Assembly>RvtLock3r.dll</Assembly>
