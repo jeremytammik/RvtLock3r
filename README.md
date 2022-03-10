@@ -46,7 +46,7 @@ In all three cases, you will first need to determine up front what elements and 
 
 ## Storage
 
-The ground truth data triples containing the data rerquired for integrity validation needs to be stored somewhere. That could be hard-wired directly into the add-in code for a specific BIM, stored in an external text file, within the `RVT` document, or elsewhere; it may be `JSON` formatted; it may be encrypted; still to be decided.
+The ground truth data triples containing the data required for integrity validation needs to be stored somewhere. That could be hard-wired directly into the add-in code for a specific BIM, stored in an external text file, within the `RVT` document, or elsewhere; it may be `JSON` formatted; it may be encrypted; still to be decided.
 
 Two options are available for storing custom data directly within the `RVT` project file: shared parameters and extensible storage.
 The latter is more modern and explicitly tailored for use by applications and data that is not accessible to the end user or even Revit itself.
