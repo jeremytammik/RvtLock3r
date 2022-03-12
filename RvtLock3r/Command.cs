@@ -41,64 +41,73 @@ namespace RvtLock3r
             Dictionary<int, List<Guid>> errorLog
               = new Dictionary<int, List<Guid>>();
 
-            foreach (string line in lines)
+            for (int j = 0; j < lines.Length - 1; j++)
             {
-                string[] triple = line.Split(null);
+
+
+                string[] triple = lines[j].Split(null);
+                string id = triple[0];
                 int i = int.Parse(triple[0]);
                 ElementId eid = new ElementId(i);
                 Guid pid = new Guid(triple[1]);
                 string checksum = triple[2];
+                string value = triple[3];
 
                 Element e = doc.GetElement(eid);
-                Parameter p = e.get_Parameter(pid);
 
-                string pval = ParameterToString(p);
+                Wall wall = (Wall)doc.GetElement(e.Id);
+                WallType wallType = wall.WallType;
+
+                Parameter p = wallType.get_Parameter(pid);
+
+                //string pval = ParameterToString(p);
+                CmdGroundTruth cmdGroundTruth = new CmdGroundTruth();
+                string pval = cmdGroundTruth.ParameterToString(p);
 
 
                 //string pchecksum = ComputeChecksum(pval);
-                string pchecksum = string.IsNullOrEmpty(pval) ? null : ComputeChecksum(pval);
+                string pchecksum = string.IsNullOrEmpty(pval) ? null : cmdGroundTruth.sha256_hash(pval);
                 //TaskDialog.Show("Line read with values", e.Id.ToString() + " " + p.GUID + " " + pchecksum);
                 //TaskDialog.Show("compare checksums", checksum + " " + " " + pchecksum);
 
 
-
                 if (!checksum.Equals(pchecksum))
                 {
-                    TaskDialog.Show("Parameter changed values",  e.Id.ToString() + " " + p.GUID + " " + checksum + " " + pchecksum);
+                    //TaskDialog.Show("Parameter changed values", e.Id.ToString() + " " + p.GUID + " " + checksum + " " + pchecksum);
                     //log.Add(string.Format(
                     //  "Validation error on element/parameter '{0}' -- '{1}'",
                     //  ElementDescription(e), p.Definition.Name));
-                    //if (!errorLog.ContainsKey(i))
-                    //{
-                    //    errorLog.Add(i, new List<Guid>());
-                    //}
-                    //if (!errorLog[i].Contains(pid))
-                    //{
-                    //    errorLog[i].Add(pid);
-                    //}
+                    if (!errorLog.ContainsKey(i))
+                    {
+                        errorLog.Add(i, new List<Guid>());
+                    }
+                    if (!errorLog[i].Contains(pid))
+                    {
+                        errorLog[i].Add(pid);
+                    }
                 }
                 else
                 {
-                    TaskDialog.Show("No Parameter changed", "No modification");
+                    //TaskDialog.Show("No Parameter changed", e.Id.ToString() + " " + p.GUID);
 
                 }
             }
 
 
-            //int n = errorLog.Count;
+            int n = errorLog.Count;
 
-            //if (0 < n)
-            //{
-            //    // Report errors to user
-            //    // Set reference return values ElementSet elements and message
+            if (0 < n)
+            {
+                // Report errors to user
+                // Set reference return values ElementSet elements and message
 
-            //    if (1 == n)
-            //    {
+                if (1 == n)
+                {
 
-            //    }
+                }
 
-            //    return Result.Failed;
-            //}
+                return Result.Failed;
+            }
             return Result.Succeeded;
         }
 

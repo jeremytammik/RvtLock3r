@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,7 +34,6 @@ namespace RvtLock3r
             string rvtpath = doc.PathName;
             //this will be storage of the ground truth file, which u will read in the validation command.
             string txtpath = rvtpath.Replace(".rte", ".lock3r");
-            TaskDialog.Show("store ground truth file", txtpath);
 
 
             // Retrieve elements from database
@@ -83,8 +83,17 @@ namespace RvtLock3r
                     // see the helper function below
                     string val = ParameterToString(param);
                     string paramvalueChecksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
-                    s += e.Id.ToString() + " " + param.GUID + " " + paramvalueChecksum + "\r\n";
-                 
+                    string paramvalueChecksum1 = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
+                    string paramvalueChecksum2 = string.IsNullOrEmpty(val) ? null : sha256_hash(val);
+
+                    if (!string.IsNullOrEmpty(val))
+                    {
+                        s += e.Id.ToString() + " " + param.GUID + " " + paramvalueChecksum2 + " " + val + "\r\n";
+
+                    }
+                    Debug.Print("elementid: " + e.Id.ToString() + "parameter GUID: " + param.GUID + "Parmeter Value: " + val  + "Checksum:" + paramvalueChecksum);
+
+
                 }
             }
 
@@ -108,7 +117,7 @@ namespace RvtLock3r
         }
 
        
-        private string ComputeChecksum(string s)
+        public string ComputeChecksum(string s)
         {
             string hash;
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
@@ -117,13 +126,29 @@ namespace RvtLock3r
                   md5.ComputeHash(Encoding.UTF8.GetBytes(s))
                 ).Replace("-", String.Empty);
             }
+
             return hash;
+        }
+        public string sha256_hash(string value)
+        {
+            StringBuilder Sb = new StringBuilder();
+
+            using (SHA256 hash = SHA256Managed.Create())
+            {
+                Encoding enc = Encoding.UTF8;
+                Byte[] result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (Byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
+
+            return Sb.ToString();
         }
 
         /// <summary>
         /// Helper function: return a string form of a given parameter.
         /// </summary>
-        public static string ParameterToString(Parameter param)
+        public string ParameterToString(Parameter param)
         {
             string val = "none";
 
