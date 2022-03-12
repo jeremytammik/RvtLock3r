@@ -34,17 +34,13 @@ namespace RvtLock3r
 
             string[] lines = File.ReadAllLines(txtpath);
 
-
-
-            // Store validation error element and parameter ids
+            // In case of validation error, store element and parameter ids
 
             Dictionary<int, List<Guid>> errorLog
               = new Dictionary<int, List<Guid>>();
 
             for (int j = 0; j < lines.Length - 1; j++)
             {
-
-
                 string[] triple = lines[j].Split(null);
                 string id = triple[0];
                 int i = int.Parse(triple[0]);
