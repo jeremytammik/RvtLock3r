@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace RvtLock3r
 {
     [Transaction(TransactionMode.ReadOnly)]
-    public class CmdGroundTruth : IExternalCommand
+    public  class CmdGroundTruth : IExternalCommand
     {
         public Result Execute(
           ExternalCommandData commandData,
@@ -62,7 +62,7 @@ namespace RvtLock3r
             //generates a .lock3r file with  ground truth triples, with checksum which will be compared with
             //I am passing the rvt file location where the ground truth file will be stored
 
-            WriteGroundTruthFile(txtpath, allString);
+            WriteGroundTruthFile(txtpath, allString).GetAwaiter();
 
             return Result.Succeeded;
         }

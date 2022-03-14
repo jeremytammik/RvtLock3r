@@ -60,12 +60,15 @@ namespace RvtLock3r
                 Parameter elemParam = elementType.get_Parameter(pid);
 
 
-                string pval = ParameterToString(elemParam);
+                //string pval = ParameterToString(elemParam);
+                string pval = CmdGroundTruth.ParameterToString(elemParam);
 
 
 
-                string pchecksum = string.IsNullOrEmpty(pval) ? null : ComputeChecksum(pval);
-               
+                //string pchecksum =  ComputeChecksum(pval);
+                string pchecksum = CmdGroundTruth.ComputeChecksum(pval);
+
+
 
 
                 if (!checksum.Equals(pchecksum))
@@ -85,7 +88,7 @@ namespace RvtLock3r
                 }
                 else
                 {
-
+                    //TaskDialog.Show("Revit", "No Parameter Modified");
                 }
             }
 
@@ -108,64 +111,6 @@ namespace RvtLock3r
         }
 
         
-
-
-
-        private static string ComputeChecksum(string value)
-        {
-            StringBuilder Sb = new StringBuilder();
-
-            using (SHA256 hash = SHA256Managed.Create())
-            {
-                Encoding enc = Encoding.UTF8;
-                Byte[] result = hash.ComputeHash(enc.GetBytes(value));
-
-                foreach (Byte b in result)
-                    Sb.Append(b.ToString("x2"));
-            }
-
-            return Sb.ToString();
-        }
-
-        /// <summary>
-        /// Helper function: return a string form of a given parameter.
-        /// </summary>
-        public static string ParameterToString(Parameter param)
-        {
-            string val = "none";
-
-            if (param == null)
-            {
-
-                return val;
-            }
-
-            // To get to the parameter value, we need to parse it depending on its storage type
-
-            switch (param.StorageType)
-            {
-                case StorageType.Double:
-                    double dVal = param.AsDouble();
-                    val = dVal.ToString(); // what precision? add precision control?
-                    break;
-                case StorageType.Integer:
-                    int iVal = param.AsInteger();
-                    val = iVal.ToString();
-                    break;
-                case StorageType.String:
-                    string sVal = param.AsString();
-                    val = sVal;
-                    break;
-                case StorageType.ElementId:
-                    ElementId idVal = param.AsElementId();
-                    val = idVal.IntegerValue.ToString();
-                    break;
-                case StorageType.None:
-                    break;
-            }
-            
-            return val;
-        }
 
         /// <summary>
         ///     Return a string describing the given element:
