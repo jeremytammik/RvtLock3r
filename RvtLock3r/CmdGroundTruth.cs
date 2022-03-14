@@ -35,7 +35,6 @@ namespace RvtLock3r
             //this will be storage of the ground truth file, which u will read in the validation command.
             string txtpath = rvtpath.Replace(".rte", ".lock3r");
 
-
             // Retrieve elements from database
 
             FilteredElementCollector col = new FilteredElementCollector(doc);
@@ -43,10 +42,10 @@ namespace RvtLock3r
             col.OfCategory(BuiltInCategory.OST_Walls)
                 //col.OfClass(typeof(WallType))
                 .WhereElementIsNotElementType().ToElements();
-            //Hi Jeremy, I tried several ways to fetch walltypes from here and i cudnt understand
-            //very well the logic, when I get the wall types and lets say we have several wall elements having the same
+                
+            //Hi Jeremy, I tried several ways to fetch walltypes from here and i couldnt understand
+            //very well the logic; when I get the wall types and lets say we have several wall elements having the same
             //wallTypes, its a bit difficult to get all wallType parameters. Maybe you cud advise me more here
-
 
             string allString = string.Empty;
 
@@ -59,11 +58,11 @@ namespace RvtLock3r
                 string s = ShowParameters(e, wallType, "WallType Parameters: ");
                 allString += s;
             }
-            //generates a .lock3r file with  ground truth tripples, with checksum which will be compared with
-            //I am passing the rvt /rte file location where the ground truth file will be stored
+            
+            //generates a .lock3r file with  ground truth triples, with checksum which will be compared with
+            //I am passing the rvt file location where the ground truth file will be stored
 
             WriteGroundTruthFile(txtpath, allString);
-
 
             return Result.Succeeded;
         }
@@ -90,14 +89,9 @@ namespace RvtLock3r
 
                     }
                     Debug.Print("elementid: " + e.Id.ToString() + "parameter GUID: " + param.GUID + "Parmeter Value: " + val  + "Checksum:" + paramvalueChecksum);
-
-
                 }
             }
-
             return s;
-
-
         }
 
         public static async Task WriteGroundTruthFile(string path, string s)
@@ -109,13 +103,14 @@ namespace RvtLock3r
 
             using (StreamWriter outputFile = File.CreateText(path))
             {
-
                 await outputFile.WriteAsync(s);
             }
         }
 
+
        
         public static string ComputeChecksum(string value)
+
         {
             StringBuilder Sb = new StringBuilder();
 
@@ -127,7 +122,6 @@ namespace RvtLock3r
                 foreach (Byte b in result)
                     Sb.Append(b.ToString("x2"));
             }
-
             return Sb.ToString();
         }
 
@@ -168,15 +162,5 @@ namespace RvtLock3r
             }
             return val;
         }
-
-        /// <summary>
-        ///     Return a string describing the given element:
-        ///     .NET type name,
-        ///     category name,
-        ///     family and symbol name for a family instance,
-        ///     element id and element name.
-        /// </summary>
-
-
     }
 }
