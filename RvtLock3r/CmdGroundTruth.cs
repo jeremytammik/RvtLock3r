@@ -68,10 +68,9 @@ namespace RvtLock3r
             return Result.Succeeded;
         }
 
-        public string ShowParameters(Element e, WallType wallType, string header)
+        public static string ShowParameters(Element e, WallType wallType, string header)
         {
             string s = string.Empty;
-            List<ChecksumData> data = new List<ChecksumData>();
 
             foreach (Parameter param in wallType.Parameters)
             {
@@ -82,13 +81,12 @@ namespace RvtLock3r
                     // To get the value, we need to parse the param depending on the storage type
                     // see the helper function below
                     string val = ParameterToString(param);
+                    
                     string paramvalueChecksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
-                    string paramvalueChecksum1 = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
-                    string paramvalueChecksum2 = string.IsNullOrEmpty(val) ? null : sha256_hash(val);
 
                     if (!string.IsNullOrEmpty(val))
                     {
-                        s += e.Id.ToString() + " " + param.GUID + " " + paramvalueChecksum2 + " " + val + "\r\n";
+                        s += e.Id.ToString() + " " + param.GUID + " " + paramvalueChecksum  + "\r\n";
 
                     }
                     Debug.Print("elementid: " + e.Id.ToString() + "parameter GUID: " + param.GUID + "Parmeter Value: " + val  + "Checksum:" + paramvalueChecksum);
@@ -117,19 +115,7 @@ namespace RvtLock3r
         }
 
        
-        public string ComputeChecksum(string s)
-        {
-            string hash;
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                hash = BitConverter.ToString(
-                  md5.ComputeHash(Encoding.UTF8.GetBytes(s))
-                ).Replace("-", String.Empty);
-            }
-
-            return hash;
-        }
-        public string sha256_hash(string value)
+        public static string ComputeChecksum(string value)
         {
             StringBuilder Sb = new StringBuilder();
 
@@ -148,7 +134,7 @@ namespace RvtLock3r
         /// <summary>
         /// Helper function: return a string form of a given parameter.
         /// </summary>
-        public string ParameterToString(Parameter param)
+        public static string ParameterToString(Parameter param)
         {
             string val = "none";
 

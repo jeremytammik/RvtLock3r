@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 #endregion
@@ -51,24 +52,24 @@ namespace RvtLock3r
                 ElementId eid = new ElementId(i);
                 Guid pid = new Guid(triple[1]);
                 string checksum = triple[2];
-                string value = triple[3];
 
                 Element e = doc.GetElement(eid);
 
-                Wall wall = (Wall)doc.GetElement(e.Id);
-                WallType wallType = wall.WallType;
+                ElementId typeId = e.GetTypeId();
 
-                Parameter p = wallType.get_Parameter(pid);
-
-                //string pval = ParameterToString(p);
-                CmdGroundTruth cmdGroundTruth = new CmdGroundTruth();
-                string pval = cmdGroundTruth.ParameterToString(p);
+                ElementType elementType = doc.GetElement(typeId)
+                  as ElementType;
 
 
-                //string pchecksum = ComputeChecksum(pval);
-                string pchecksum = string.IsNullOrEmpty(pval) ? null : cmdGroundTruth.sha256_hash(pval);
-                //TaskDialog.Show("Line read with values", e.Id.ToString() + " " + p.GUID + " " + pchecksum);
-                //TaskDialog.Show("compare checksums", checksum + " " + " " + pchecksum);
+                Parameter elemParam = elementType.get_Parameter(pid);
+
+
+                string pval = ParameterToString(elemParam);
+
+
+
+                string pchecksum = string.IsNullOrEmpty(pval) ? null : ComputeChecksum(pval);
+               
 
 
                 if (!checksum.Equals(pchecksum))
@@ -88,7 +89,6 @@ namespace RvtLock3r
                 }
                 else
                 {
-                    //TaskDialog.Show("No Parameter changed", e.Id.ToString() + " " + p.GUID);
 
                 }
             }
@@ -111,46 +111,24 @@ namespace RvtLock3r
             return Result.Succeeded;
         }
 
-        public void ShowParameters(Element e, /*ElementType eType,*/ string header)
+        
+
+
+
+        private static string ComputeChecksum(string value)
         {
-            string s = string.Empty;
-            List<ChecksumData> data = new List<ChecksumData>();
+            StringBuilder Sb = new StringBuilder();
 
-            foreach (Parameter param in e.Parameters)
+            using (SHA256 hash = SHA256Managed.Create())
             {
-                if (param.IsShared)
-                {
-                    string name = param.Definition.Name;
+                Encoding enc = Encoding.UTF8;
+                Byte[] result = hash.ComputeHash(enc.GetBytes(value));
 
-                    // To get the value, we need to parse the param depending on the storage type
-                    // see the helper function below
-                    string val = ParameterToString(param);
-                    s += "\r\n" + name + " : " + val;
-                    data.Add(new ChecksumData()
-                    {
-                        ElementId = e.Id.IntegerValue,
-                        ElementParamId = param.Id.IntegerValue,
-                        ElementParamValue = val,
-                        Checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val)
-                    });
-                }
+                foreach (Byte b in result)
+                    Sb.Append(b.ToString("x2"));
             }
 
-            
-        }
-
-       
-
-        private string ComputeChecksum(string s)
-        {
-            string hash;
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                hash = BitConverter.ToString(
-                  md5.ComputeHash(Encoding.UTF8.GetBytes(s))
-                ).Replace("-", String.Empty);
-            }
-            return hash;
+            return Sb.ToString();
         }
 
         /// <summary>
@@ -230,12 +208,4 @@ namespace RvtLock3r
         }
     }
 
-    public class ChecksumData
-    {
-        public int ElementId { get; set; } // not to confuse with ElementId class
-        public int ElementParamId { get; set; } // maybe better Definition element id, or shared param GUID
-        public string ElementParamValue { get; set; }
-        public string Checksum { get; set; }
-
-    }
 }
