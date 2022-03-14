@@ -57,15 +57,17 @@ namespace RvtLock3r
                 Parameter p = wallType.get_Parameter(pid);
 
                 //string pval = ParameterToString(p);
+                
+                // no need to instantiate here; use a static method instead.
+                // better still, move the ParameterToString to a separate Util module.
+                
                 CmdGroundTruth cmdGroundTruth = new CmdGroundTruth();
                 string pval = cmdGroundTruth.ParameterToString(p);
-
 
                 //string pchecksum = ComputeChecksum(pval);
                 string pchecksum = string.IsNullOrEmpty(pval) ? null : cmdGroundTruth.sha256_hash(pval);
                 //TaskDialog.Show("Line read with values", e.Id.ToString() + " " + p.GUID + " " + pchecksum);
                 //TaskDialog.Show("compare checksums", checksum + " " + " " + pchecksum);
-
 
                 if (!checksum.Equals(pchecksum))
                 {
@@ -73,6 +75,7 @@ namespace RvtLock3r
                     //log.Add(string.Format(
                     //  "Validation error on element/parameter '{0}' -- '{1}'",
                     //  ElementDescription(e), p.Definition.Name));
+
                     if (!errorLog.ContainsKey(i))
                     {
                         errorLog.Add(i, new List<Guid>());
@@ -85,10 +88,8 @@ namespace RvtLock3r
                 else
                 {
                     //TaskDialog.Show("No Parameter changed", e.Id.ToString() + " " + p.GUID);
-
                 }
             }
-
 
             int n = errorLog.Count;
 
@@ -131,11 +132,7 @@ namespace RvtLock3r
                     });
                 }
             }
-
-            
         }
-
-       
 
         private string ComputeChecksum(string s)
         {
