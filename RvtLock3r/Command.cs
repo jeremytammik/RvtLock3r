@@ -56,20 +56,11 @@ namespace RvtLock3r
                 ElementType elementType = doc.GetElement(typeId)
                   as ElementType;
 
-
                 Parameter elemParam = elementType.get_Parameter(pid);
 
-
-                //string pval = ParameterToString(elemParam);
                 string pval = CmdGroundTruth.ParameterToString(elemParam);
 
-
-
-                //string pchecksum =  ComputeChecksum(pval);
                 string pchecksum = CmdGroundTruth.ComputeChecksum(pval);
-
-
-
 
                 if (!checksum.Equals(pchecksum))
                 {
@@ -77,6 +68,7 @@ namespace RvtLock3r
                     //log.Add(string.Format(
                     //  "Validation error on element/parameter '{0}' -- '{1}'",
                     //  ElementDescription(e), p.Definition.Name));
+
                     if (!errorLog.ContainsKey(i))
                     {
                         errorLog.Add(i, new List<Guid>());
@@ -86,12 +78,11 @@ namespace RvtLock3r
                         errorLog[i].Add(pid);
                     }
                 }
+
                 else
                 {
-                    //TaskDialog.Show("Revit", "No Parameter Modified");
                 }
             }
-
 
             int n = errorLog.Count;
 
@@ -110,7 +101,6 @@ namespace RvtLock3r
             return Result.Succeeded;
         }
 
-        
 
         /// <summary>
         ///     Return a string describing the given element:
@@ -148,5 +138,4 @@ namespace RvtLock3r
             return $"{typeName} {categoryName}{familyName}{symbolName}<{e.Id.IntegerValue} {e.Name}>";
         }
     }
-
 }
