@@ -41,18 +41,29 @@ namespace RvtLock3r
 
             col.OfCategory(BuiltInCategory.OST_Walls)
                 //col.OfClass(typeof(WallType))
-                .WhereElementIsNotElementType().ToElements();
+                .WhereElementIsNotElementType().ToElementIds();
                 
-            //Hi Jeremy, I tried several ways to fetch walltypes from here and i couldnt understand
-            //very well the logic; when I get the wall types and lets say we have several wall elements having the same
-            //wallTypes, its a bit difficult to get all wallType parameters. Maybe you cud advise me more here
+            // Hi Jeremy, I tried several ways to fetch walltypes from here and i couldnt understand
+            // very well the logic; when I get the wall types and lets say we have several wall elements having the same
+            // wallTypes, its a bit difficult to get all wallType parameters. Maybe you cud advise me more here
 
+            FilteredElementCollector wallTypes1
+              = new FilteredElementCollector(doc)
+                .OfClass(typeof(WallType));
+            
+            FilteredElementCollector wallTypes2
+              = new FilteredElementCollector(doc)
+                .OfCategory(BuiltInCategory.OST_Walls)
+                .WhereElementIsElementType();
+            
             string allString = string.Empty;
 
             foreach (Element e in col)
             {
                 Wall wall = (Wall)doc.GetElement(e.Id);
                 WallType wallType = wall.WallType;
+                
+                have i already processed this one?
 
                 //Gets a list of the ElementType Parameters
                 string s = ShowParameters(e, wallType, "WallType Parameters: ");
@@ -107,10 +118,7 @@ namespace RvtLock3r
             }
         }
 
-
-       
         public static string ComputeChecksum(string value)
-
         {
             StringBuilder Sb = new StringBuilder();
 
