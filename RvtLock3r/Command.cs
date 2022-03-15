@@ -51,14 +51,14 @@ namespace RvtLock3r
 
                 Element e = doc.GetElement(eid);
 
-                ElementId typeId = e.GetTypeId();
+                //ElementId typeId = e.GetTypeId();
 
-                ElementType elementType = doc.GetElement(typeId)
-                  as ElementType;
+                //ElementType elementType = doc.GetElement(typeId)
+                //  as ElementType;
 
-                Parameter elemParam = elementType.get_Parameter(pid);
+                Parameter p = e.get_Parameter(pid);
 
-                string pval = CmdGroundTruth.ParameterToString(elemParam);
+                string pval = CmdGroundTruth.ParameterToString(p);
 
                 string pchecksum = CmdGroundTruth.ComputeChecksum(pval);
 
@@ -78,10 +78,6 @@ namespace RvtLock3r
                         errorLog[i].Add(pid);
                     }
                 }
-
-                else
-                {
-                }
             }
 
             int n = errorLog.Count;
@@ -91,10 +87,8 @@ namespace RvtLock3r
                 // Report errors to user
                 // Set reference return values ElementSet elements and message
 
-                if (1 == n)
-                {
-
-                }
+                message = ...
+                element = ...
 
                 return Result.Failed;
             }
