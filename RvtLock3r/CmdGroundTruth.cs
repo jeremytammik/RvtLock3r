@@ -37,17 +37,7 @@ namespace RvtLock3r
 
             // Retrieve elements from database
 
-            FilteredElementCollector col = new FilteredElementCollector(doc);
-
-            col.OfCategory(BuiltInCategory.OST_Walls)
-                //col.OfClass(typeof(WallType))
-                .WhereElementIsNotElementType().ToElementIds();
-                
-            // Hi Jeremy, I tried several ways to fetch walltypes from here and i couldnt understand
-            // very well the logic; when I get the wall types and lets say we have several wall elements having the same
-            // wallTypes, its a bit difficult to get all wallType parameters. Maybe you cud advise me more here
-
-            FilteredElementCollector wallTypes1
+            FilteredElementCollector wallTypes
               = new FilteredElementCollector(doc)
                 .OfClass(typeof(WallType));
             
@@ -58,15 +48,12 @@ namespace RvtLock3r
             
             string allString = string.Empty;
 
-            foreach (Element e in col)
+            foreach (Element e in wallTypes)
             {
-                Wall wall = (Wall)doc.GetElement(e.Id);
-                WallType wallType = wall.WallType;
-                
-                have i already processed this one?
+               
 
                 //Gets a list of the ElementType Parameters
-                string s = ShowParameters(e, wallType, "WallType Parameters: ");
+                string s = ShowParameters(e,  "WallType Parameters: ");
                 allString += s;
             }
             
@@ -78,11 +65,11 @@ namespace RvtLock3r
             return Result.Succeeded;
         }
 
-        public static string ShowParameters(Element e, WallType wallType, string header)
+        public static string ShowParameters(Element e,  string header)
         {
             string s = string.Empty;
 
-            foreach (Parameter param in wallType.Parameters)
+            foreach (Parameter param in e.Parameters)
             {
                 if (param.IsShared)
                 {
