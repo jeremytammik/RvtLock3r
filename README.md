@@ -21,7 +21,7 @@ It may later be triggered automatically on opening or saving a document to notif
 
 ### Model Checker Caveat
 
-In any serious BIUM environment, many rules and conventions are applied anbd required.
+In any serious BIM environment, many rules and conventions are applied anbd required.
 Tools such as the [Autodesk Model Checker](https://interoperability.autodesk.com/modelchecker.php) ensure that these are strictly followed and can be relied upon.
 Maybe you should be using such a tool providing more coverage than RvtLock3r does?
 ]
