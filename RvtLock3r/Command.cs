@@ -84,14 +84,17 @@ namespace RvtLock3r
 
             if (0 < n)
             {
-                
+
+
                 // Report errors to user
                 // Set reference return values ElementSet elements and message
-                
+               
+                    message = "Model Pramaters have been Altered!";
+                _ = GetAlteredElementSet(doc, errorLog);
 
-                message = "Model Pramaters have been Altered!";
 
-                elements = GetAlteredElementSet(doc, errorLog);
+
+
 
                 return Result.Failed;
             }
@@ -106,6 +109,8 @@ namespace RvtLock3r
                 ElementId eid = new ElementId(kvp.Key);
                 Element e = doc.GetElement(eid);
                 elementSet.Insert(e);
+                bool exist = elementSet.Contains(e);
+
             }
             return elementSet;
         }
