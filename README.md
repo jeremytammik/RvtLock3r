@@ -19,6 +19,12 @@ The validation function is initially implemented as an external command.
 
 It may later be triggered automatically on opening or saving a document to notify the user that undesired tampering has taken place.
 
+### Model Checker Caveat
+
+In any serious BIUM environment, many rules and conventions are applied anbd required.
+Tools such as the [Autodesk Model Checker](https://interoperability.autodesk.com/modelchecker.php) ensure that these are strictly followed and can be relied upon.
+Maybe you should be using such a tool providing more coverage than RvtLock3r does?
+]
 ## Validation
 
 The customer add-in reads a set of [ground truth](https://en.wikipedia.org/wiki/Ground_truth) data from some [storage location](#storage). It contains a list of triples:
