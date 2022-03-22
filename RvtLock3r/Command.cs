@@ -84,23 +84,18 @@ namespace RvtLock3r
 
             if (0 < n)
             {
-
-
                 // Report errors to user
                 // Set reference return values ElementSet elements and message
                
-                    message = "Model Pramaters have been Altered!";
+                message = "Model parameters have been altered.";
                 _ = GetAlteredElementSet(doc, errorLog);
-
-
-
-
 
                 return Result.Failed;
             }
             return Result.Succeeded;
         }
-        //Returns a set of ElementTypes that were altered, to be set to the Excecute : ElementSet elements argument 
+        
+        //Returns a set of Elements that were altered, to be set to the Excecute : ElementSet elements argument 
         private ElementSet GetAlteredElementSet(Document doc, Dictionary<int, List<Guid>> errorLog)
         {
             ElementSet elementSet = new ElementSet();
@@ -114,7 +109,6 @@ namespace RvtLock3r
             }
             return elementSet;
         }
-
 
         /// <summary>
         ///     Return a string describing the given element:
@@ -151,7 +145,5 @@ namespace RvtLock3r
 
             return $"{typeName} {categoryName}{familyName}{symbolName}<{e.Id.IntegerValue} {e.Name}>";
         }
-
-        
     }
 }
