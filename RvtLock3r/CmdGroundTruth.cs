@@ -77,9 +77,10 @@ namespace RvtLock3r
 
                     // To get the value, we need to parse the param depending on the storage type
                     // see the helper function below
-                    string val = ParameterToString(param);
                     
-                    string paramvalueChecksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
+                    string val = Util.ParameterToString(param);
+                    
+                    string paramvalueChecksum = string.IsNullOrEmpty(val) ? null : Util.ComputeChecksum(val);
 
                     if (!string.IsNullOrEmpty(val))
                     {
@@ -105,57 +106,6 @@ namespace RvtLock3r
             }
         }
 
-        public static string ComputeChecksum(string value)
-        {
-            StringBuilder Sb = new StringBuilder();
-
-            using (SHA256 hash = SHA256Managed.Create())
-            {
-                Encoding enc = Encoding.UTF8;
-                Byte[] result = hash.ComputeHash(enc.GetBytes(value));
-
-                foreach (Byte b in result)
-                    Sb.Append(b.ToString("x2"));
-            }
-            return Sb.ToString();
-        }
-
-        /// <summary>
-        /// Helper function: return a string form of a given parameter.
-        /// </summary>
-        public static string ParameterToString(Parameter param)
-        {
-            string val = "none";
-
-            if (param == null)
-            {
-                return val;
-            }
-
-            // To get to the parameter value, we need to parse it depending on its storage type
-
-            switch (param.StorageType)
-            {
-                case StorageType.Double:
-                    double dVal = param.AsDouble();
-                    val = dVal.ToString(); // what precision? add precision control?
-                    break;
-                case StorageType.Integer:
-                    int iVal = param.AsInteger();
-                    val = iVal.ToString();
-                    break;
-                case StorageType.String:
-                    string sVal = param.AsString();
-                    val = sVal;
-                    break;
-                case StorageType.ElementId:
-                    ElementId idVal = param.AsElementId();
-                    val = idVal.IntegerValue.ToString();
-                    break;
-                case StorageType.None:
-                    break;
-            }
-            return val;
-        }
+       
     }
 }

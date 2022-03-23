@@ -60,6 +60,7 @@
     <Compile Include="Command.cs" />
     <Compile Include="CmdGroundTruth.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="RvtLock3r.addin" />
