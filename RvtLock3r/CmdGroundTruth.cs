@@ -50,8 +50,6 @@ namespace RvtLock3r
 
             foreach (Element e in wallTypes)
             {
-               
-
                 //Gets a list of the ElementType Parameters
                 string s = ShowParameters(e,  "WallType Parameters: ");
                 allString += s;
