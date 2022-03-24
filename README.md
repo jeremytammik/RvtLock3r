@@ -63,7 +63,14 @@ However, it interferes least with Revit operation when placed on a dedicated `Da
 especially [in a worksharing environment](http://thebuildingcoder.typepad.com/blog/2015/02/extensible-storage-in-a-worksharing-environment.html).
 Creation and population of a `DataStorage` element is demonstrated by the [named GUID storage for project identification](https://thebuildingcoder.typepad.com/blog/2016/04/named-guid-storage-for-project-identification.html) sample.
 
-## Plan
+## Todo
+
+- Test on real-world model
+- Implement event handlers for document opened and saving
+- Implement automatic execution on document opened and saving
+- Implement extensible storage of ground truth
+
+## Partially Obsolete Original Plan
 
 Proposal:
 
