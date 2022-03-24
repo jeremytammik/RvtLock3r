@@ -10,9 +10,8 @@ namespace RvtLock3r
 {
     internal class Util
     {
-
         /// <summary>
-        /// Helper function: return a string form of a given parameter.
+        /// Return string representation of parameter value
         /// </summary>
         public static string ParameterToString(Parameter param)
         {
@@ -48,6 +47,7 @@ namespace RvtLock3r
             }
             return val;
         }
+        
         //Computes the checksum of each ElementType Parameter value
         public static string ComputeChecksum(string value)
         {
