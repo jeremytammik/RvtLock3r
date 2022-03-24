@@ -11,8 +11,6 @@ namespace RvtLock3r
     internal class Util
     {
 
-
-
         /// <summary>
         /// Helper function: return a string form of a given parameter.
         /// </summary>
@@ -106,38 +104,19 @@ namespace RvtLock3r
         }
 
         //Returns a set of ElementTypes that were altered, to be set to the Excecute : ElementSet elements argument 
-        public static Element GetAlteredElements(Document doc, Dictionary<int, List<Guid>> errorLog)
+        public static ElementSet GetAlteredElements(Document doc, Dictionary<int, List<Guid>> errorLog, ElementSet elementSet)
         {
-            //ElementSet elementSet = new ElementSet();
             Element e = null;
             foreach (KeyValuePair<int, List<Guid>> kvp in errorLog)
             {
                 ElementId eid = new ElementId(kvp.Key);
                 e= doc.GetElement(eid);
-                //elements.Insert(e);
+                elementSet.Insert(e);
 
             }
-            return e;
+            return elementSet;
         }
-        public static string GetAlteredMsgAlert(Document doc,  string msg, Dictionary<int, List<Guid>> errorLog)
-        {
-
-            string alteredElems = "";
-
-            foreach (KeyValuePair<int, List<Guid>> kvp in errorLog)
-            {
-                ElementId eid = new ElementId(kvp.Key);
-                Element e = doc.GetElement(eid);
-                alteredElems ="Id : "+ e.Id.ToString() + "\r\n";
-
-            }
-
-            msg = "Model Paramaters have been Altered!" + "\r\n" + alteredElems;
-
-            return msg;
-        }
-
-
+       
 
     }
 }

@@ -74,6 +74,7 @@ namespace RvtLock3r
                     {
                         errorLog[i].Add(pid);
                     }
+                    
                 }
             }
 
@@ -83,9 +84,9 @@ namespace RvtLock3r
             {
                 // Report errors to user
                 // Set reference return values ElementSet elements and message
+                message = "Model Paramaters have been Altered!";
 
-                message = Util.GetAlteredMsgAlert(doc, message, errorLog);
-                elements.Insert(Util.GetAlteredElements(doc, errorLog));
+                 Util.GetAlteredElements(doc, errorLog, elements);
 
                 return Result.Failed;
             }
