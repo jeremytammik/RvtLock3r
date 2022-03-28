@@ -51,7 +51,7 @@ namespace RvtLock3r
             foreach (Element e in wallTypes)
             {
                 //Gets a list of the ElementType Parameters
-                string s = ShowParameters(e,  "WallType Parameters: ");
+                string s = Util.ShowParameters(e,  "WallType Parameters: ");
                 allString += s;
             }
             
@@ -63,34 +63,7 @@ namespace RvtLock3r
             return Result.Succeeded;
         }
 
-        public static string ShowParameters(Element e,  string header)
-        {
-            string s = string.Empty;
-
-            foreach (Parameter param in e.Parameters)
-            {
-                if (param.IsShared)
-                {
-                    string name = param.Definition.Name;
-
-                    // To get the value, we need to parse the param depending on the storage type
-                    // see the helper function below
-                    
-                    string val = Util.ParameterToString(param);
-                    
-                    string paramvalueChecksum = string.IsNullOrEmpty(val) ? null : Util.ComputeChecksum(val);
-
-                    if (!string.IsNullOrEmpty(val))
-                    {
-                        s += e.Id.ToString() + " " + param.GUID + " " + paramvalueChecksum  + "\r\n";
-
-                    }
-                    Debug.Print("elementid: " + e.Id.ToString() + "parameter GUID: " + param.GUID + "Parmeter Value: " + val  + "Checksum:" + paramvalueChecksum);
-                }
-            }
-            return s;
-        }
-
+      
         public static async Task WriteGroundTruthFile(string path, string s)
         {
             if (File.Exists(path))

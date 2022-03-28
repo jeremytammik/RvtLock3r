@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,6 +11,38 @@ namespace RvtLock3r
 {
     internal class Util
     {
+        /// <summary>
+        /// Return string representation of the Ground Truth tripples to be svaed on an an external file, 
+        /// for validation later by the algorithm
+        /// </summary>
+        public static string ShowParameters(Element e, string header)
+        {
+            string s = string.Empty;
+
+            foreach (Parameter param in e.Parameters)
+            {
+                if (param.IsShared)
+                {
+                    string name = param.Definition.Name;
+
+                    // To get the value, we need to parse the param depending on the storage type
+                    // see the helper function below
+
+                    string val = Util.ParameterToString(param);
+
+                    string paramvalueChecksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
+
+                    if (!string.IsNullOrEmpty(val))
+                    {
+                        s += e.Id.ToString() + " " + param.GUID + " " + paramvalueChecksum + "\r\n";
+
+                    }
+                    Debug.Print("elementid: " + e.Id.ToString() + "parameter GUID: " + param.GUID + "Parmeter Value: " + val + "Checksum:" + paramvalueChecksum);
+                }
+            }
+            return s;
+        }
+
         /// <summary>
         /// Return string representation of parameter value
         /// </summary>
@@ -47,8 +80,9 @@ namespace RvtLock3r
             }
             return val;
         }
-        
-        //Computes the checksum of each ElementType Parameter value
+        /// </summary>
+        /// Computes the checksum of each ElementType Parameter value
+        /// </summary>
         public static string ComputeChecksum(string value)
         {
             StringBuilder Sb = new StringBuilder();
@@ -64,8 +98,6 @@ namespace RvtLock3r
             return Sb.ToString();
         }
 
-
-
         /// <summary>
         ///     Return a string describing the given element:
         ///     .NET type name,
@@ -73,7 +105,6 @@ namespace RvtLock3r
         ///     family and symbol name for a family instance,
         ///     element id and element name.
         /// </summary>
-
         public static string ElementDescription(
             Element e)
         {
@@ -102,8 +133,9 @@ namespace RvtLock3r
 
             return $"{typeName} {categoryName}{familyName}{symbolName}<{e.Id.IntegerValue} {e.Name}>";
         }
-
-        //Returns a set of ElementTypes that were altered, to be set to the Excecute : ElementSet elements argument 
+        /// </summary>
+        /// Returns a set of ElementTypes that were altered, to be set to the Excecute : ElementSet elements argument 
+        /// </summary>
         public static ElementSet GetAlteredElements(Document doc, Dictionary<int, List<Guid>> errorLog, ElementSet elementSet)
         {
             Element e = null;
