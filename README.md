@@ -68,7 +68,7 @@ Creation and population of a `DataStorage` element is demonstrated by the [named
 Currently, the add-in implements two commands: `CmdGroundTruth` and `Command`.
 The former is only used once to initialise the ground truth data for a given model.
 The latter can be used for testing purposes.
-However, it may be replaced by an automated system to launch it on opedning and saving a document.
+However, it may be replaced by an automated system to launch it on opening and saving a document.
 Hence, there is no great need to implement a UI.
 Otherwise, maybe, a ribbon tab with buttons to launch each command might be suitable.
 
