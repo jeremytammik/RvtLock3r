@@ -84,6 +84,10 @@ Otherwise, maybe, a ribbon tab with buttons to launch each command might be suit
 
 ## Todo
 
+- Refactor validation command `CmdValidation` into a separate method that can be
+  executecd automatically from `DocumentOpened`, `DocumentSaving`, and DMU
+- Refactor the entire add-in
+  to [prepare for DA4R](https://thebuildingcoder.typepad.com/blog/about-the-author.html#5.55)
 - Test on real-world model
 - Implement detailed and user friendly log file of validation errors
 - Implement event handlers for document opened and saving
