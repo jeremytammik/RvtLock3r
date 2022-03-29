@@ -33,7 +33,7 @@ Maybe you should be using such a tool providing more coverage than RvtLock3r doe
 
 BIM360 and ACC design collaboration provide
 a [change visualization interface](https://help.autodesk.com/view/COLLAB/ENU/?guid=Design_Collab_Change_Visualization_Interface) that enables you to [find model difference by Model Properties API](https://forge.autodesk.com/blog/find-model-difference-model-properties-api).
-It is based on the Forge Model Properties API.
+It is based on the [Forge Model Properties API](https://forge.autodesk.com/blog/bim-360acc-model-properties-api).
 Another alternative approach to this task.
 
 ## Validation
