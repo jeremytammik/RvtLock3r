@@ -32,19 +32,15 @@ namespace RvtLock3r
             Document doc = uidoc.Document;
 
             string rvtpath = doc.PathName;
-            //this will be storage of the ground truth file, which u will read in the validation command.
-            string txtpath = rvtpath.Replace(".rte", ".lock3r");
+            //this will be the storage of the ground truth file, which u will read in the validation command.
+            string txtpath = rvtpath.Replace(".rvt", ".lock3r");
 
             // Retrieve elements from database
 
             FilteredElementCollector wallTypes
               = new FilteredElementCollector(doc)
                 .OfClass(typeof(WallType));
-            
-            FilteredElementCollector wallTypes2
-              = new FilteredElementCollector(doc)
-                .OfCategory(BuiltInCategory.OST_Walls)
-                .WhereElementIsElementType();
+           
             
             string allString = string.Empty;
 
