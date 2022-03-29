@@ -10,6 +10,9 @@ using System.IO;
 
 namespace RvtLock3r
 {
+  /// <summary>
+  /// External command to validate ground truth data
+  /// </summary>
   [Transaction(TransactionMode.ReadOnly)]
   public class Command : IExternalCommand
   {
