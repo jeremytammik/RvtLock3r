@@ -3,16 +3,9 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Selection;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-
 #endregion
 
 namespace RvtLock3r
@@ -35,7 +28,7 @@ namespace RvtLock3r
 
       string[] lines = File.ReadAllLines(txtpath);
 
-      // In case of validation error, store element and parameter ids
+      // Store element and parameter ids causing validation error
 
       Dictionary<int, List<Guid>> errorLog
         = new Dictionary<int, List<Guid>>();
@@ -71,7 +64,6 @@ namespace RvtLock3r
           {
             errorLog[i].Add(pid);
           }
-
         }
       }
 
