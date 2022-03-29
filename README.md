@@ -19,6 +19,10 @@ The validation function is initially implemented as an external command.
 
 It may later be triggered automatically on opening or saving a document to notify the user that undesired tampering has taken place.
 
+Below, two caveats on model checking and change analysis.
+However, they both report on modifications ater the fact.
+RvtLock3r goes one step further and prevents all forbidden modifications in the first place.
+
 ### Model Checker Caveat
 
 In any serious BIM environment, many rules and conventions are applied and required.
@@ -29,6 +33,7 @@ Maybe you should be using such a tool providing more coverage than RvtLock3r doe
 
 BIM360 and ACC design collaboration provide
 a [change visualization interface](https://help.autodesk.com/view/COLLAB/ENU/?guid=Design_Collab_Change_Visualization_Interface) that enables you to [find model difference by Model Properties API](https://forge.autodesk.com/blog/find-model-difference-model-properties-api).
+It is based on the Forge Model Properties API.
 Another alternative approach to this task.
 
 ## Validation
