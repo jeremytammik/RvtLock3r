@@ -77,7 +77,10 @@ Otherwise, maybe, a ribbon tab with buttons to launch each command might be suit
 - Test on real-world model
 - Implement event handlers for document opened and saving
 - Implement automatic execution on document opened and saving
+- Implement DMU dynamic model updater to prevent modification of the protected parameter values
 - Implement extensible storage of ground truth
+- Implement settings to choos validation strategy: command/opening closing event/ DMU
+- Migrate to Forge Design Automation for Revit 
 
 ## Partially Obsolete Original Plan
 
