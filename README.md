@@ -25,6 +25,11 @@ In any serious BIM environment, many rules and conventions are applied and requi
 Tools such as the [Autodesk Model Checker](https://interoperability.autodesk.com/modelchecker.php) ensure that these are strictly followed and can be relied upon.
 Maybe you should be using such a tool providing more coverage than RvtLock3r does?
 
+### Change Analysis Caveat
+
+BIM360 and ACC design collaboration provide
+a [change visualization interface](https://help.autodesk.com/view/COLLAB/ENU/?guid=Design_Collab_Change_Visualization_Interface) that enables you to [find model difference by Model Properties API](https://forge.autodesk.com/blog/find-model-difference-model-properties-api).
+Another alternative approach to this task.
 
 ## Validation
 
