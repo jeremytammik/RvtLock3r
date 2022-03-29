@@ -92,8 +92,9 @@ Otherwise, maybe, a ribbon tab with buttons to launch each command might be suit
 - Implement detailed and user friendly log file of validation errors
 - Implement event handlers for document opened and saving
 - Implement automatic execution on document opened and saving
-- Implement DMU dynamic model updater to prevent modification of the protected parameter values
-- Implement extensible storage of ground truth
+- Implement [DMU dynamic model updater](https://thebuildingcoder.typepad.com/blog/about-the-author.html#5.31) to
+  prevent modification of the protected parameter values
+- Implement [extensible storage](https://thebuildingcoder.typepad.com/blog/about-the-author.html#5.23) of ground truth
 - Implement [end user settings](https://thebuildingcoder.typepad.com/blog/2016/09/hololens-escape-path-waypoint-json-exporter.html) to
   choose validation strategy: command / opening and closing events / DMU
 - Migrate to Forge Design Automation for Revit 
