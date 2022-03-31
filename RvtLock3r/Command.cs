@@ -77,7 +77,7 @@ namespace RvtLock3r
         // Report errors to user by setting the
         // ElementSet `elements` and `message` return values
 
-        message = "Model Paramaters have been Altered!";
+        message = "Model parameters have been altered!";
 
         Util.GetAlteredElements(doc, errorLog, elements);
 
