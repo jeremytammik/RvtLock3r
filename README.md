@@ -19,12 +19,22 @@ The validation function is initially implemented as an external command.
 
 It may later be triggered automatically on opening or saving a document to notify the user that undesired tampering has taken place.
 
+Below, two caveats on model checking and change analysis.
+However, they both report on modifications ater the fact.
+RvtLock3r goes one step further and prevents all forbidden modifications in the first place.
+
 ### Model Checker Caveat
 
 In any serious BIM environment, many rules and conventions are applied and required.
 Tools such as the [Autodesk Model Checker](https://interoperability.autodesk.com/modelchecker.php) ensure that these are strictly followed and can be relied upon.
 Maybe you should be using such a tool providing more coverage than RvtLock3r does?
 
+### Change Analysis Caveat
+
+BIM360 and ACC design collaboration provide
+a [change visualization interface](https://help.autodesk.com/view/COLLAB/ENU/?guid=Design_Collab_Change_Visualization_Interface) that enables you to [find model difference by Model Properties API](https://forge.autodesk.com/blog/find-model-difference-model-properties-api).
+It is based on the [Forge Model Properties API](https://forge.autodesk.com/blog/bim-360acc-model-properties-api).
+Another alternative approach to this task.
 
 ## Validation
 
@@ -63,12 +73,31 @@ However, it interferes least with Revit operation when placed on a dedicated `Da
 especially [in a worksharing environment](http://thebuildingcoder.typepad.com/blog/2015/02/extensible-storage-in-a-worksharing-environment.html).
 Creation and population of a `DataStorage` element is demonstrated by the [named GUID storage for project identification](https://thebuildingcoder.typepad.com/blog/2016/04/named-guid-storage-for-project-identification.html) sample.
 
+## User Interface
+
+Currently, the add-in implements two commands: `CmdGroundTruth` and `Command`.
+The former is only used once to initialise the ground truth data for a given model.
+The latter can be used for testing purposes.
+However, it may be replaced by an automated system to launch it on opening and saving a document.
+Hence, there is no great need to implement a UI.
+Otherwise, maybe, a ribbon tab with buttons to launch each command might be suitable.
+
 ## Todo
 
+- Refactor validation command `CmdValidation` into a separate method that can be
+  executecd automatically from `DocumentOpened`, `DocumentSaving`, and DMU
+- Refactor the entire add-in
+  to [prepare for DA4R](https://thebuildingcoder.typepad.com/blog/about-the-author.html#5.55)
 - Test on real-world model
+- Implement detailed and user friendly log file of validation errors
 - Implement event handlers for document opened and saving
 - Implement automatic execution on document opened and saving
-- Implement extensible storage of ground truth
+- Implement [DMU dynamic model updater](https://thebuildingcoder.typepad.com/blog/about-the-author.html#5.31) to
+  prevent modification of the protected parameter values
+- Implement [extensible storage](https://thebuildingcoder.typepad.com/blog/about-the-author.html#5.23) of ground truth
+- Implement [end user settings](https://thebuildingcoder.typepad.com/blog/2016/09/hololens-escape-path-waypoint-json-exporter.html) to
+  choose validation strategy: command / opening and closing events / DMU
+- Migrate to Forge Design Automation for Revit 
 
 ## Partially Obsolete Original Plan
 

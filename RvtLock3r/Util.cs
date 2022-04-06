@@ -142,7 +142,7 @@ namespace RvtLock3r
             foreach (KeyValuePair<int, List<Guid>> kvp in errorLog)
             {
                 ElementId eid = new ElementId(kvp.Key);
-                e= doc.GetElement(eid);
+                e = doc.GetElement(eid);
                 elementSet.Insert(e);
 
             }
@@ -163,14 +163,14 @@ namespace RvtLock3r
             // visible parameters in order.
             List<string> paramDefinitionNames = new List<string>();
 
-            foreach(Parameter param in e.Parameters)
+            foreach (Parameter param in e.Parameters)
             {
                 paramDefinitionNames.Add(param.Definition.Name);
             }
 
             return paramDefinitionNames;
         }
-        
+
 
 
     }
