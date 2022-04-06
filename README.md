@@ -41,7 +41,7 @@ Another alternative approach to this task.
 The customer add-in reads a set of [ground truth](https://en.wikipedia.org/wiki/Ground_truth) data from some [storage location](#storage). It contains a list of triples:
 
 - `ElementId`
-- Shared parameter `GUID`
+- Shared parameter `GUID` (maybe better: parameter id?)
 - Checksum
 
 The add-in iterates over all elements and shared parameters specified by these triples, reads the corresponding shared parameter value, calculates its checksum and validates it by comparison with the ground truth value.
@@ -59,7 +59,17 @@ There are various possible approaches to prepare
 the [ground truth](https://en.wikipedia.org/wiki/Ground_truth) input text file,
 and they can be completely automated, more or less programmatically assisted, or fully manual.
 
-In all three cases, you will first need to determine up front what elements and which shared parameters on them are to be checked. Retrieve the corresponding parameter values, compute their checksums, and save the above-mentioned triples.
+In all three cases, you will first need to determine up front what elements and which shared parameters on them are to be checked.
+Retrieve the corresponding parameter values, compute their checksums, and save the above-mentioned triples.
+
+The most generic approoach might be the following:
+
+- Prompt user to select element
+- Query whether to use type or instance parameters
+- List all the element instance or type poarameters and their values with check boxes
+- User check all paramters to define ground truth
+- Repeat until happy
+- Read all selected parameter values and store as ground truth with element and parameter ids
 
 ## Storage
 
