@@ -62,7 +62,7 @@ and they can be completely automated, more or less programmatically assisted, or
 In all three cases, you will first need to determine up front what elements and which shared parameters on them are to be checked.
 Retrieve the corresponding parameter values, compute their checksums, and save the above-mentioned triples.
 
-The most generic approoach might be the following:
+The most generic approach might be the following:
 
 - Prompt user to select element
 - Query whether to use type or instance parameters

@@ -60,7 +60,7 @@
     <Compile Include="App.cs" />
     <Compile Include="CmdCommand.cs" />
     <Compile Include="CmdGroundTruth.cs" />
-    <Compile Include="WallUpdater.cs" />
+    <Compile Include="ParamValueValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
