@@ -12,10 +12,10 @@ namespace RvtLock3r
     internal class Util
     {
         /// <summary>
-        /// Return string representation of the Ground Truth tripples to be svaed on an an external file, 
+        /// Return string representation of the Ground Truth tripples to be saved on an an external file, 
         /// for validation later by the algorithm
         /// </summary>
-        public static string ShowParameters(Element e, string header)
+        public static string GroundTruthData(Element e, string header)
         {
             string s = string.Empty;
 
@@ -148,7 +148,30 @@ namespace RvtLock3r
             }
             return elementSet;
         }
-       
+
+        /// <summary>
+        /// Return all the parameter names  
+        /// deemed relevant for the given element
+        /// in string form.
+        /// </summary>
+        public static List<string> GetParamNamesToLookUp(Element e)
+        {
+            // Two choices: 
+            // Element.Parameters property -- Retrieves 
+            // a set containing all  the parameters.
+            // GetOrderedParameters method -- Gets the 
+            // visible parameters in order.
+            List<string> paramDefinitionNames = new List<string>();
+
+            foreach(Parameter param in e.Parameters)
+            {
+                paramDefinitionNames.Add(param.Definition.Name);
+            }
+
+            return paramDefinitionNames;
+        }
+        
+
 
     }
 }

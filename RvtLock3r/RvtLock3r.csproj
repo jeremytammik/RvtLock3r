@@ -45,6 +45,7 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2022\NewtonSoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="RevitAPI">
       <HintPath>$(ProgramW6432)\Autodesk\Revit 2022\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -57,14 +58,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="Command.cs" />
+    <Compile Include="CmdCommand.cs" />
     <Compile Include="CmdGroundTruth.cs" />
+    <Compile Include="WallUpdater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\btn1.png" />
+    <Resource Include="Resources\btn2.png" />
+    <Resource Include="Resources\fileicon1.png" />
+    <Resource Include="Resources\validateico1.ico" />
+    <Resource Include="Resources\check3.png" />
+    <Resource Include="Resources\gtfile1.png" />
     <Content Include="RvtLock3r.addin" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "$(AppData)\Autodesk\REVIT\Addins\2022" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2022"

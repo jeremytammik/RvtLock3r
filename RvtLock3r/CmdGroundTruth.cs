@@ -33,7 +33,7 @@ namespace RvtLock3r
 
             string rvtpath = doc.PathName;
             //this will be the storage of the ground truth file, which u will read in the validation command.
-            string txtpath = rvtpath.Replace(".rvt", ".lock3r");
+            string txtpath = rvtpath.Replace(".rte", ".lock3r");
 
             // Retrieve elements from database
 
@@ -47,30 +47,29 @@ namespace RvtLock3r
             foreach (Element e in wallTypes)
             {
                 //Gets a list of the ElementType Parameters
-                string s = Util.ShowParameters(e,  "WallType Parameters: ");
+                string s = Util.GroundTruthData(e,  "WallType Parameters: ");
                 allString += s;
             }
             
             //generates a .lock3r file with  ground truth triples, with checksum which will be compared with
             //I am passing the rvt file location where the ground truth file will be stored
 
-            WriteGroundTruthFile(txtpath, allString).GetAwaiter();
+            WriteGroundTruthFile(txtpath, allString);
 
             return Result.Succeeded;
         }
 
       
-        public static async Task WriteGroundTruthFile(string path, string s)
+        public static void WriteGroundTruthFile(string path, string s)
         {
             if (File.Exists(path))
             {
                 File.Delete(path);
             }
 
-            using (StreamWriter outputFile = File.CreateText(path))
-            {
-                await outputFile.WriteAsync(s);
-            }
+                File.WriteAllText(path, s);
+
+
         }
 
        
