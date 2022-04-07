@@ -1,4 +1,7 @@
-﻿using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.ApplicationServices;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,65 +12,81 @@ namespace RvtLock3r
 {
   internal class ParamValueValidator : IUpdater
   {
-    static AddInId m_appId;
-    UpdaterId m_updaterId;
-    FailureDefinitionId m_failureId = null;
-    FailureDefinitionId m_warnId = null;
-    public static bool m_updateActive = false;
-    public Dictionary element id parameter guid
+    static AddInId appId;
+    UpdaterId updaterId;
+    private FailureDefinitionId failureId = null;
+    public static bool updateActive = false;
 
+
+        public Dictionary <ElementId, List<Guid>> paramGuid 
+            = new Dictionary<ElementId, List<Guid>>();
     // constructor takes the AddInId for the add-in associated with this updater
     public ParamValueValidator(AddInId id)
     {
-      m_appId = id;
-      m_updaterId = new UpdaterId(m_appId,
+      appId = id;
+      updaterId = new UpdaterId(appId,
           new Guid("5b5382d3-4cc3-48db-88e8-8cefff8f0243"));
     }
 
-    public void Execute(UpdaterData data)
+
+        public void Execute(UpdaterData data)
     {
-      if (m_updateActive == false) { return; }
+      if (updateActive == false) { return; }
       Document doc = data.GetDocument();
-      Autodesk.Revit.ApplicationServices.Application app = doc.Application;
+      Application app = doc.Application;
       foreach (ElementId id in data.GetModifiedElementIds())
       {
         Element e = doc.GetElement(id);
+                string rvtpath = doc.PathName;
+                string txtpath = rvtpath.Replace(".rte", ".lock3r");
+                int count = Util.GetGroundTruthData(txtpath).Count;
 
-        // get all the parameter guids from the dictionary mapping element id to the ground truth guids
+                // get all the parameter guids from the dictionary mapping element id to the ground truth guids
+                List<Guid> groundTruthParamGuids = new List<Guid>();
+                foreach (KeyValuePair<ElementId, List<Guid>> kvp in Util.GetGroundTruthData(txtpath))
+                {
+                    groundTruthParamGuids.AddRange(kvp.Value);
 
-        foreach (string paramgin Util.GetParamNamesToLookUp(e))
+                }
+                int i = groundTruthParamGuids.Count;
+
+                foreach (Guid paramGuid in groundTruthParamGuids)
+                {
+                    //Parameter p = e.LookupParameter(paramName);
+                    Parameter p = e.get_Parameter(paramGuid);
+                    if (p != null)
+                    {
+
+                        FailureMessage failMessage = new FailureMessage(FailureId);
+                        failMessage.SetFailingElement(id);
+                        doc.PostFailure(failMessage);
+
+                    }
+                }
+               
+
+            }
+    }
+
+        public FailureDefinitionId FailureId
         {
-          //Parameter p = e.LookupParameter(paramName);
-          Parameter p = e.get_Parameter(pguid);
-          if (p != null)
-          {
+            get
+            {
+                return failureId;
+            }
 
-            FailureMessage failMessage = new FailureMessage(FailureId);
-            failMessage.SetFailingElement(id);
-            doc.PostFailure(failMessage);
+            set { 
+                failureId = value; 
+            }
+            
 
-          }
         }
+        
 
-      }
-    }
 
-    public FailureDefinitionId FailureId
+        public string GetAdditionalInformation()
     {
-      get { return m_failureId; }
-      set { m_failureId = value; }
-    }
-
-    public FailureDefinitionId WarnId
-    {
-      get { return m_warnId; }
-      set { m_warnId = value; }
-    }
-
-    public string GetAdditionalInformation()
-    {
-      return "Give warning and error if "
-        + "wall parameters are modified";
+      return "Give warning and error if wall parameters are modified";
     }
 
     public ChangePriority GetChangePriority()
@@ -77,12 +96,12 @@ namespace RvtLock3r
 
     public UpdaterId GetUpdaterId()
     {
-      return m_updaterId;
+      return updaterId;
     }
 
     public string GetUpdaterName()
     {
-      return "Wall Parameter Modification Check";
+      return "Parameter Value Validator";
     }
   }
 }
