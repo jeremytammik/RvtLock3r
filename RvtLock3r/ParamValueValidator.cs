@@ -18,8 +18,8 @@ namespace RvtLock3r
     public static bool updateActive = false;
 
 
-        public Dictionary <ElementId, List<Guid>> paramGuid 
-            = new Dictionary<ElementId, List<Guid>>();
+    public Dictionary<ElementId, List<Guid>> paramGuid
+        = new Dictionary<ElementId, List<Guid>>();
     // constructor takes the AddInId for the add-in associated with this updater
     public ParamValueValidator(AddInId id)
     {
@@ -29,7 +29,7 @@ namespace RvtLock3r
     }
 
 
-        public void Execute(UpdaterData data)
+    public void Execute(UpdaterData data)
     {
       if (updateActive == false) { return; }
       Document doc = data.GetDocument();
@@ -37,54 +37,67 @@ namespace RvtLock3r
       foreach (ElementId id in data.GetModifiedElementIds())
       {
         Element e = doc.GetElement(id);
-                string rvtpath = doc.PathName;
-                string txtpath = rvtpath.Replace(".rte", ".lock3r");
-                int count = Util.GetGroundTruthData(txtpath).Count;
+        string rvtpath = doc.PathName;
+        string txtpath = rvtpath.Replace(".rte", ".lock3r");
 
-                // get all the parameter guids from the dictionary mapping element id to the ground truth guids
-                List<Guid> groundTruthParamGuids = new List<Guid>();
-                foreach (KeyValuePair<ElementId, List<Guid>> kvp in Util.GetGroundTruthData(txtpath))
-                {
-                    groundTruthParamGuids.AddRange(kvp.Value);
+        // 
+        // Two big problems calling GetGroundTruthData
+        // at this point:
+        // 1. why inside the foreach elementd loop?
+        // that means, you re-read the file for every element.
+        // why? the file is constant and nothing will change!
+        // 2. much worse: why in updater execute?
+        // the file should be read only one single time,
+        // when the document is opened.
+        //
 
-                }
-                int i = groundTruthParamGuids.Count;
+        int count = Util.GetGroundTruthData(txtpath).Count;
 
-                foreach (Guid paramGuid in groundTruthParamGuids)
-                {
-                    //Parameter p = e.LookupParameter(paramName);
-                    Parameter p = e.get_Parameter(paramGuid);
-                    if (p != null)
-                    {
-
-                        FailureMessage failMessage = new FailureMessage(FailureId);
-                        failMessage.SetFailingElement(id);
-                        doc.PostFailure(failMessage);
-
-                    }
-                }
-               
-
-            }
-    }
-
-        public FailureDefinitionId FailureId
+        // get all the parameter guids from the dictionary mapping element id to the ground truth guids
+        List<Guid> groundTruthParamGuids = new List<Guid>();
+        foreach (KeyValuePair<ElementId, List<Guid>> kvp in Util.GetGroundTruthData(txtpath))
         {
-            get
-            {
-                return failureId;
-            }
-
-            set { 
-                failureId = value; 
-            }
-            
+          groundTruthParamGuids.AddRange(kvp.Value);
 
         }
-        
+        int i = groundTruthParamGuids.Count;
+
+        foreach (Guid paramGuid in groundTruthParamGuids)
+        {
+          //Parameter p = e.LookupParameter(paramName);
+          Parameter p = e.get_Parameter(paramGuid);
+          if (p != null)
+          {
+
+            FailureMessage failMessage = new FailureMessage(FailureId);
+            failMessage.SetFailingElement(id);
+            doc.PostFailure(failMessage);
+
+          }
+        }
 
 
-        public string GetAdditionalInformation()
+      }
+    }
+
+    public FailureDefinitionId FailureId
+    {
+      get
+      {
+        return failureId;
+      }
+
+      set
+      {
+        failureId = value;
+      }
+
+
+    }
+
+
+
+    public string GetAdditionalInformation()
     {
       return "Give warning and error if wall parameters are modified";
     }

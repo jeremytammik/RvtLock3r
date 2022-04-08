@@ -174,9 +174,8 @@ namespace RvtLock3r
 
     /// <summary>
     /// Read ground truth data from external text file
+    /// Todo: checksum is missing!
     /// </summary>
-    /// <param name="pathname"></param>
-    /// <returns></returns>
     public static Dictionary<ElementId, List<Guid>> GetGroundTruthData(string pathname)
     {
       Dictionary<ElementId, List<Guid>> elemParamaters = new Dictionary<ElementId, List<Guid>>();
