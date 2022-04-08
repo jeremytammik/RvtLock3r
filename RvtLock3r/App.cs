@@ -73,28 +73,29 @@ namespace RvtLock3r
     {
       View vCurrent = e.CurrentActiveView;
       Document doc = e.Document;
-      rvtFilePath = doc.PathName;
-      TaskDialog.Show("Revit file path", rvtFilePath);
-      RegisterParamValueValidator(_uiControlledApp);
+      //rvtFilePath = doc.PathName;
+      //TaskDialog.Show("Revit file path", rvtFilePath);
+      RegisterParamValueValidator(_uiControlledApp, doc);
 
     }
     private void doc_opened(object sender, DocumentOpenedEventArgs e)
     {
       Document doc = e.Document;
-
       UIDocument uidoc = new UIDocument(doc);
       Application app = e.Document.Application;
       UIControlledApplication uiapp = sender as UIControlledApplication;
-      rvtFilePath = doc.PathName;
-      RegisterParamValueValidator(_uiControlledApp);
+      RegisterParamValueValidator(_uiControlledApp, doc);
     }
 
     /// <summary>
     /// Register  the updater and add triger
     /// </summary>
     /// <param name="app"></param>
-    public static void RegisterParamValueValidator(UIControlledApplication app)
+    public static void RegisterParamValueValidator(UIControlledApplication app, Document doc)
     {
+
+      // Do not register the updater (AGAIN) every time a document is opened.
+
       //initializes the wall updater
       ParamValueValidator paramValueValidator = new ParamValueValidator(app.ActiveAddInId);
       // Register the wall updater if the updater.
@@ -109,6 +110,8 @@ namespace RvtLock3r
       // Also make a list of all the parameter guids (or ids) for each element id
       // dect element_id --> parameter id 
       // make this dictionary available in the updater (member of the updater)
+
+      string rvtFilePath = doc.PathName;
 
       string txtpath = rvtFilePath.Replace(".rte", ".lock3r");
       int count = Util.GetGroundTruthData(txtpath).Count;
