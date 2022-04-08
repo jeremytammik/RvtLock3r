@@ -44,7 +44,18 @@ namespace RvtLock3r
       get { return Keys; }
     }
 
-    public bool Validate(ElementId id, Document doc)
+    /// <summary>
+    /// Validate all parameter values on the given element.
+    /// Return false if validation fails.
+    /// If no values are defined for this element, nothing 
+    /// can fail, and true is returned.
+    /// If 'errorLog' is null, terminate on first failure.
+    /// Otherwise, continue and log all failures.
+    /// </summary>
+    public bool Validate(
+      ElementId id,
+      Document doc,
+      Dictionary<int, List<Guid>> errorLog = null)
     {
       bool rc = true;
       if (ContainsKey(id))
@@ -54,14 +65,65 @@ namespace RvtLock3r
 
         foreach (KeyValuePair<Guid, string> pair in ps)
         {
-          Parameter p = e.get_Parameter(pair.Key);
+          Guid pid = pair.Key;
+          Parameter p = e.get_Parameter(pid);
           string pvalue = Util.ParameterToString(p);
           string checksum = Util.ComputeChecksum(pvalue);
           rc = checksum.Equals(pair.Value);
-          if(!rc) { break; }
+          if (!rc)
+          {
+            if (null != errorLog)
+            {
+              int i = id.IntegerValue;
+              if (!errorLog.ContainsKey(i))
+              {
+                errorLog.Add(i, new List<Guid>());
+              }
+              if (!errorLog[i].Contains(pid))
+              {
+                errorLog[i].Add(pid);
+              }
+            }
+            else
+            {
+              break;
+            }
+          }
         }
+      }
+      if (null != errorLog)
+      {
+        rc = (0 == errorLog.Count);
       }
       return rc;
     }
+
+    /// <summary>
+    /// Validate all parameter values on all elements.
+    /// Return false if validation fails.
+    /// If 'errorLog' is null, terminate on first failure.
+    /// Otherwise, continue and log all failures.
+    /// </summary>
+    public bool Validate(
+      Document doc,
+      Dictionary<int, List<Guid>> errorLog = null)
+    {
+      bool rc = true;
+      foreach (ElementId id in ElementIds)
+      {
+        rc = Validate(id, doc, errorLog);
+
+        if (null == errorLog && !rc)
+        {
+          break;
+        }
+      }
+      if (null != errorLog)
+      {
+        rc = (0 == errorLog.Count);
+      }
+      return rc;
+    }
+
   }
 }
