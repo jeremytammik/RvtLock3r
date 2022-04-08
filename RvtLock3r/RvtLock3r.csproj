@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="CmdCommand.cs" />
+    <Compile Include="CmdValidation.cs" />
     <Compile Include="CmdGroundTruth.cs" />
     <Compile Include="GroundTruth.cs" />
     <Compile Include="ParamValueValidator.cs" />

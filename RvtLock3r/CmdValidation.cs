@@ -6,13 +6,12 @@ using Autodesk.Revit.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
 #endregion
 
 namespace RvtLock3r
 {
   [Transaction(TransactionMode.ReadOnly)]
-  public class CmdCommand : IExternalCommand
+  public class CmdValidation : IExternalCommand
   {
     /// <summary>
     /// Second version using GroundTruth class
@@ -40,9 +39,7 @@ namespace RvtLock3r
       Dictionary<int, List<Guid>> errorLog
         = new Dictionary<int, List<Guid>>();
 
-      Result rc = truth.Validate(doc, errorLog)
-        ? Result.Succeeded
-        : Result.Failed;
+      bool rc = truth.Validate(doc, errorLog);
 
       int n = errorLog.Count;
 

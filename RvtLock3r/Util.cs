@@ -134,18 +134,22 @@ namespace RvtLock3r
 
       return $"{typeName} {categoryName}{familyName}{symbolName}<{e.Id.IntegerValue} {e.Name}>";
     }
+
     /// </summary>
-    /// Returns a set of ElementTypes that were altered, to be set to the Excecute : ElementSet elements argument 
+    /// Convert error log integer keys to 
+    /// ElementSet elements for error report 
     /// </summary>
-    public static ElementSet GetAlteredElements(Document doc, Dictionary<int, List<Guid>> errorLog, ElementSet elementSet)
+    public static ElementSet GetAlteredElements(
+      Document doc, 
+      Dictionary<int, List<Guid>> errorLog, 
+      ElementSet elementSet)
     {
       Element e = null;
-      foreach (KeyValuePair<int, List<Guid>> kvp in errorLog)
+      foreach ( int i in errorLog.Keys)
       {
-        ElementId eid = new ElementId(kvp.Key);
+        ElementId eid = new ElementId(i);
         e = doc.GetElement(eid);
         elementSet.Insert(e);
-
       }
       return elementSet;
     }
