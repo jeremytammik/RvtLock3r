@@ -5,46 +5,19 @@ using System.IO;
 
 namespace RvtLock3r
 {
-  class GroundTruth : Dictionary<ElementId, List<Tuple<Guid, string>>>
+  /// <summary>
+  /// Manage ground truth for one given model
+  /// </summary>
+  class GroundTruth : Dictionary<ElementId, Dictionary<Guid, string>>
   {
-    public GroundTruth( string filepath)
-    {
-      // Open file and rea
-    }
-
-    public List<ElementId> ElementIds
-    {
-      get { return new List<ElementId>(); }
-    }
-
-    public bool Validate(ElementId id, Document doc)
-    {
-      bool rc = false;
-      if (ContainsKey(id))
-      {
-        Element e = doc.GetElement(id);
-
-        foreach(Tuple<Guid, string> pair in this[id])
-        {
-          Parameter p = e.get_Parameter(pair.Item1);
-
-          // compare param value with checksum in Item2
-
-        }
-
-
-      }
-      return rc;
-    }
-
     /// <summary>
-    /// Read ground truth data from external text file
-    /// Todo: checksum is missing!
+    /// Instantiate ground truth from external text file
+    /// containing triples of element id, shared parameter 
+    /// guid and parameter value checksum
     /// </summary>
-    static Dictionary<ElementId, List<Guid>> GetGroundTruthData(string pathname)
+    public GroundTruth(string filepath)
     {
-      Dictionary<ElementId, List<Guid>> elemParamaters = new Dictionary<ElementId, List<Guid>>();
-      string[] lines = File.ReadAllLines(pathname);
+      string[] lines = File.ReadAllLines(filepath);
 
       for (int j = 0; j < lines.Length - 1; j++)
       {
@@ -54,16 +27,41 @@ namespace RvtLock3r
         ElementId eid = new ElementId(i);
         Guid pid = new Guid(triple[1]);
 
-        if (!elemParamaters.ContainsKey(eid))
+        if (!ContainsKey(eid))
         {
-          elemParamaters.Add(eid, new List<Guid>());
+          Add(eid, new Dictionary<Guid, string>());
         }
-        if (!elemParamaters[eid].Contains(pid))
+        if (!this[eid].ContainsKey(pid))
         {
-          elemParamaters[eid].Add(pid);
+          this[eid].Add(pid, triple[2]);
         }
       }
-      return elemParamaters;
+
     }
-  } 
+
+    public ICollection<ElementId> ElementIds
+    {
+      get { return Keys; }
+    }
+
+    public bool Validate(ElementId id, Document doc)
+    {
+      bool rc = true;
+      if (ContainsKey(id))
+      {
+        Dictionary<Guid, string> ps = this[id];
+        Element e = doc.GetElement(id);
+
+        foreach (KeyValuePair<Guid, string> pair in ps)
+        {
+          Parameter p = e.get_Parameter(pair.Key);
+          string pvalue = Util.ParameterToString(p);
+          string checksum = Util.ComputeChecksum(pvalue);
+          rc = checksum.Equals(pair.Value);
+          if(!rc) { break; }
+        }
+      }
+      return rc;
+    }
+  }
 }

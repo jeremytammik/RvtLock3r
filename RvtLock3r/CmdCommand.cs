@@ -49,9 +49,7 @@ namespace RvtLock3r
                 Guid pid = new Guid(triple[1]);
                 string checksum = triple[2];
 
-                Element e = doc.GetElement(eid);
-
-             
+                Element e = doc.GetElement(eid)             
 
                 Parameter p = e.get_Parameter(pid);
 
