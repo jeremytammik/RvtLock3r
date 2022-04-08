@@ -16,7 +16,7 @@ namespace RvtLock3r
 {
   class App : IExternalApplication
   {
-        public static string rvtFilePath;
+        //public static string rvtFilePath;
         public static UIControlledApplication _uiControlledApp;
     
 
