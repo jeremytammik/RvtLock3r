@@ -63,6 +63,7 @@ namespace RvtLock3r
       AddDmuCommandButtons(lock3rPanel);
       return Result.Succeeded;
     }
+
     /// <summary>
     /// Gives access to the active document using the viewActivated event arguments
     /// </summary>
@@ -76,8 +77,8 @@ namespace RvtLock3r
       //rvtFilePath = doc.PathName;
       //TaskDialog.Show("Revit file path", rvtFilePath);
       RegisterParamValueValidator(_uiControlledApp, doc);
-
     }
+
     private void doc_opened(object sender, DocumentOpenedEventArgs e)
     {
       Document doc = e.Document;

@@ -71,6 +71,9 @@ The most generic approach might be the following:
 - Repeat until happy
 - Read all selected parameter values and store as ground truth with element and parameter ids
 
+Keep in mind that many documents may be open and each one has its own ground truth.
+So, we need to keep track of separate ground truth data for each open document.
+
 ## Storage
 
 The ground truth data triples containing the data required for integrity validation needs to be stored somewhere. That could be hard-wired directly into the add-in code for a specific BIM, stored in an external text file, within the `RVT` document, or elsewhere; it may be `JSON` formatted; it may be encrypted; still to be decided.

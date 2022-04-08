@@ -33,15 +33,22 @@ namespace RvtLock3r
     {
       if (updateActive == false) { return; }
       Document doc = data.GetDocument();
+
+      // from the document, retrieve its ground truth from the ground truth dictionary
+
+      GroundTruth truth = null;
+
       Application app = doc.Application;
       foreach (ElementId id in data.GetModifiedElementIds())
       {
-        Element e = doc.GetElement(id);
+        //Element e = doc.GetElement(id);
+        truth.Validate(id, doc);
+
         string rvtpath = doc.PathName;
         string txtpath = rvtpath.Replace(".rte", ".lock3r");
 
         // 
-        // Two big problems calling GetGroundTruthData
+        // Two problems calling GetGroundTruthData
         // at this point:
         // 1. why inside the foreach elementd loop?
         // that means, you re-read the file for every element.
