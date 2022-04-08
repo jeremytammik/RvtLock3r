@@ -172,6 +172,11 @@ namespace RvtLock3r
       return paramDefinitionNames;
     }
 
+    /// <summary>
+    /// Read ground truth data from external text file
+    /// </summary>
+    /// <param name="pathname"></param>
+    /// <returns></returns>
     public static Dictionary<ElementId, List<Guid>> GetGroundTruthData(string pathname)
     {
       Dictionary<ElementId, List<Guid>> elemParamaters = new Dictionary<ElementId, List<Guid>>();
