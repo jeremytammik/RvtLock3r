@@ -112,17 +112,16 @@ namespace RvtLock3r
       // dect element_id --> parameter id 
       // make this dictionary available in the updater (member of the updater)
 
-      string rvtFilePath = doc.PathName;
+      //string rvtFilePath = doc.PathName;
 
-      string txtpath = rvtFilePath.Replace(".rte", ".lock3r");
-      int count = Util.GetGroundTruthData(txtpath).Count;
-      List<ElementId> groundTruthElemIds = new List<ElementId>();
-      foreach (KeyValuePair<ElementId, List<Guid>> kvp in Util.GetGroundTruthData(txtpath))
-      {
-        groundTruthElemIds.Add(kvp.Key);
-
-      }
-      int countIds = groundTruthElemIds.Count;
+      //string txtpath = rvtFilePath.Replace(".rte", ".lock3r");
+      //int count = Util.GetGroundTruthData(txtpath).Count;
+      //foreach (KeyValuePair<ElementId, List<Guid>> kvp in Util.GetGroundTruthData(txtpath))
+      //{
+      //  groundTruthElemIds.Add(kvp.Key);
+      //}
+      //int countIds = groundTruthElemIds.Count;
+      List<ElementId> groundTruthElemIds = null;
       ElementFilter filter = new ElementIdSetFilter(groundTruthElemIds);
       //ElementClassFilter filter = new ElementClassFilter(typeof(WallType));
 

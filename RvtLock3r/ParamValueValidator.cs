@@ -41,7 +41,7 @@ namespace RvtLock3r
       Application app = doc.Application;
       foreach (ElementId id in data.GetModifiedElementIds())
       {
-        //Element e = doc.GetElement(id);
+        Element e = doc.GetElement(id);
         truth.Validate(id, doc);
 
         string rvtpath = doc.PathName;
@@ -58,15 +58,15 @@ namespace RvtLock3r
         // when the document is opened.
         //
 
-        int count = Util.GetGroundTruthData(txtpath).Count;
+        //int count = Util.GetGroundTruthData(txtpath).Count;
 
         // get all the parameter guids from the dictionary mapping element id to the ground truth guids
         List<Guid> groundTruthParamGuids = new List<Guid>();
-        foreach (KeyValuePair<ElementId, List<Guid>> kvp in Util.GetGroundTruthData(txtpath))
-        {
-          groundTruthParamGuids.AddRange(kvp.Value);
+        //foreach (KeyValuePair<ElementId, List<Guid>> kvp in Util.GetGroundTruthData(txtpath))
+        //{
+        //  groundTruthParamGuids.AddRange(kvp.Value);
 
-        }
+        //}
         int i = groundTruthParamGuids.Count;
 
         foreach (Guid paramGuid in groundTruthParamGuids)
