@@ -46,14 +46,14 @@ namespace RvtLock3r
 
           var grdTruthButton = new PushButtonData("Ground Truth Button", "Ground Truth", Assembly.GetExecutingAssembly().Location, "RvtLock3r.CmdGroundTruth");
           grdTruthButton.ToolTip = "Export Ground Truth Data";
-          grdTruthButton.LongDescription = "Export Ground Truth Tripple data of the original model to an en external text file located in the same directory as the Revit model";
+          grdTruthButton.LongDescription = "Export ground truth triple data of the original model to an en external text file located in the same directory as the Revit model";
           grdTruthButton.LargeImage = groundTruthImage;
           //add the button1 to panel
           var grdTruthBtn = lock3rPanel.AddItem(grdTruthButton) as PushButton;
 
           var validateButton = new PushButtonData("My Test Button2", "Validate", Assembly.GetExecutingAssembly().Location, "RvtLock3r.CmdCommand");
           validateButton.ToolTip = "Validate";
-          validateButton.LongDescription = "Validates the opened model to the Ground Truth Tripple data. Throws an error if any parameter value was modified.";
+          validateButton.LongDescription = "Validate the open model with the ground truth data. Throw an error if any protected parameter value was modified.";
           validateButton.LargeImage = validateImage;
 
           //add stacked buttons
@@ -74,7 +74,7 @@ namespace RvtLock3r
             View vCurrent = e.CurrentActiveView;
             Document doc = e.Document;
             rvtFilePath = doc.PathName;
-            TaskDialog.Show("Revit file Path", rvtFilePath);
+            TaskDialog.Show("Revit file path", rvtFilePath);
             RegisterParamValueValidator(_uiControlledApp);
 
         }
@@ -87,7 +87,6 @@ namespace RvtLock3r
             UIControlledApplication uiapp = sender as UIControlledApplication;
             rvtFilePath = doc.PathName;
             RegisterParamValueValidator(_uiControlledApp);
-
         }
 
         /// <summary>
