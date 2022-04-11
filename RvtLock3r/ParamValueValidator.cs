@@ -17,9 +17,9 @@ namespace RvtLock3r
     private FailureDefinitionId failureId = null;
     public static bool updateActive = true;
 
+    //public Dictionary<ElementId, List<Guid>> paramGuid
+    //    = new Dictionary<ElementId, List<Guid>>();
 
-    public Dictionary<ElementId, List<Guid>> paramGuid
-        = new Dictionary<ElementId, List<Guid>>();
     // constructor takes the AddInId for the add-in associated with this updater
     public ParamValueValidator(AddInId id)
     {
@@ -28,36 +28,33 @@ namespace RvtLock3r
           new Guid("5b5382d3-4cc3-48db-88e8-8cefff8f0243"));
     }
 
-        internal void Register(Document doc)
-        {
-            // Register the ParamValueValidator updater if the updater is not registered.
-            if (!UpdaterRegistry.IsUpdaterRegistered(updaterId))
-                UpdaterRegistry.RegisterUpdater(this, doc);
-        }
-        /// <summary>
-        /// Adds trigger to the updater
-        /// </summary>
-        /// <param name="idsToWatch"></param>
-        internal void AddTriggerForUpdater(List<ElementId> idsToWatch)
-        {
+    internal void Register(Document doc)
+    {
+      // Register the ParamValueValidator updater if the updater is not registered.
+      if (!UpdaterRegistry.IsUpdaterRegistered(updaterId))
+        UpdaterRegistry.RegisterUpdater(this, doc);
+    }
 
-            if (idsToWatch.Count == 0)
-                return;
-            ElementFilter filter = new ElementIdSetFilter(idsToWatch);
-            UpdaterRegistry.AddTrigger(updaterId, filter, Element.GetChangeTypeAny());
+    /// <summary>
+    /// Adds trigger to the updater
+    /// </summary>
+    /// <param name="idsToWatch"></param>
+    internal void AddTriggerForUpdater(List<ElementId> idsToWatch)
+    {
+      if (idsToWatch.Count == 0)
+        return;
+      ElementFilter filter = new ElementIdSetFilter(idsToWatch);
+      UpdaterRegistry.AddTrigger(updaterId, filter, Element.GetChangeTypeAny());
+    }
 
-
-        }
-
-
-        public void Execute(UpdaterData data)
+    public void Execute(UpdaterData data)
     {
       if (updateActive == false) { return; }
       Document doc = data.GetDocument();
 
-            // from the document, retrieve its ground truth from the ground truth dictionary
-            string path = doc.PathName.Replace(".rte", ".lock3r");
-            GroundTruth truth = new GroundTruth(path);
+      // from the document, retrieve its ground truth from the ground truth dictionary
+      string path = doc.PathName.Replace(".rte", ".lock3r");
+      GroundTruth truth = new GroundTruth(path);
 
       Application app = doc.Application;
       foreach (ElementId id in data.GetModifiedElementIds())
@@ -66,15 +63,12 @@ namespace RvtLock3r
         {
           if (!rc)
           {
-
             FailureMessage failMessage = new FailureMessage(FailureId);
             failMessage.SetFailingElement(id);
             doc.PostFailure(failMessage);
 
           }
         }
-
-
       }
     }
 
@@ -89,11 +83,7 @@ namespace RvtLock3r
       {
         failureId = value;
       }
-
-
     }
-
-
 
     public string GetAdditionalInformation()
     {

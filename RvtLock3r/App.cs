@@ -18,7 +18,7 @@ namespace RvtLock3r
   {
     public static ParamValueValidator _paramValueValidator = null;
 
-    public object Session { get; private set; }
+    //public object Session { get; private set; }
 
     public Result OnStartup(UIControlledApplication application)
     {
@@ -155,6 +155,7 @@ namespace RvtLock3r
   {
     public static ParamValueValidator _paramValueValidator = null;
     private static List<ElementId> idsToWatch = new List<ElementId>();
+
     public Result Execute(
       ExternalCommandData commandData,
       ref string message,
