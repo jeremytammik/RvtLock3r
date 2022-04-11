@@ -1,15 +1,11 @@
 #region Namespaces
-using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Events;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Windows.Media.Imaging;
 
 #endregion
@@ -17,20 +13,19 @@ using System.Windows.Media.Imaging;
 namespace RvtLock3r
 {
 
-   public class App : IExternalApplication
+  public class App : IExternalApplication
   {
-        public static ParamValueValidator _paramValueValidator = null;
+    public static ParamValueValidator _paramValueValidator = null;
 
-        public object Session { get; private set; }
+    public object Session { get; private set; }
 
-        public Result OnStartup(UIControlledApplication application)
-        {
+    public Result OnStartup(UIControlledApplication application)
+    {
+      string tabName = "Lock3r";
+      string panelName = "Validation";
 
-            string tabName = "Lock3r";
-            string panelName = "Validation";
-
-            //creating bitimages
-            BitmapImage groundTruthImage = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/gtfile1.png"));
+      //creating bitimages
+      BitmapImage groundTruthImage = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/gtfile1.png"));
 
       BitmapImage validateImage = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/check3.png"));
 
@@ -60,35 +55,30 @@ namespace RvtLock3r
 
       AddDmuCommandButtons(lock3rPanel);
 
-            //instantiates the ParamValueValidator
-            _paramValueValidator = new ParamValueValidator(application.ActiveAddInId);
-            //Defines a failure Id 
-            FailureDefinitionId failId = new FailureDefinitionId(new Guid("f04836cc-a698-4bec-9e02-0603d0bd8cf9"));
+      //instantiates the ParamValueValidator
+      _paramValueValidator = new ParamValueValidator(application.ActiveAddInId);
+      //Defines a failure Id 
+      FailureDefinitionId failId = new FailureDefinitionId(new Guid("f04836cc-a698-4bec-9e02-0603d0bd8cf9"));
 
-            //Defines failure definition text tht will be posted to the end user if the updater is not loaded
-            FailureDefinition failDefError = FailureDefinition.CreateFailureDefinition(failId, FailureSeverity.Error, "Permission Denied: Sorry, you are not allowed to modify the Wall Type parameters.");
-            // save ids for later reference
-            _paramValueValidator.FailureId = failId;
+      //Defines failure definition text tht will be posted to the end user if the updater is not loaded
+      FailureDefinition failDefError = FailureDefinition.CreateFailureDefinition(failId, FailureSeverity.Error, "Permission Denied: Sorry, you are not allowed to modify the Wall Type parameters.");
+      // save ids for later reference
+      _paramValueValidator.FailureId = failId;
 
-            return Result.Succeeded;
+      return Result.Succeeded;
     }
 
-   
-
-   
-        public Result OnShutdown(UIControlledApplication application)
+    public Result OnShutdown(UIControlledApplication application)
     {
-            // remove the event.
-            return Result.Succeeded;
+      // remove the event.
+      return Result.Succeeded;
     }
 
-
-        /// <summary>
-        /// Adds toggling buttons on Lock3r ribbon tab for switching the updater On and Off
-        /// </summary>
-        /// <param name="panel"></param>
+    /// <summary>
+    /// Adds toggling buttons on Lock3r ribbon tab for switching the updater On and Off
+    /// </summary>
+    /// <param name="panel"></param>
     private void AddDmuCommandButtons(RibbonPanel panel)
-
     {
       BitmapImage dmuOnImg = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/btn1.png"));
 
@@ -124,12 +114,11 @@ namespace RvtLock3r
       radioBtnGroup2.AddItem(toggleButtonData3);
       radioBtnGroup2.AddItem(toggleButtonData4);
     }
-
-
   }
-    /// <summary>
-    /// Turns the updater OFF
-    /// </summary>
+
+  /// <summary>
+  /// Turns the updater OFF
+  /// </summary>
   [Transaction(TransactionMode.ReadOnly)]
   public class UIDynamicModelUpdateOff : IExternalCommand
   {
@@ -141,56 +130,48 @@ namespace RvtLock3r
       ParamValueValidator.updateActive = false;
       return Result.Succeeded;
     }
-
   }
-    /// <summary>
-    /// Turns the updater ON, Registers the updater and Adds Trigger to the updater
-    /// </summary>
+
+  /// <summary>
+  /// Turns the updater ON, Registers the updater and Adds Trigger to the updater
+  /// </summary>
   [Transaction(TransactionMode.ReadOnly)]
   public class UIDynamicModelUpdateOn : IExternalCommand
   {
-        public static ParamValueValidator _paramValueValidator = null;
-        private static List<ElementId> idsToWatch = new List<ElementId>();
-        public Result Execute(
-          ExternalCommandData commandData,
-          ref string message,
-          ElementSet elements)
+    public static ParamValueValidator _paramValueValidator = null;
+    private static List<ElementId> idsToWatch = new List<ElementId>();
+    public Result Execute(
+      ExternalCommandData commandData,
+      ref string message,
+      ElementSet elements)
+    {
+      ParamValueValidator.updateActive = true;
+      try
+      {
+        Document doc = commandData.Application.ActiveUIDocument.Document;
+        UIDocument uidoc = commandData.Application.ActiveUIDocument;
+        AddInId appId = commandData.Application.ActiveAddInId;
+        // creating and registering the updater for the document.
+        if (_paramValueValidator == null)
         {
-            ParamValueValidator.updateActive = true;
-            try
-            {
+          _paramValueValidator = App._paramValueValidator;
+          _paramValueValidator.Register(doc);
+        }
 
-                Document doc = commandData.Application.ActiveUIDocument.Document;
-                UIDocument uidoc = commandData.Application.ActiveUIDocument;
-                AddInId appId = commandData.Application.ActiveAddInId;
-                // creating and registering the updater for the document.
-                    if (_paramValueValidator == null)
-                {
-                            _paramValueValidator = App._paramValueValidator;
-                            _paramValueValidator.Register(doc);
-                }
+        string path = doc.PathName;
+        string filePath = path.Replace(".rte", ".lock3r");
+        GroundTruth truth = new GroundTruth(filePath);
+        idsToWatch = truth.ElementIds.ToList();
+        int count = truth.ElementIds.Count;
 
-                string path = doc.PathName;
-                string filePath = path.Replace(".rte", ".lock3r");
-                GroundTruth truth = new GroundTruth(filePath);
-                idsToWatch = truth.ElementIds.ToList();
-                int count = truth.ElementIds.Count;
-
-
-                _paramValueValidator.AddTriggerForUpdater(idsToWatch);
-
-                
-
-            }
-            catch (Exception ex)
-            {
-                message = ex.ToString();
-                return Result.Failed;
-            }
-
-            
-            return Result.Succeeded;
-
+        _paramValueValidator.AddTriggerForUpdater(idsToWatch);
+      }
+      catch (Exception ex)
+      {
+        message = ex.ToString();
+        return Result.Failed;
+      }
+      return Result.Succeeded;
     }
   }
 }
