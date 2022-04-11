@@ -16,10 +16,6 @@ namespace RvtLock3r
     /// <summary>
     /// Second version using GroundTruth class
     /// </summary>
-    /// <param name="commandData"></param>
-    /// <param name="message"></param>
-    /// <param name="elements"></param>
-    /// <returns></returns>
     public Result Execute(
       ExternalCommandData commandData,
       ref string message,
@@ -127,7 +123,6 @@ namespace RvtLock3r
       }
       return Result.Succeeded;
     }
-
   }
 }
 

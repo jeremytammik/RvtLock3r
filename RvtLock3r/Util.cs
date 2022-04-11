@@ -12,14 +12,11 @@ namespace RvtLock3r
 {
   internal class Util
   {
-    public static string rvtFilePath { get; set; }
-
-
     /// <summary>
-    /// Return string representation of the Ground Truth tripples to be saved on an an external file, 
-    /// for validation later by the algorithm
+    /// Return string representation of ground truth triples 
+    /// to be saved on an an external file for later validation.
     /// </summary>
-    public static string GroundTruthData(Element e, string header)
+    public static string GroundTruthData(Element e)
     {
       string s = string.Empty;
 
@@ -29,19 +26,18 @@ namespace RvtLock3r
         {
           string name = param.Definition.Name;
 
-          // To get the value, we need to parse the param depending on the storage type
-          // see the helper function below
+          string val = ParameterToString(param);
 
-          string val = Util.ParameterToString(param);
-
-          string paramvalueChecksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
+          string checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
 
           if (!string.IsNullOrEmpty(val))
           {
-            s += e.Id.ToString() + " " + param.GUID + " " + paramvalueChecksum + "\r\n";
-
+            s += e.Id.ToString() + " " + param.GUID + " " + checksum + "\r\n";
           }
-          Debug.Print("elementid: " + e.Id.ToString() + "parameter GUID: " + param.GUID + "Parmeter Value: " + val + "Checksum:" + paramvalueChecksum);
+          Debug.Print("elementid: " + e.Id.ToString() 
+            + "parameter GUID: " + param.GUID 
+            + "Parmeter Value: " + val 
+            + "Checksum:" + checksum);
         }
       }
       return s;
@@ -59,7 +55,7 @@ namespace RvtLock3r
         return val;
       }
 
-      // To get to the parameter value, we need to parse it depending on its storage type
+      // Convert parameter value to string depending on its storage type
 
       switch (param.StorageType)
       {
@@ -104,32 +100,13 @@ namespace RvtLock3r
     }
 
     /// <summary>
-    /// Writes the Ground Truth Triples data into and
-    /// external text file within the same directory as Revit model 
-    /// with the same exact name as the Revit model with ext .lock3r
+    /// Return a string describing the given element:
+    /// .NET type name,
+    /// category name,
+    /// family and symbol name for a family instance,
+    /// element id and element name.
     /// </summary>
-    /// <param name="path"></param>
-    /// <param name="s"></param>
-    public static void WriteGroundTruthFile(string path, string s)
-    {
-      rvtFilePath = path;
-      if (File.Exists(path))
-      {
-        File.Delete(path);
-      }
-      File.WriteAllText(path, s);
-    }
-
-    /// <summary>
-    ///     Return a string describing the given element:
-    ///     .NET type name,
-    ///     category name,
-    ///     family and symbol name for a family instance,
-    ///     element id and element name.
-    /// </summary>
-    /// 
-    public static string ElementDescription(
-    Element e)
+    public static string ElementDescription( Element e)
     {
       if (null == e) return "<null>";
 
@@ -174,27 +151,6 @@ namespace RvtLock3r
         elementSet.Insert(e);
       }
       return elementSet;
-    }
-
-    /// <summary>
-    /// Return all the parameter names  
-    /// deemed relevant for the given element
-    /// in string form.
-    /// </summary>
-    public static List<string> GetParamNamesToLookUp(Element e)
-    {
-      // Two choices: 
-      // Element.Parameters property -- Retrieves 
-      // a set containing all  the parameters.
-      // GetOrderedParameters method -- Gets the 
-      // visible parameters in order.
-      List<string> paramDefinitionNames = new List<string>();
-
-      foreach (Parameter param in e.Parameters)
-      {
-        paramDefinitionNames.Add(param.Definition.Name);
-      }
-      return paramDefinitionNames;
     }
   }
 }

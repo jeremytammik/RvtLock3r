@@ -3,6 +3,7 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using System.IO;
 #endregion
 
 namespace RvtLock3r
@@ -33,11 +34,15 @@ namespace RvtLock3r
 
       foreach (Element e in wallTypes)
       {
-        string s = Util.GroundTruthData(e, "WallType Parameters: ");
+        string s = Util.GroundTruthData(e);
         allString += s;
       }
 
-      Util.WriteGroundTruthFile(txtpath, allString);
+      if (File.Exists(txtpath))
+      {
+        File.Delete(txtpath);
+      }
+      File.WriteAllText(txtpath, allString);
 
       return Result.Succeeded;
     }

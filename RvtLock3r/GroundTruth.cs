@@ -124,6 +124,5 @@ namespace RvtLock3r
       }
       return rc;
     }
-
   }
 }
