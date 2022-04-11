@@ -25,10 +25,7 @@ namespace RvtLock3r
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
-
-      string path = doc.PathName;
-      path = path.Replace(".rte", ".lock3r");
-      GroundTruth truth = new GroundTruth(path);
+      GroundTruth truth = new GroundTruth(doc);
 
       // In case of validation error, store element and parameter ids
 

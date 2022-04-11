@@ -1,9 +1,11 @@
 #region Namespaces
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Events;
 using Autodesk.Revit.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Media.Imaging;
@@ -12,7 +14,6 @@ using System.Windows.Media.Imaging;
 
 namespace RvtLock3r
 {
-
   public class App : IExternalApplication
   {
     public static ParamValueValidator _paramValueValidator = null;
@@ -65,7 +66,21 @@ namespace RvtLock3r
       // save ids for later reference
       _paramValueValidator.FailureId = failId;
 
+      application.ControlledApplication.DocumentOpened += OnDocumentOpened;
+
       return Result.Succeeded;
+    }
+
+    private void OnDocumentOpened(object sender, DocumentOpenedEventArgs e)
+    {
+      Document doc = e.Document;
+      string path = doc.PathName;
+      Debug.Assert(null != path, "expected valid document path");
+      Debug.Assert(0 < path.Length, "expected valid document path");
+      if((null != path) && (0 < path.Length))
+      {
+        GroundTruthLookup.Singleton.Add(path, new GroundTruth(doc));
+      }
     }
 
     public Result OnShutdown(UIControlledApplication application)

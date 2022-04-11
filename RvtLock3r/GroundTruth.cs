@@ -11,11 +11,11 @@ namespace RvtLock3r
   class GroundTruth : Dictionary<ElementId, Dictionary<Guid, string>>
   {
     /// <summary>
-    /// Instantiate ground truth from external text file
+    /// Initialise ground truth from external text file
     /// containing triples of element id, shared parameter 
-    /// guid and parameter value checksum
+    /// guid and parameter value checksum.
     /// </summary>
-    public GroundTruth(string filepath)
+    void InitialiseFromTextFile(string filepath)
     {
       string[] lines = File.ReadAllLines(filepath);
 
@@ -36,7 +36,25 @@ namespace RvtLock3r
           this[eid].Add(pid, triple[2]);
         }
       }
+    }
 
+
+    /// <summary>
+    /// Instantiate ground truth for given RVT document.
+    /// </summary>
+    public GroundTruth(Document doc)
+    {
+      string path = doc.PathName;
+      path = path.Replace(".rvt", ".lock3r");
+      InitialiseFromTextFile(path);
+    }
+
+    /// <summary>
+    /// Instantiate ground truth from external text file.
+    /// </summary>
+    public GroundTruth(string filepath)
+    {
+      InitialiseFromTextFile(filepath);
     }
 
     public ICollection<ElementId> ElementIds
