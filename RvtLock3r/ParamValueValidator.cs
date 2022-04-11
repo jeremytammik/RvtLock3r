@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace RvtLock3r
 {
-  internal class ParamValueValidator : IUpdater
+  public class ParamValueValidator : IUpdater
   {
     static AddInId appId;
-    UpdaterId updaterId;
+    static UpdaterId updaterId;
     private FailureDefinitionId failureId = null;
-    public static bool updateActive = false;
+    public static bool updateActive = true;
 
 
     public Dictionary<ElementId, List<Guid>> paramGuid
@@ -28,52 +28,43 @@ namespace RvtLock3r
           new Guid("5b5382d3-4cc3-48db-88e8-8cefff8f0243"));
     }
 
+        internal void Register(Document doc)
+        {
+            // Register the ParamValueValidator updater if the updater is not registered.
+            if (!UpdaterRegistry.IsUpdaterRegistered(updaterId))
+                UpdaterRegistry.RegisterUpdater(this, doc);
+        }
+        /// <summary>
+        /// Adds trigger to the updater
+        /// </summary>
+        /// <param name="idsToWatch"></param>
+        internal void AddTriggerForUpdater(List<ElementId> idsToWatch)
+        {
 
-    public void Execute(UpdaterData data)
+            if (idsToWatch.Count == 0)
+                return;
+            ElementFilter filter = new ElementIdSetFilter(idsToWatch);
+            UpdaterRegistry.AddTrigger(updaterId, filter, Element.GetChangeTypeAny());
+
+
+        }
+
+
+        public void Execute(UpdaterData data)
     {
       if (updateActive == false) { return; }
       Document doc = data.GetDocument();
 
-      // from the document, retrieve its ground truth from the ground truth dictionary
-
-      GroundTruth truth = null;
+            // from the document, retrieve its ground truth from the ground truth dictionary
+            string path = doc.PathName.Replace(".rte", ".lock3r");
+            GroundTruth truth = new GroundTruth(path);
 
       Application app = doc.Application;
       foreach (ElementId id in data.GetModifiedElementIds())
       {
-        Element e = doc.GetElement(id);
-        truth.Validate(id, doc);
-
-        string rvtpath = doc.PathName;
-        string txtpath = rvtpath.Replace(".rte", ".lock3r");
-
-        // 
-        // Two problems calling GetGroundTruthData
-        // at this point:
-        // 1. why inside the foreach elementd loop?
-        // that means, you re-read the file for every element.
-        // why? the file is constant and nothing will change!
-        // 2. much worse: why in updater execute?
-        // the file should be read only one single time,
-        // when the document is opened.
-        //
-
-        //int count = Util.GetGroundTruthData(txtpath).Count;
-
-        // get all the parameter guids from the dictionary mapping element id to the ground truth guids
-        List<Guid> groundTruthParamGuids = new List<Guid>();
-        //foreach (KeyValuePair<ElementId, List<Guid>> kvp in Util.GetGroundTruthData(txtpath))
-        //{
-        //  groundTruthParamGuids.AddRange(kvp.Value);
-
-        //}
-        int i = groundTruthParamGuids.Count;
-
-        foreach (Guid paramGuid in groundTruthParamGuids)
+        bool rc = truth.Validate(id, doc);
         {
-          //Parameter p = e.LookupParameter(paramName);
-          Parameter p = e.get_Parameter(paramGuid);
-          if (p != null)
+          if (!rc)
           {
 
             FailureMessage failMessage = new FailureMessage(FailureId);

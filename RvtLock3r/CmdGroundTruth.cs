@@ -45,23 +45,12 @@ namespace RvtLock3r
             //generates a .lock3r file with  ground truth triples, with checksum which will be compared with
             //I am passing the rvt file location where the ground truth file will be stored
 
-            WriteGroundTruthFile(txtpath, allString);
+            Util.WriteGroundTruthFile(txtpath, allString);
 
             return Result.Succeeded;
         }
 
-
-        public static void WriteGroundTruthFile(string path, string s)
-        {
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-
-            File.WriteAllText(path, s);
-
-
-        }
+        
 
 
     }

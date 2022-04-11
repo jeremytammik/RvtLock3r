@@ -4,7 +4,7 @@
     <Text>RvtLock3r</Text>
     <Description>Validate that certain properties have not been modified</Description>
     <Assembly>RvtLock3r.dll</Assembly>
-    <FullClassName>RvtLock3r.Command</FullClassName>
+    <FullClassName>RvtLock3r.CmdValidation</FullClassName>
     <ClientId>c83ab35a-a84f-4c75-9fe2-8064335f7a5d</ClientId>
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>

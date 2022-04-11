@@ -7,32 +7,30 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Events;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Web;
 using System.Windows.Media.Imaging;
 
 #endregion
 
 namespace RvtLock3r
 {
-  class App : IExternalApplication
+
+   public class App : IExternalApplication
   {
-    //public static string rvtFilePath;
-    public static UIControlledApplication _uiControlledApp;
+        public static ParamValueValidator _paramValueValidator = null;
 
+        public object Session { get; private set; }
 
-    public Result OnStartup(UIControlledApplication application)
-    {
-      _uiControlledApp = application;
+        public Result OnStartup(UIControlledApplication application)
+        {
 
-      //application.ViewActivated += new EventHandler<ViewActivatedEventArgs>(onViewActivated);
-      application.ControlledApplication.DocumentOpened += new EventHandler<DocumentOpenedEventArgs>(doc_opened);
-      string tabName = "Lock3r";
-      string panelName = "Validation";
+            string tabName = "Lock3r";
+            string panelName = "Validation";
 
-
-
-      //creating bitimages
-      BitmapImage groundTruthImage = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/gtfile1.png"));
+            //creating bitimages
+            BitmapImage groundTruthImage = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/gtfile1.png"));
 
       BitmapImage validateImage = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/check3.png"));
 
@@ -51,7 +49,7 @@ namespace RvtLock3r
       //add the button1 to panel
       var grdTruthBtn = lock3rPanel.AddItem(grdTruthButton) as PushButton;
 
-      var validateButton = new PushButtonData("My Test Button2", "Validate", Assembly.GetExecutingAssembly().Location, "RvtLock3r.CmdCommand");
+      var validateButton = new PushButtonData("My Test Button2", "Validate", Assembly.GetExecutingAssembly().Location, "RvtLock3r.CmdValidation");
       validateButton.ToolTip = "Validate";
       validateButton.LongDescription = "Validate the open model with the ground truth data. Throw an error if any protected parameter value was modified.";
       validateButton.LargeImage = validateImage;
@@ -61,91 +59,34 @@ namespace RvtLock3r
       lock3rPanel.AddSeparator();
 
       AddDmuCommandButtons(lock3rPanel);
-      return Result.Succeeded;
+
+            //instantiates the ParamValueValidator
+            _paramValueValidator = new ParamValueValidator(application.ActiveAddInId);
+            //Defines a failure Id 
+            FailureDefinitionId failId = new FailureDefinitionId(new Guid("f04836cc-a698-4bec-9e02-0603d0bd8cf9"));
+
+            //Defines failure definition text tht will be posted to the end user if the updater is not loaded
+            FailureDefinition failDefError = FailureDefinition.CreateFailureDefinition(failId, FailureSeverity.Error, "Permission Denied: Sorry, you are not allowed to modify the Wall Type parameters.");
+            // save ids for later reference
+            _paramValueValidator.FailureId = failId;
+
+            return Result.Succeeded;
     }
 
-    /// <summary>
-    /// Gives access to the active document using the viewActivated event arguments
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    /// <returns></returns>
-    void onViewActivated(object sender, ViewActivatedEventArgs e)
+   
+
+   
+        public Result OnShutdown(UIControlledApplication application)
     {
-      View vCurrent = e.CurrentActiveView;
-      Document doc = e.Document;
-      //rvtFilePath = doc.PathName;
-      //TaskDialog.Show("Revit file path", rvtFilePath);
-      RegisterParamValueValidator(_uiControlledApp, doc);
-    }
-
-    private void doc_opened(object sender, DocumentOpenedEventArgs e)
-    {
-      Document doc = e.Document;
-      UIDocument uidoc = new UIDocument(doc);
-      Application app = e.Document.Application;
-      UIControlledApplication uiapp = sender as UIControlledApplication;
-      RegisterParamValueValidator(_uiControlledApp, doc);
-    }
-
-    /// <summary>
-    /// Register  the updater and add triger
-    /// </summary>
-    /// <param name="app"></param>
-    public static void RegisterParamValueValidator(UIControlledApplication app, Document doc)
-    {
-
-      // Do not register the updater (AGAIN) every time a document is opened.
-
-      //initializes the wall updater
-      ParamValueValidator paramValueValidator = new ParamValueValidator(app.ActiveAddInId);
-      // Register the wall updater if the updater.
-      UpdaterRegistry.RegisterUpdater(paramValueValidator);
-
-      //NOT Gets the filter of class wall type
-      //ElementClassFilter filter = new ElementClassFilter(typeof(WallType));
-
-      // Filter or elements specified in ground truth
-      // Read the ground truth (file, extensible storage, ...)
-      // Make a list of the element ids specified there
-      // Also make a list of all the parameter guids (or ids) for each element id
-      // dect element_id --> parameter id 
-      // make this dictionary available in the updater (member of the updater)
-
-      //string rvtFilePath = doc.PathName;
-
-      //string txtpath = rvtFilePath.Replace(".rte", ".lock3r");
-      //int count = Util.GetGroundTruthData(txtpath).Count;
-      //foreach (KeyValuePair<ElementId, List<Guid>> kvp in Util.GetGroundTruthData(txtpath))
-      //{
-      //  groundTruthElemIds.Add(kvp.Key);
-      //}
-      //int countIds = groundTruthElemIds.Count;
-      List<ElementId> groundTruthElemIds = null;
-      ElementFilter filter = new ElementIdSetFilter(groundTruthElemIds);
-      //ElementClassFilter filter = new ElementClassFilter(typeof(WallType));
-
-      //creates a triger on any change type on the wallType properties
-      UpdaterRegistry.AddTrigger(paramValueValidator.GetUpdaterId(), filter, Element.GetChangeTypeAny());
-      //Defines a failure Id 
-      FailureDefinitionId failId = new FailureDefinitionId(new Guid("f04836cc-a698-4bec-9e02-0603d0bd8cf9"));
-
-      //Defines failure definition text tht will be posted to the end user if the updater is not loaded
-      FailureDefinition failDefError = FailureDefinition.CreateFailureDefinition(failId, FailureSeverity.Error, "Permission Denied: Sorry, you are not allowed to modify the Wall Type parameters.");
-      // save ids for later reference
-      paramValueValidator.FailureId = failId;
-
-
+            // remove the event.
+            return Result.Succeeded;
     }
 
 
-    public Result OnShutdown(UIControlledApplication application)
-    {
-      return Result.Succeeded;
-    }
-
-
-
+        /// <summary>
+        /// Adds toggling buttons on Lock3r ribbon tab for switching the updater On and Off
+        /// </summary>
+        /// <param name="panel"></param>
     private void AddDmuCommandButtons(RibbonPanel panel)
 
     {
@@ -186,6 +127,9 @@ namespace RvtLock3r
 
 
   }
+    /// <summary>
+    /// Turns the updater OFF
+    /// </summary>
   [Transaction(TransactionMode.ReadOnly)]
   public class UIDynamicModelUpdateOff : IExternalCommand
   {
@@ -199,17 +143,54 @@ namespace RvtLock3r
     }
 
   }
-
+    /// <summary>
+    /// Turns the updater ON, Registers the updater and Adds Trigger to the updater
+    /// </summary>
   [Transaction(TransactionMode.ReadOnly)]
   public class UIDynamicModelUpdateOn : IExternalCommand
   {
-    public Result Execute(
-      ExternalCommandData commandData,
-      ref string message,
-      ElementSet elements)
-    {
-      ParamValueValidator.updateActive = true;
-      return Result.Succeeded;
+        public static ParamValueValidator _paramValueValidator = null;
+        private static List<ElementId> idsToWatch = new List<ElementId>();
+        public Result Execute(
+          ExternalCommandData commandData,
+          ref string message,
+          ElementSet elements)
+        {
+            ParamValueValidator.updateActive = true;
+            try
+            {
+
+                Document doc = commandData.Application.ActiveUIDocument.Document;
+                UIDocument uidoc = commandData.Application.ActiveUIDocument;
+                AddInId appId = commandData.Application.ActiveAddInId;
+                // creating and registering the updater for the document.
+                    if (_paramValueValidator == null)
+                {
+                            _paramValueValidator = App._paramValueValidator;
+                            _paramValueValidator.Register(doc);
+                }
+
+                string path = doc.PathName;
+                string filePath = path.Replace(".rte", ".lock3r");
+                GroundTruth truth = new GroundTruth(filePath);
+                idsToWatch = truth.ElementIds.ToList();
+                int count = truth.ElementIds.Count;
+
+
+                _paramValueValidator.AddTriggerForUpdater(idsToWatch);
+
+                
+
+            }
+            catch (Exception ex)
+            {
+                message = ex.ToString();
+                return Result.Failed;
+            }
+
+            
+            return Result.Succeeded;
+
     }
   }
 }

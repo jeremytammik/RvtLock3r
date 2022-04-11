@@ -12,11 +12,14 @@ namespace RvtLock3r
 {
   internal class Util
   {
-    /// <summary>
-    /// Return string representation of the Ground Truth tripples to be saved on an an external file, 
-    /// for validation later by the algorithm
-    /// </summary>
-    public static string GroundTruthData(Element e, string header)
+        public static string rvtFilePath { get; set; }
+
+
+        /// <summary>
+        /// Return string representation of the Ground Truth tripples to be saved on an an external file, 
+        /// for validation later by the algorithm
+        /// </summary>
+        public static string GroundTruthData(Element e, string header)
     {
       string s = string.Empty;
 
@@ -99,14 +102,35 @@ namespace RvtLock3r
       return Sb.ToString();
     }
 
-    /// <summary>
-    ///     Return a string describing the given element:
-    ///     .NET type name,
-    ///     category name,
-    ///     family and symbol name for a family instance,
-    ///     element id and element name.
-    /// </summary>
-    public static string ElementDescription(
+        /// <summary>
+        /// Writes the Ground Truth Tripples data into and
+        /// external text file within the same directory as Rvit model 
+        /// with the same exact name as the Revit model with ext .lock3r
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="s"></param>
+        public static void WriteGroundTruthFile(string path, string s)
+        {
+            rvtFilePath = path;
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            File.WriteAllText(path, s);
+
+        }
+
+        /// <summary>
+        ///     Return a string describing the given element:
+        ///     .NET type name,
+        ///     category name,
+        ///     family and symbol name for a family instance,
+        ///     element id and element name.
+        /// </summary>
+        /// 
+
+        public static string ElementDescription(
         Element e)
     {
       if (null == e) return "<null>";

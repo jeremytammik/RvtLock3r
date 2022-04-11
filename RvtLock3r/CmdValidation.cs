@@ -31,7 +31,7 @@ namespace RvtLock3r
       Document doc = uidoc.Document;
 
       string path = doc.PathName;
-      path = path.Replace(".rvt", ".lock3r");
+      path = path.Replace(".rte", ".lock3r");
       GroundTruth truth = new GroundTruth(path);
 
       // In case of validation error, store element and parameter ids
