@@ -23,6 +23,30 @@ Below, two caveats on model checking and change analysis.
 However, they both report on modifications ater the fact.
 RvtLock3r goes one step further and prevents all forbidden modifications in the first place.
 
+### Overview
+
+We have two actors:
+
+- The vendor shares elements and equips them with certain specific read-only properties.
+- The consumer manipulates these elements and is prohibited from modifying these properties.
+
+To implement this protection, the vendor encodes the original property values in ground truth data.
+
+The ground truth can be stored anywhere you like.
+We initially implemented it as an external text file, with the disadvantage that this can be manipulated or get lost.
+A better and safer solution would be to encode the ground truth in extensible storage.
+
+We also have several options to ensure that the consumer has not modified any protected properties:
+
+- Implement DocumentOpening and DocumentSaving events, check the ground truth in the event handlers, and cancel the operation with a useful message in case validation fails.
+- Implement a DMU mechanism that prevent the consumer from perfrming any forbidden modifications in real time.
+
+<!--
+
+This event is cancellable, except when it is raised during close of the application. Check the 'Cancellable' property of event's argument to see whether it is cancellable or not. When it is cancellable, call the 'Cancel()' method of event's argument to cancel it. Your application is responsible for providing feedback to the user about the reason for the cancellation.
+
+-->
+
 ### Model Checker Caveat
 
 In any serious BIM environment, many rules and conventions are applied and required.
