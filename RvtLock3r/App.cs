@@ -87,9 +87,10 @@ namespace RvtLock3r
       }
       */
       
-      // If validtion is performed directly and only during opening and saving,
-      // we can read the ground truth from this current document and validate it
-      // on the spot:
+      // If validation is performed directly and only
+      // during opening and saving, we can read the
+      // ground truth from this current document and
+      // validate it on the spot:
       
       GroundTruth gt = new GroundTruth(doc);
       if( !gt.Validate( doc ))
