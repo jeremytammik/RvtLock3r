@@ -74,12 +74,28 @@ namespace RvtLock3r
     private void OnDocumentOpened(object sender, DocumentOpenedEventArgs e)
     {
       Document doc = e.Document;
+      
+      /*
+       *this code is only used for DMU approach:
+       
       string path = doc.PathName;
       Debug.Assert(null != path, "expected valid document path");
       Debug.Assert(0 < path.Length, "expected valid document path");
       if((null != path) && (0 < path.Length))
       {
         GroundTruthLookup.Singleton.Add(path, new GroundTruth(doc));
+      }
+      */
+      
+      // If validtion is performed directly and only during opening and saving,
+      // we can read the ground truth from this current document and validate it
+      // on the spot:
+      
+      GroundTruth gt = new GroundTruth(doc);
+      if( !gt.Validate( doc ))
+      {
+        // present a useful error message to the user to explain the probloem
+        e.Cancel();
       }
     }
 

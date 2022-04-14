@@ -43,7 +43,7 @@ We also have several options to ensure that the consumer has not modified any pr
 
 <!--
 
-This event is cancellable, except when it is raised during close of the application. Check the 'Cancellable' property of event's argument to see whether it is cancellable or not. When it is cancellable, call the 'Cancel()' method of event's argument to cancel it. Your application is responsible for providing feedback to the user about the reason for the cancellation.
+DocumentSaving: This event is cancellable, except when it is raised during close of the application. Check the 'Cancellable' property of event's argument to see whether it is cancellable or not. When it is cancellable, call the 'Cancel()' method of event's argument to cancel it. Your application is responsible for providing feedback to the user about the reason for the cancellation.
 
 -->
 
