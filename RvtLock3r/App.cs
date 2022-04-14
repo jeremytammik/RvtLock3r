@@ -66,12 +66,12 @@ namespace RvtLock3r
       // save ids for later reference
       _paramValueValidator.FailureId = failId;
 
-      application.ControlledApplication.DocumentOpened += OnDocumentOpened;
+      application.ControlledApplication.DocumentOpening += OnDocumentOpening;
 
       return Result.Succeeded;
     }
 
-    private void OnDocumentOpened(object sender, DocumentOpenedEventArgs e)
+    private void OnDocumentOpening(object sender, DocumentOpenedEventArgs e)
     {
       Document doc = e.Document;
       
