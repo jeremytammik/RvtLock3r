@@ -1,4 +1,5 @@
 #region Namespaces
+using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Events;
@@ -66,41 +67,93 @@ namespace RvtLock3r
       // save ids for later reference
       _paramValueValidator.FailureId = failId;
 
-      application.ControlledApplication.DocumentOpening += OnDocumentOpening;
+            application.ControlledApplication.DocumentOpened += OnDocumentOpened;
+            application.ControlledApplication.DocumentSaving += OnDocumentSaving;
+            //application.ControlledApplication.DocumentOpening += OnDocumentOpening;
 
-      return Result.Succeeded;
+
+            return Result.Succeeded;
     }
 
-    private void OnDocumentOpening(object sender, DocumentOpenedEventArgs e)
+        private void OnDocumentOpening(object sender, DocumentOpeningEventArgs e)
+        {
+            TaskDialog.Show("Document Opening", "My Document is Opening. lets see.");
+        }
+
+        private void OnDocumentOpened(object sender, DocumentOpenedEventArgs e)
     {
       Document doc = e.Document;
-      
-      /*
-       *this code is only used for DMU approach:
-       
-      string path = doc.PathName;
-      Debug.Assert(null != path, "expected valid document path");
-      Debug.Assert(0 < path.Length, "expected valid document path");
-      if((null != path) && (0 < path.Length))
-      {
-        GroundTruthLookup.Singleton.Add(path, new GroundTruth(doc));
-      }
-      */
-      
-      // If validation is performed directly and only
-      // during opening and saving, we can read the
-      // ground truth from this current document and
-      // validate it on the spot:
-      
-      GroundTruth gt = new GroundTruth(doc);
+            //initializes the CmdGroundTruth class,
+            
+            var docGroundTruth = new CmdGroundTruth();
+            //generates the groud truth tripples data on DocumentUpened Event
+            if (sender is UIApplication)
+                docGroundTruth.Execute(sender as UIApplication);
+            else
+                docGroundTruth.Execute(new UIApplication(sender as Application));
+
+            // initializes the CmdCloseDocument
+            //the command forcefully closes the active document
+            //if the ground truth data have been tampered with
+            var docClose = new CmdCloseDocument();
+
+            /*
+             *this code is only used for DMU approach:
+
+            string path = doc.PathName;
+            Debug.Assert(null != path, "expected valid document path");
+            Debug.Assert(0 < path.Length, "expected valid document path");
+            if((null != path) && (0 < path.Length))
+            {
+              GroundTruthLookup.Singleton.Add(path, new GroundTruth(doc));
+            }
+            */
+
+            // If validation is performed directly and only
+            // during opening and saving, we can read the
+            // ground truth from this current document and
+            // validate it on the spot:
+
+            GroundTruth gt = new GroundTruth(doc);
       if( !gt.Validate( doc ))
       {
-        // present a useful error message to the user to explain the probloem
-        e.Cancel();
-      }
-    }
+                // present a useful error message to the user to explain the probloem
+                //e.Cancel();
+                TaskDialog.Show("Corrupted File!", "This file is corrupted. The original data have been maliciously modified and the autenticity compromised");
+                //doc.Close();
+                //ErrorDialog(doc);
+                //forcefully closes current data if the ground truth is modified
+                if (sender is UIApplication)
+                    docClose.Execute(sender as UIApplication);
+                else
+                    docClose.Execute(new UIApplication(sender as Application));
 
-    public Result OnShutdown(UIControlledApplication application)
+
+            }
+    }
+        private void OnDocumentSaving(object sender, DocumentSavingEventArgs e)
+        {
+            Document doc = e.Document;
+
+            
+
+            GroundTruth gt = new GroundTruth(doc);
+            if (!gt.Validate(doc))
+            {
+                // present a useful error message to the user to explain the probloem
+                
+                TaskDialog.Show("Permission Denied!", "You are not alowed to modify this parameter value.");
+                e.Cancel();
+
+            }
+
+
+
+        }
+
+   
+
+        public Result OnShutdown(UIControlledApplication application)
     {
       // remove the event.
       return Result.Succeeded;

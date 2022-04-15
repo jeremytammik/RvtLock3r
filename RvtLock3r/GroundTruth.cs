@@ -45,7 +45,7 @@ namespace RvtLock3r
     public GroundTruth(Document doc)
     {
       string path = doc.PathName;
-      path = path.Replace(".rvt", ".lock3r");
+      path = path.Replace(".rte", ".lock3r");
       InitialiseFromTextFile(path);
     }
 
