@@ -14,7 +14,7 @@ namespace RvtLock3r
     /// <summary>
     /// Create ground truth for given document.
     /// </summary>
-    void CreateGroundTruthFor(Document doc)
+    public static void CreateGroundTruthFor(Document doc)
     {
       string rvtpath = doc.PathName;
       string txtpath = rvtpath.Replace(".rte", ".lock3r");
@@ -47,60 +47,11 @@ namespace RvtLock3r
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
+      CreateGroundTruthFor( doc);
+
       string rvtpath = doc.PathName;
-      string txtpath = rvtpath.Replace(".rte", ".lock3r");
-
-      // Retrieve elements from database
-
-      FilteredElementCollector wallTypes
-        = new FilteredElementCollector(doc)
-          .OfClass(typeof(WallType));
-
-      string allString = string.Empty;
-
-      foreach (Element e in wallTypes)
-      {
-        string s = Util.GroundTruthData(e);
-        allString += s;
-      }
-
-      if (File.Exists(txtpath))
-      {
-        File.Delete(txtpath);
-      }
-      File.WriteAllText(txtpath, allString);
 
       return Result.Succeeded;
-    }
-
-    public Result Execute(UIApplication uiapp)
-    {
-      Document doc = uiapp.ActiveUIDocument.Document;
-      string rvtpath = doc.PathName;
-      string txtpath = rvtpath.Replace(".rte", ".lock3r");
-
-      // Retrieve elements from database
-
-      FilteredElementCollector wallTypes
-        = new FilteredElementCollector(doc)
-          .OfClass(typeof(WallType));
-
-      string allString = string.Empty;
-
-      foreach (Element e in wallTypes)
-      {
-        string s = Util.GroundTruthData(e);
-        allString += s;
-      }
-
-      if (File.Exists(txtpath))
-      {
-        File.Delete(txtpath);
-      }
-      File.WriteAllText(txtpath, allString);
-
-      return Result.Succeeded;
-
     }
   }
 }

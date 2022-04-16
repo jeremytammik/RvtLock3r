@@ -17,6 +17,8 @@ namespace RvtLock3r
 {
   public class App : IExternalApplication
   {
+    const string _resource_path = "pack://application:,,,/RvtLock3r;component/Resources/";
+
     public static ParamValueValidator _paramValueValidator = null;
 
     //public object Session { get; private set; }
@@ -27,9 +29,8 @@ namespace RvtLock3r
       string panelName = "Validation";
 
       //creating bitimages
-      BitmapImage groundTruthImage = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/gtfile1.png"));
-
-      BitmapImage validateImage = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/check3.png"));
+      BitmapImage groundTruthImage = new BitmapImage(new Uri(_resource_path + "gtfile1.png"));
+      BitmapImage validateImage = new BitmapImage(new Uri(_resource_path + "check3.png"));
 
       //create tab
       application.CreateRibbonTab(tabName);
@@ -67,93 +68,104 @@ namespace RvtLock3r
       // save ids for later reference
       _paramValueValidator.FailureId = failId;
 
-            application.ControlledApplication.DocumentOpened += OnDocumentOpened;
-            application.ControlledApplication.DocumentSaving += OnDocumentSaving;
-            //application.ControlledApplication.DocumentOpening += OnDocumentOpening;
+      application.ControlledApplication.DocumentOpened += OnDocumentOpened;
+      application.ControlledApplication.DocumentSaving += OnDocumentSaving;
+      //application.ControlledApplication.DocumentOpening += OnDocumentOpening;
 
 
-            return Result.Succeeded;
+      return Result.Succeeded;
     }
 
-        private void OnDocumentOpening(object sender, DocumentOpeningEventArgs e)
-        {
-            TaskDialog.Show("Document Opening", "My Document is Opening. lets see.");
-        }
+    private void OnDocumentOpening(object sender, DocumentOpeningEventArgs e)
+    {
+      TaskDialog.Show("Document Opening", "My Document is Opening. lets see.");
+    }
 
-        private void OnDocumentOpened(object sender, DocumentOpenedEventArgs e)
+    private void OnDocumentOpened(object sender, DocumentOpenedEventArgs e)
     {
       Document doc = e.Document;
-            //initializes the CmdGroundTruth class,
-            
-            var docGroundTruth = new CmdGroundTruth();
-            //generates the groud truth tripples data on DocumentUpened Event
-            if (sender is UIApplication)
-                docGroundTruth.Execute(sender as UIApplication);
-            else
-                docGroundTruth.Execute(new UIApplication(sender as Application));
+      CmdGroundTruth.CreateGroundTruthFor(doc);
 
-            // initializes the CmdCloseDocument
-            //the command forcefully closes the active document
-            //if the ground truth data have been tampered with
-            var docClose = new CmdCloseDocument();
+      //var docGroundTruth = new CmdGroundTruth();
 
-            /*
-             *this code is only used for DMU approach:
+      // no need to instantiate an instance!
+      // use a static method instead.
 
-            string path = doc.PathName;
-            Debug.Assert(null != path, "expected valid document path");
-            Debug.Assert(0 < path.Length, "expected valid document path");
-            if((null != path) && (0 < path.Length))
-            {
-              GroundTruthLookup.Singleton.Add(path, new GroundTruth(doc));
-            }
-            */
+      //generates the groud truth tripples data on DocumentUpened Event
 
-            // If validation is performed directly and only
-            // during opening and saving, we can read the
-            // ground truth from this current document and
-            // validate it on the spot:
+      // triples is spelled with a single 'p'.
 
-            GroundTruth gt = new GroundTruth(doc);
-      if( !gt.Validate( doc ))
+      // no need for a complex method, no need to duplicate Execute.
+
+      //if (sender is UIApplication)
+      //  docGroundTruth.Execute(sender as UIApplication);
+      //else
+      //  docGroundTruth.Execute(new UIApplication(sender as Application));
+
+      // initializes the CmdCloseDocument
+      //the command forcefully closes the active document
+      //if the ground truth data have been tampered with
+
+      // wow. that looks kind of wilkd. very forceful indeed.
+      // i doubt that the end user will like this.
+      // i also think this is a very risky thing to try to do.
+      // i would recommend a safer and simpler approach.
+
+      var docClose = new CmdCloseDocument();
+
+      /*
+       *this code is only used for DMU approach:
+
+      string path = doc.PathName;
+      Debug.Assert(null != path, "expected valid document path");
+      Debug.Assert(0 < path.Length, "expected valid document path");
+      if((null != path) && (0 < path.Length))
       {
-                // present a useful error message to the user to explain the probloem
-                //e.Cancel();
-                TaskDialog.Show("Corrupted File!", "This file is corrupted. The original data have been maliciously modified and the autenticity compromised");
-                //doc.Close();
-                //ErrorDialog(doc);
-                //forcefully closes current data if the ground truth is modified
-                if (sender is UIApplication)
-                    docClose.Execute(sender as UIApplication);
-                else
-                    docClose.Execute(new UIApplication(sender as Application));
+        GroundTruthLookup.Singleton.Add(path, new GroundTruth(doc));
+      }
+      */
+
+      // If validation is performed directly and only
+      // during opening and saving, we can read the
+      // ground truth from this current document and
+      // validate it on the spot:
+
+      GroundTruth gt = new GroundTruth(doc);
+      if (!gt.Validate(doc))
+      {
+        // present a useful error message to the user to explain the probloem
+        //e.Cancel();
+        TaskDialog.Show("Corrupted File!",
+          "This file is corrupted. "
+          + "The original vendor data has been modified "
+          + "and the authenticity compromised.");
+        //doc.Close();
+        //ErrorDialog(doc);
+        //forcefully closes current data if the ground truth is modified
+        if (sender is UIApplication)
+          docClose.Execute(sender as UIApplication);
+        else
+          docClose.Execute(new UIApplication(sender as Application));
 
 
-            }
+      }
     }
-        private void OnDocumentSaving(object sender, DocumentSavingEventArgs e)
-        {
-            Document doc = e.Document;
+    private void OnDocumentSaving(object sender, DocumentSavingEventArgs e)
+    {
+      Document doc = e.Document;
 
-            
+      GroundTruth gt = new GroundTruth(doc);
+      if (!gt.Validate(doc))
+      {
+        // present a useful error message to the user to explain the probloem
 
-            GroundTruth gt = new GroundTruth(doc);
-            if (!gt.Validate(doc))
-            {
-                // present a useful error message to the user to explain the probloem
-                
-                TaskDialog.Show("Permission Denied!", "You are not alowed to modify this parameter value.");
-                e.Cancel();
+        TaskDialog.Show("Permission Denied!", 
+          "You are not alowed to modify this parameter value.");
+        e.Cancel();
+      }
+    }
 
-            }
-
-
-
-        }
-
-   
-
-        public Result OnShutdown(UIControlledApplication application)
+    public Result OnShutdown(UIControlledApplication a)
     {
       // remove the event.
       return Result.Succeeded;
@@ -165,9 +177,8 @@ namespace RvtLock3r
     /// <param name="panel"></param>
     private void AddDmuCommandButtons(RibbonPanel panel)
     {
-      BitmapImage dmuOnImg = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/btn1.png"));
-
-      BitmapImage dmuOffImg = new BitmapImage(new Uri("pack://application:,,,/RvtLock3r;component/Resources/btn2.png"));
+      BitmapImage dmuOnImg = new BitmapImage(new Uri(_resource_path + "btn1.png"));
+      BitmapImage dmuOffImg = new BitmapImage(new Uri(_resource_path + "btn2.png"));
 
       string path = Assembly.GetExecutingAssembly().Location;
 
