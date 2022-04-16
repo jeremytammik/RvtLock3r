@@ -106,7 +106,7 @@ namespace RvtLock3r
       //the command forcefully closes the active document
       //if the ground truth data have been tampered with
 
-      // wow. that looks kind of wilkd. very forceful indeed.
+      // wow. that looks kind of wild. very forceful indeed.
       // i doubt that the end user will like this.
       // i also think this is a very risky thing to try to do.
       // i would recommend a safer and simpler approach.
