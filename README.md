@@ -65,14 +65,14 @@ Another alternative approach to this task.
 The customer add-in reads a set of [ground truth](https://en.wikipedia.org/wiki/Ground_truth) data from some [storage location](#storage). It contains a list of triples:
 
 - `ElementId`
-- Shared parameter `GUID` (maybe better: parameter id?)
+- `BuiltInParameter` `parameterId` or shared parameter `GUID`
 - Checksum
 
-The add-in iterates over all elements and shared parameters specified by these triples, reads the corresponding shared parameter value, calculates its checksum and validates it by comparison with the ground truth value.
+The add-in iterates over all elements and parameters specified by these triples, reads the corresponding parameter value, calculates its checksum and validates it by comparison with the ground truth value.
 
 Discrepancies are logged and a report is presented to the user.
 
-The add-in does not care what kind of elements or shared parameters are being examined.
+The add-in does not care what kind of elements or parameters are being examined.
 That worry is left up to whoever creates the ground truth file.
 
 In the initial proof of concept, the triples are simply space separated in individual lines in a text file.
