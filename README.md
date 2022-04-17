@@ -39,7 +39,7 @@ A better and safer solution would be to encode the ground truth in extensible st
 We also have several options to ensure that the consumer has not modified any protected properties:
 
 - Implement DocumentOpening and DocumentSaving events, check the ground truth in the event handlers, and cancel the operation with a useful message in case validation fails.
-- Implement a DMU mechanism that prevent the consumer from perfrming any forbidden modifications in real time.
+- Implement a DMU mechanism that prevents the consumer from performing any forbidden modifications in real time.
 
 <!--
 
