@@ -11,17 +11,24 @@ Revit .NET C# add-in to validate that certain BIM element properties have not be
 
 ## Motivation
 
-Revit does not provide any functionality to ensure that shared parameter values are not modified.
+Revit does not provide any functionality to ensure that parameter values are not modified.
 
-The add-in stores a checksum for the original intended values of selected shared parameters and implements a validation function to ensure that the current values compute the same checksum.
+The add-in stores a checksum for the original read-only values of selected parameters and implements a validation function to ensure that these intended values are not modified.
 
-The validation function is initially implemented as an external command.
+The validation process can be launched in various ways:
 
-It may later be triggered automatically on opening or saving a document to notify the user that undesired tampering has taken place.
+- Initially, for testing purposes, the validation function is implemented as an external command, launched manually by the user.
+- It may later be triggered automatically on opening or saving a document to notify the user that undesired tampering has taken place.
+- Finally, we can use ther dynamic model updater framework DMU to detect and prevent any such tampering immediately in real-time.
 
-Below, two caveats on model checking and change analysis.
+That said, please note
+the [caveats on model checking](#model-checker-caveat)
+and [change analysis](#change-analysis-caveat).
 However, they both report on modifications ater the fact.
-RvtLock3r goes one step further and prevents all forbidden modifications in the first place.
+RvtLock3r using DMU goes one step further and prevents all forbidden modifications in the first place.
+
+Lastly, it is impossible to prevent the user from corrupting models if they really try.
+A large level of trust and following best practices is required.
 
 ### Overview
 
