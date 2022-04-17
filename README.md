@@ -28,7 +28,7 @@ RvtLock3r goes one step further and prevents all forbidden modifications in the 
 We have two actors:
 
 - The vendor shares elements and equips them with certain specific read-only properties.
-- The consumer manipulates these elements and is prohibited from modifying these properties.
+- The consumer may manipulate these elements and is prohibited from modifying the protected properties.
 
 To implement this protection, the vendor encodes the original property values in ground truth data.
 
