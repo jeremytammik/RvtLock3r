@@ -1,22 +1,32 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.ExtensibleStorage;
+using Autodesk.Revit.UI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace RvtLock3r
 {
-  internal class Util
+    public class GroundTruthTripples
+    {
+        public string ElementId { get; set; }
+        public string ParamGuid { get; set; }
+        public string Checksum { get; set; }
+    }
+    public class Util
   {
-    /// <summary>
-    /// Return string representation of ground truth triples 
-    /// to be saved on an an external file for later validation.
-    /// </summary>
-    public static string GroundTruthData(Element e)
+       static Guid schemaGuid = new Guid(
+
+          "0DC954AE-ADEF-41c1-8D38-EB5B8465D255");
+        /// <summary>
+        /// Return string representation of ground truth triples 
+        /// to be saved on an an external file for later validation.
+        /// </summary>
+        public static string GroundTruthData(Element e)
     {
       string s = string.Empty;
 
@@ -29,24 +39,234 @@ namespace RvtLock3r
           string val = ParameterToString(param);
 
           string checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
+                   
 
           if (!string.IsNullOrEmpty(val))
           {
-            s += e.Id.ToString() + " " + param.GUID + " " + checksum + "\r\n";
-          }
-          Debug.Print("elementid: " + e.Id.ToString() 
+                        s += e.Id.ToString() + " " + param.GUID + " " + checksum + "\r\n";
+
+                    }
+
+                    Debug.Print("elementid: " + e.Id.ToString() 
             + "parameter GUID: " + param.GUID 
             + "Parmeter Value: " + val 
             + "Checksum:" + checksum);
-        }
-      }
-      return s;
-    }
 
-    /// <summary>
-    /// Return string representation of parameter value
-    /// </summary>
-    public static string ParameterToString(Parameter param)
+        }
+               
+            }
+
+            return s;
+
+        }
+       
+        /// <summary>
+        /// Generates a list of Ground Truth tripples 
+        /// to be saved in in the schema for e-store
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static List<GroundTruthTripples> GroundTruthListData(Element e)
+        {
+            List<GroundTruthTripples> groundTruthTripples = new List<GroundTruthTripples>();
+
+         
+            foreach (Parameter param in e.Parameters)
+            {
+                if (param.IsShared)
+                {
+                    string name = param.Definition.Name;
+
+                    string val = ParameterToString(param);
+
+                    string checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
+
+                    if (!string.IsNullOrEmpty(val))
+                    {
+                        GroundTruthTripples gtTripples = new GroundTruthTripples();
+                        gtTripples.ElementId = e.Id.ToString();
+
+                        gtTripples.ParamGuid = param.GUID.ToString();
+                        gtTripples.Checksum = checksum;
+                        groundTruthTripples.Add(gtTripples);
+
+
+                    }
+
+                }
+
+
+            }
+
+            return groundTruthTripples;
+        }
+        /// <summary>
+        /// Defines the shcema entity to set the ground truth data,
+        /// </summary>
+        /// <param name="e"></param>
+        public static void GroundTruthSchemaEntity(Element e)
+        {
+            //Get the ground truth tripples
+            var data = Util.GroundTruthListData(e);
+            //Debug.Print("My data is:" + data);
+
+            /// There is a note I read says:
+            /// Please note that only one entity (defined by a given schema) can be attached to an element. 
+            /// If multiple entities from the same schema are attached to an element, only the last Entity is retained. 
+            /// If there is a requirement for adding multiple Entities to an element, we would need to create different 
+            /// entity objects defined from different schemas and attach these different entities to the element.
+            /// 
+            /// I have not understood this note, I am not sure if I save in a loop like this it saves only the 
+            /// last record from my code below. Or do I need several schema and entities
+            /// I really need help
+
+            foreach (var tripple in data)
+            {
+
+
+                //Now create entity(object) for this schema(class)
+                    Schema schema = GroundTruthSchema();
+
+                Entity ent = new Entity(GroundTruthSchema());
+
+                Field ElementId = GroundTruthSchema().GetField("ElementId");
+
+                ent.Set<String>(ElementId, tripple.ElementId);
+
+                Field ParamGuid = GroundTruthSchema().GetField("ParamGuid");
+
+                ent.Set<String>(ParamGuid, tripple.ParamGuid);
+
+                Field Checksum = GroundTruthSchema().GetField("Checksum");
+
+                ent.Set<String>(Checksum, tripple.Checksum);
+
+
+
+                if (null != e)
+
+                {
+
+                    e.SetEntity(ent);
+
+                }
+}
+
+        }
+        /// <summary>
+        /// Defines the data schema, sets access levels and adds the ground truth tripple fields 
+        /// </summary>
+        /// <returns></returns>
+        private static Schema GroundTruthSchema()
+        {
+            // Create a schema builder
+
+            SchemaBuilder builder = new SchemaBuilder(schemaGuid);
+
+            // Set read and write access levels
+
+            builder.SetReadAccessLevel(AccessLevel.Public);
+
+            builder.SetWriteAccessLevel(AccessLevel.Public);
+
+            // Note: if this was set as vendor or application,
+
+            // we would have addtionally required to use SetVendorId
+
+            // Set name to this schema builder
+
+            builder.SetSchemaName("GroundTruthData");
+
+            builder.SetDocumentation(
+
+              "Data store for Ground Truth");
+
+            // Create field1 as a string storing the Element Id
+
+            FieldBuilder fieldBuilder1 =
+
+              builder.AddSimpleField("ElementId", typeof(String));
+
+            
+
+            // Add documentation (optional)
+
+            // Create field2 as a string storing the paramater Guid
+
+            FieldBuilder fieldBuilder2 =
+
+              builder.AddSimpleField("ParamGuid", typeof(String));
+
+            // Create field2 as a string storing the paramater Value checksum
+
+            FieldBuilder fieldBuilder3 =
+
+              builder.AddSimpleField("Checksum", typeof(String));
+
+            Schema schema = builder.Finish();
+
+            return schema;
+        }
+        /// <summary>
+        /// Test method to ry readin e-stored data, for testing purposes only. 
+        /// I have had alot of issues here, each entity mapped to passes element in 
+        /// a loop just returns one record, I dont know maybe the last to be set.
+        /// How can I be able to iterate or maybe the data was not written to the e-store.
+        /// </summary>
+        /// <param name="e"></param>
+        public static void ExtractDataFromExternalStorage(Element e)
+        {
+
+            Schema ourSchema = Schema.Lookup(schemaGuid);
+            // Now let us extract the value for the field we created
+            //IList<Field> fields = ourSchema.ListFields();
+
+            //foreach (Field fld in fields)
+
+            //{
+
+            //    TaskDialog.Show(
+
+            //      "Field Details", "Field Name: " + fld.FieldName);
+
+            //}
+
+            Entity wallSchemaEnt = e.GetEntity(Schema.Lookup(schemaGuid));
+
+            if (wallSchemaEnt.Schema != null)
+            {
+                String ElementTypeId = wallSchemaEnt.Get<String>(
+
+                  Schema.Lookup(schemaGuid).GetField("ElementId"));
+
+                TaskDialog.Show("ElementId",
+
+                  "ElementId: " + ElementTypeId);
+
+
+
+                String parameterGuid = wallSchemaEnt.Get<String>(
+
+                  Schema.Lookup(schemaGuid).GetField("ParamGuid"));
+
+                TaskDialog.Show(
+
+                  "ParamGuid", "ParamGuid: " + parameterGuid);
+
+                String paramvalueChecksum = wallSchemaEnt.Get<String>(
+
+                  Schema.Lookup(schemaGuid).GetField("Checksum"));
+
+                TaskDialog.Show(
+
+                  "Checksum", "Checksum: " + paramvalueChecksum);
+            }
+        }
+
+        /// <summary>
+        /// Return string representation of parameter value
+        /// </summary>
+        public static string ParameterToString(Parameter param)
     {
       string val = "none";
 
