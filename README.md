@@ -117,6 +117,22 @@ However, it interferes least with Revit operation when placed on a dedicated `Da
 especially [in a worksharing environment](http://thebuildingcoder.typepad.com/blog/2015/02/extensible-storage-in-a-worksharing-environment.html).
 Creation and population of a `DataStorage` element is demonstrated by the [named GUID storage for project identification](https://thebuildingcoder.typepad.com/blog/2016/04/named-guid-storage-for-project-identification.html) sample.
 
+### Extensible Storage Options
+
+Two obvious choices for storing the ground truth in extensible storage:
+
+- Store a separate `Entity` containing ground truth for each BIM `Element` on thr `Element` itself.
+  In that case, the ground truth no longer consists of triples, since the element id is already known.
+- Store one single global collection of ground truth triples in a custom `DataStorage` element.
+
+References:
+
+- [Extensible Storage TBC topic group](https://thebuildingcoder.typepad.com/blog/about-the-author.html#5.23)
+- [Add-ins in a worksharing environment](https://thebuildingcoder.typepad.com/blog/2014/10/worksharing-and-duplicating-element-geometry.html#2)
+- [Extensible storage in a worksharing environment](https://thebuildingcoder.typepad.com/blog/2015/02/extensible-storage-in-a-worksharing-environment.html)
+- [Named Guid storage for project identification](https://thebuildingcoder.typepad.com/blog/2016/04/named-guid-storage-for-project-identification.html)
+- [Storing a dictionary &ndash; use `DataStorage`, not `ProjectInfo`](https://thebuildingcoder.typepad.com/blog/2016/11/1500-posts-devday-and-storing-a-dictionary.html#5)
+
 ## User Interface
 
 Currently, the add-in implements two commands: `CmdGroundTruth` and `Command`.
