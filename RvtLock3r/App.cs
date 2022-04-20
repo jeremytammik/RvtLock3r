@@ -25,6 +25,7 @@ namespace RvtLock3r
 
     public Result OnStartup(UIControlledApplication application)
     {
+      string path = Assembly.GetExecutingAssembly().Location;
       string tabName = "Lock3r";
       string panelName = "Validation";
 
@@ -40,14 +41,14 @@ namespace RvtLock3r
 
       //create buttons
 
-      var grdTruthButton = new PushButtonData("Ground Truth Button", "Ground Truth", Assembly.GetExecutingAssembly().Location, "RvtLock3r.CmdGroundTruth");
+      var grdTruthButton = new PushButtonData("Ground Truth Button", "Ground Truth", path, "RvtLock3r.CmdGroundTruth");
       grdTruthButton.ToolTip = "Export Ground Truth Data";
       grdTruthButton.LongDescription = "Export ground truth triple data of the original model to an en external text file located in the same directory as the Revit model";
       grdTruthButton.LargeImage = groundTruthImage;
       //add the button1 to panel
       var grdTruthBtn = lock3rPanel.AddItem(grdTruthButton) as PushButton;
 
-      var validateButton = new PushButtonData("My Test Button2", "Validate", Assembly.GetExecutingAssembly().Location, "RvtLock3r.CmdValidation");
+      var validateButton = new PushButtonData("My Test Button2", "Validate", path, "RvtLock3r.CmdValidation");
       validateButton.ToolTip = "Validate";
       validateButton.LongDescription = "Validate the open model with the ground truth data. Throw an error if any protected parameter value was modified.";
       validateButton.LargeImage = validateImage;
@@ -58,14 +59,16 @@ namespace RvtLock3r
 
       AddDmuCommandButtons(lock3rPanel);
 
-      //instantiates the ParamValueValidator
+      //instantiate the ParamValueValidator
       _paramValueValidator = new ParamValueValidator(application.ActiveAddInId);
-      //Defines a failure Id 
+      //Define a failure Id 
       FailureDefinitionId failId = new FailureDefinitionId(new Guid("f04836cc-a698-4bec-9e02-0603d0bd8cf9"));
 
-      //Defines failure definition text tht will be posted to the end user if the updater is not loaded
-      FailureDefinition failDefError = FailureDefinition.CreateFailureDefinition(failId, FailureSeverity.Error, "Permission Denied: Sorry, you are not allowed to modify the Wall Type parameters.");
-      // save ids for later reference
+      //Define failure definition text that will be posted to the end user if the updater is not loaded
+      FailureDefinition failDefError = FailureDefinition.CreateFailureDefinition(failId, 
+        FailureSeverity.Error, 
+        "Permission Denied: Sorry, you are not allowed to modify the Wall Type parameters.");
+      // save id for later reference
       _paramValueValidator.FailureId = failId;
 
       application.ControlledApplication.DocumentOpened += OnDocumentOpened;
