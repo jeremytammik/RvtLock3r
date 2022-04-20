@@ -29,16 +29,16 @@ namespace RvtLock3r
     //    /// <param name="doc"></param>
     //    public static void ReadGroundTruthFor(Document doc)
     //    {
-            
+
 
     //        FilteredElementCollector wallTypes
     //          = new FilteredElementCollector(doc)
     //            .OfClass(typeof(WallType));
 
-       
+
 
     //        WallType wallType = null;
-         
+
 
     //        foreach (Element e in wallTypes)
     //        {
@@ -50,77 +50,77 @@ namespace RvtLock3r
 
     //    }
 
-        public Result Execute(
-      ExternalCommandData commandData,
-      ref string message,
-      ElementSet elements)
+    public Result Execute(
+  ExternalCommandData commandData,
+  ref string message,
+  ElementSet elements)
     {
       UIApplication uiapp = commandData.Application;
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
-            Result rslt = Result.Failed;
+      Result rslt = Result.Failed;
 
-            //CreateGroundTruthFor(doc);
+      //CreateGroundTruthFor(doc);
 
-            string name = "Ground_Truth_Identifier";
-            string description = "Ground Truth Data set successfully";
-            Guid named_guid;
-            //IDictionary < ElementId, Dictionary<Guid, string> > tr;
+      string name = "Ground_Truth_Identifier";
+      string description = "Ground Truth Data set successfully";
+      Guid named_guid;
+      //IDictionary < ElementId, Dictionary<Guid, string> > tr;
 
-            bool rc = NamedGroundTruthStorage.Get(doc,
-              name, out named_guid, out string gtStringdata, false);
+      bool rc = NamedGroundTruthStorage.Get(doc,
+        name, out named_guid, out string gtStringdata, false);
 
-            if (rc)
-            {
-                Util.InfoMsg(string.Format(
-                  "This document already has a project "
-                  + "identifier: {0} = {1}",
-                  name, gtStringdata));
-                Util.InfoMsg(string.Format(
-                      "Created a new project identifier "
-                      + "for this document: {0} = {1}",
-                      name, description));
+      if (rc)
+      {
+        Util.InfoMsg(string.Format(
+          "This document already has a project "
+          + "identifier: {0} = {1}",
+          name, gtStringdata));
+        Util.InfoMsg(string.Format(
+              "Created a new project identifier "
+              + "for this document: {0} = {1}",
+              name, description));
 
-                rslt = Result.Succeeded;
-            }
-            else
-            {
-                rc = NamedGroundTruthStorage.Get(doc,
-                  name, out named_guid, out gtStringdata, true);
+        rslt = Result.Succeeded;
+      }
+      else
+      {
+        rc = NamedGroundTruthStorage.Get(doc,
+          name, out named_guid, out gtStringdata, true);
 
-                if (rc)
-                {
-                    Util.InfoMsg(string.Format(
-                      "Created a new project identifier "
-                      + "for this document: {0} = {1}",
-                      name, description));
-                    Util.InfoMsg(string.Format(
-                      "Created a new project identifier "
-                      + "for this document: {0} = {1}",
-                      name, gtStringdata));
+        if (rc)
+        {
+          Util.InfoMsg(string.Format(
+            "Created a new project identifier "
+            + "for this document: {0} = {1}",
+            name, description));
+          Util.InfoMsg(string.Format(
+            "Created a new project identifier "
+            + "for this document: {0} = {1}",
+            name, gtStringdata));
 
 
-                    rslt = Result.Succeeded;
-                }
-                else
-                {
-                    Util.ErrorMsg("Something went wrong");
-                }
-            }
-            return rslt;
-            //Transaction trans = new Transaction(doc);
-            //trans.Start("GroundTruth");
+          rslt = Result.Succeeded;
+        }
+        else
+        {
+          Util.ErrorMsg("Something went wrong");
+        }
+      }
+      return rslt;
+      //Transaction trans = new Transaction(doc);
+      //trans.Start("GroundTruth");
 
-            //CreateGroundTruthFor( doc);
-            //trans.Commit();
+      //CreateGroundTruthFor( doc);
+      //trans.Commit();
 
-            //ReadGroundTruthFor(doc);
+      //ReadGroundTruthFor(doc);
 
-            //string rvtpath = doc.PathName;
+      //string rvtpath = doc.PathName;
 
-            return Result.Succeeded;
+      //return Result.Succeeded;
     }
   }
 }

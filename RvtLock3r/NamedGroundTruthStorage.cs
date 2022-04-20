@@ -41,9 +41,11 @@ namespace RvtLock3r
                     schemaBuilder.SetSchemaName(
                       "GroundTruthStorage");
 
-                    schemaBuilder.AddSimpleField(
-                      "Guid", typeof(Guid));
+                    //schemaBuilder.AddSimpleField(
+                    //  "Guid", typeof(Guid));
+
                     schemaBuilder.AddSimpleField("GroundTruth", typeof(string));
+
                     //schemaBuilder.AddSimpleField(
                     //  "GroundTruth", typeof(List<>));
                     //schemaBuilder.AddArrayField("GroundTruth", typeof(GroundTruthTripples));
@@ -84,8 +86,8 @@ namespace RvtLock3r
             ExtensibleStorageFilter f
               = new ExtensibleStorageFilter(
                 NamedGroundTruthSchema.SchemaGuid);
-            DataStorage dataStorage
 
+            DataStorage dataStorage
               = new FilteredElementCollector(doc)
                 .OfClass(typeof(DataStorage))
                 .WherePasses(f)
@@ -97,7 +99,7 @@ namespace RvtLock3r
                 if (create)
                 {
                     using (Transaction t = new Transaction(
-                      doc, "Create named Guid storage"))
+                      doc, "Create named ground truth extensible storage"))
                     {
                         t.Start();
 
@@ -111,9 +113,11 @@ namespace RvtLock3r
                         Entity entity = new Entity(
                           NamedGroundTruthSchema.GetSchema());
 
-                        entity.Set("Guid", guid = Guid.NewGuid());
+                        //entity.Set("Guid", guid = Guid.NewGuid());
+
                         data = Util.GroundTruthData(doc);
                         entity.Set("GroundTruth", data);
+
                         //IList<GroundTruthTripples> list = Util.GroundTruthListData(doc);
                         //IList<int> list = new List<int>() { 111, 222, 333 };
 
@@ -149,9 +153,9 @@ namespace RvtLock3r
 
                 if (entity.IsValid())
                 {
-                    guid = entity.Get<Guid>("Guid");
-                    data = entity.Get<string>("GroundTruth");
+                    //guid = entity.Get<Guid>("Guid");
 
+                    data = entity.Get<string>("GroundTruth");
 
                     ////gtTriples = entity.Get<List<GroundTruthTripples>>("GroundTruth");
                     //IDictionary<ElementId, Dictionary<Guid, string>> dict = entity.Get<IDictionary<ElementId, Dictionary<Guid, string>>>("GroundTruth");
