@@ -8,7 +8,7 @@ using WinForms = System.Windows.Forms;
 
 namespace RvtLock3r
 {
-    public class GroundTruthTripples
+    public class GroundTruthTriples
     {
         public string ElementId { get; set; }
         public string ParamGuid { get; set; }
@@ -75,18 +75,18 @@ namespace RvtLock3r
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static List<GroundTruthTripples> GroundTruthListData(Document doc)
+        public static List<GroundTruthTriples> GroundTruthListData(Document doc)
 
         {
             FilteredElementCollector wallTypes
                 = new FilteredElementCollector(doc)
                 .OfClass(typeof(WallType));
 
-            List<GroundTruthTripples> groundTruthData = new List<GroundTruthTripples>();
+            List<GroundTruthTriples> groundTruthData = new List<GroundTruthTriples>();
 
             foreach (Element e in wallTypes)
             {
-                List<GroundTruthTripples> groundTruthTripples = new List<GroundTruthTripples>();
+                List<GroundTruthTriples> GroundTruthTriples = new List<GroundTruthTriples>();
 
                 foreach (Parameter param in e.Parameters)
                 {
@@ -100,12 +100,12 @@ namespace RvtLock3r
 
                         if (!string.IsNullOrEmpty(val))
                         {
-                            GroundTruthTripples gtTripples = new GroundTruthTripples();
+                            GroundTruthTriples gtTripples = new GroundTruthTriples();
                             gtTripples.ElementId = e.Id.ToString();
 
                             gtTripples.ParamGuid = param.GUID.ToString();
                             gtTripples.Checksum = checksum;
-                            groundTruthTripples.Add(gtTripples);
+                            GroundTruthTriples.Add(gtTripples);
 
 
                         }
@@ -114,7 +114,7 @@ namespace RvtLock3r
 
 
                 }
-                groundTruthData.AddRange(groundTruthTripples);
+                groundTruthData.AddRange(GroundTruthTriples);
             }
 
             return groundTruthData;
