@@ -1,0 +1,10 @@
+* text=auto eol=lf
+
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+*.cs                  text eol=crlf
+*.xaml                text eol=crlf
+*.csproj              text eol=crlf
+*.njsproj             text eol=crlf
+*.pyproj              text eol=crlf
+*.sln                 text eol=crlf
