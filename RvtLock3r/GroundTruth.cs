@@ -15,44 +15,82 @@ namespace RvtLock3r
     /// containing triples of element id, shared parameter 
     /// guid and parameter value checksum.
     /// </summary>
-    void InitialiseFromTextFile(string filepath)
-    {
-      string[] lines = File.ReadAllLines(filepath);
-
-      for (int j = 0; j < lines.Length - 1; j++)
-      {
-        string[] triple = lines[j].Split(null);
-        string id = triple[0];
-        int i = int.Parse(triple[0]);
-        ElementId eid = new ElementId(i);
-        Guid pid = new Guid(triple[1]);
-
-        if (!ContainsKey(eid))
+    
+        void InitialiseFromTextFile(string filepath)
         {
-          Add(eid, new Dictionary<Guid, string>());
+            string[] lines = File.ReadAllLines(filepath);
+
+            for (int j = 0; j < lines.Length - 1; j++)
+            {
+                string[] triple = lines[j].Split(null);
+                string id = triple[0];
+                int i = int.Parse(triple[0]);
+
+                ElementId eid = new ElementId(i);
+                Guid pid = new Guid(triple[1]);
+
+                if (!ContainsKey(eid))
+                {
+                    Add(eid, new Dictionary<Guid, string>());
+                }
+                if (!this[eid].ContainsKey(pid))
+                {
+                    this[eid].Add(pid, triple[2]);
+                }
+            }
         }
-        if (!this[eid].ContainsKey(pid))
+
+         void  InitialiseFromDataStorage(Document doc)
         {
-          this[eid].Add(pid, triple[2]);
+            var data = Util.GroundTruthData(doc);
+            string[] lines = data.Split(',');
+
+
+            foreach (string line in lines)
+            {
+                string[] triple = line.Split(null);
+                string id = triple[0];
+                int i = int.Parse(triple[0]);
+
+                ElementId eid = new ElementId(i);
+                Guid pid = new Guid(triple[1]);
+
+                if (!ContainsKey(eid))
+                {
+                    Add(eid, new Dictionary<Guid, string>());
+                }
+                if (!this[eid].ContainsKey(pid))
+                {
+                    this[eid].Add(pid, triple[2]);
+                }
+
+            }
         }
-      }
-    }
 
-
-    /// <summary>
-    /// Instantiate ground truth for given RVT document.
-    /// </summary>
-    public GroundTruth(Document doc)
+        /// <summary>
+        /// Instantiate ground truth for given RVT document.
+        /// </summary>
+        public GroundTruth(Document doc)
     {
-      string path = doc.PathName;
-      path = path.Replace(".rte", ".lock3r");
-      InitialiseFromTextFile(path);
-    }
+            //string path = doc.PathName;
+            //path = path.Replace(".rte", ".lock3r");
+            //InitialiseFromTextFile(path);
+            InitialiseFromDataStorage(doc);
+        }
+        //public static GroundTruth GroundTruthObjectData(Document doc)
+        //{
+        //    //string path = doc.PathName;
+        //    //path = path.Replace(".rte", ".lock3r");
+        //    //InitialiseFromTextFile(path);
+        //    GroundTruth t = new GroundTruth(doc);
+        //    var data = t.InitialiseFromGroundTruthListList(doc);
+        //    return data;
+        //}
 
-    /// <summary>
-    /// Instantiate ground truth from external text file.
-    /// </summary>
-    public GroundTruth(string filepath)
+        /// <summary>
+        /// Instantiate ground truth from external text file.
+        /// </summary>
+        public GroundTruth(string filepath)
     {
       InitialiseFromTextFile(filepath);
     }

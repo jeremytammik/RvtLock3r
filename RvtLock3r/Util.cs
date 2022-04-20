@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Script.Serialization;
+using WinForms = System.Windows.Forms;
 
 namespace RvtLock3r
 {
@@ -19,144 +20,116 @@ namespace RvtLock3r
     }
     public class Util
   {
-       static Guid schemaGuid = new Guid(
+        private const string _caption = "Ground Truth Data";
+
+        static Guid schemaGuid = new Guid(
 
           "0DC954AE-ADEF-41c1-8D38-EB5B8465D255");
         /// <summary>
         /// Return string representation of ground truth triples 
         /// to be saved on an an external file for later validation.
         /// </summary>
-        public static string GroundTruthData(Element e)
+        public static string GroundTruthData(Document doc)
     {
-      string s = string.Empty;
+            FilteredElementCollector wallTypes
+                = new FilteredElementCollector(doc)
+                .OfClass(typeof(WallType));
+            string ss = string.Empty;
 
-      foreach (Parameter param in e.Parameters)
-      {
-        if (param.IsShared)
-        {
-          string name = param.Definition.Name;
+            foreach (Element e in wallTypes)
+            {
+                string s = string.Empty;
 
-          string val = ParameterToString(param);
 
-          string checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
-                   
+                foreach (Parameter param in e.Parameters)
+                {
+                    if (param.IsShared)
+                    {
+                        string name = param.Definition.Name;
 
-          if (!string.IsNullOrEmpty(val))
-          {
-                        s += e.Id.ToString() + " " + param.GUID + " " + checksum + "\r\n";
+                        string val = ParameterToString(param);
+
+                        string checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
+
+
+                        if (!string.IsNullOrEmpty(val))
+                        {
+                            //s += e.Id.ToString() + " " + param.GUID + " " + checksum + "\r\n";
+                            s += e.Id.ToString() + " " + param.GUID + " " + checksum + ",";
+
+                        }
+
+                        Debug.Print("elementid: " + e.Id.ToString()
+                + "parameter GUID: " + param.GUID
+                + "Parmeter Value: " + val
+                + "Checksum:" + checksum);
 
                     }
 
-                    Debug.Print("elementid: " + e.Id.ToString() 
-            + "parameter GUID: " + param.GUID 
-            + "Parmeter Value: " + val 
-            + "Checksum:" + checksum);
+                }
+                ss += s;
 
-        }
-               
             }
 
-            return s;
+            return ss;
 
         }
-       
+
         /// <summary>
         /// Generates a list of Ground Truth tripples 
         /// to be saved in in the schema for e-store
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static List<GroundTruthTripples> GroundTruthListData(Element e)
+        public static List<GroundTruthTripples> GroundTruthListData(Document doc)
+
         {
-            List<GroundTruthTripples> groundTruthTripples = new List<GroundTruthTripples>();
+            FilteredElementCollector wallTypes
+                = new FilteredElementCollector(doc)
+                .OfClass(typeof(WallType));
 
-         
-            foreach (Parameter param in e.Parameters)
+            List<GroundTruthTripples> groundTruthData = new List<GroundTruthTripples>();
+
+            foreach (Element e in wallTypes)
             {
-                if (param.IsShared)
+                List<GroundTruthTripples> groundTruthTripples = new List<GroundTruthTripples>();
+
+                foreach (Parameter param in e.Parameters)
                 {
-                    string name = param.Definition.Name;
-
-                    string val = ParameterToString(param);
-
-                    string checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
-
-                    if (!string.IsNullOrEmpty(val))
+                    if (param.IsShared)
                     {
-                        GroundTruthTripples gtTripples = new GroundTruthTripples();
-                        gtTripples.ElementId = e.Id.ToString();
+                        string name = param.Definition.Name;
 
-                        gtTripples.ParamGuid = param.GUID.ToString();
-                        gtTripples.Checksum = checksum;
-                        groundTruthTripples.Add(gtTripples);
+                        string val = ParameterToString(param);
 
+                        string checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
+
+                        if (!string.IsNullOrEmpty(val))
+                        {
+                            GroundTruthTripples gtTripples = new GroundTruthTripples();
+                            gtTripples.ElementId = e.Id.ToString();
+
+                            gtTripples.ParamGuid = param.GUID.ToString();
+                            gtTripples.Checksum = checksum;
+                            groundTruthTripples.Add(gtTripples);
+
+
+                        }
 
                     }
 
+
                 }
-
-
+                groundTruthData.AddRange(groundTruthTripples);
             }
 
-            return groundTruthTripples;
+            return groundTruthData;
         }
         /// <summary>
         /// Defines the shcema entity to set the ground truth data,
         /// </summary>
         /// <param name="e"></param>
-        public static void GroundTruthSchemaEntity(Element e)
-        {
-            //Get the ground truth tripples
-            var data = Util.GroundTruthListData(e);
-            //Debug.Print("My data is:" + data);
-
-            /// There is a note I read says:
-            /// Please note that only one entity (defined by a given schema) can be attached to an element. 
-            /// If multiple entities from the same schema are attached to an element, only the last Entity is retained. 
-            /// If there is a requirement for adding multiple Entities to an element, we would need to create different 
-            /// entity objects defined from different schemas and attach these different entities to the element.
-            /// 
-            /// I have not understood this note, I am not sure if I save in a loop like this it saves only the 
-            /// last record from my code below. Or do I need several schema and entities
-            /// I really need help
-
-            foreach (var tripple in data)
-            {
-
-
-                //Now create entity(object) for this schema(class)
-                    Schema schema = GroundTruthSchema();
-
-                Entity ent = new Entity(GroundTruthSchema());
-
-                Field ElementId = GroundTruthSchema().GetField("ElementId");
-
-                ent.Set<String>(ElementId, tripple.ElementId);
-
-                Field ParamGuid = GroundTruthSchema().GetField("ParamGuid");
-
-                ent.Set<String>(ParamGuid, tripple.ParamGuid);
-
-                Field Checksum = GroundTruthSchema().GetField("Checksum");
-
-                ent.Set<String>(Checksum, tripple.Checksum);
-
-
-
-                if (null != e)
-
-                {
-
-                    e.SetEntity(ent);
-
-                }
-}
-
-        }
-        /// <summary>
-        /// Defines the data schema, sets access levels and adds the ground truth tripple fields 
-        /// </summary>
-        /// <returns></returns>
+  
         private static Schema GroundTruthSchema()
         {
             // Create a schema builder
@@ -372,5 +345,23 @@ namespace RvtLock3r
       }
       return elementSet;
     }
-  }
+
+        public static void InfoMsg(string msg)
+        {
+            Debug.WriteLine(msg);
+            WinForms.MessageBox.Show(msg,
+                _caption,
+                WinForms.MessageBoxButtons.OK,
+                WinForms.MessageBoxIcon.Information);
+        }
+
+        public static void ErrorMsg(string msg)
+        {
+            Debug.WriteLine(msg);
+            WinForms.MessageBox.Show(msg,
+                _caption,
+                WinForms.MessageBoxButtons.OK,
+                WinForms.MessageBoxIcon.Error);
+        }
+    }
 }

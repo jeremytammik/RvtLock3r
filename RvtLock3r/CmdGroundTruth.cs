@@ -3,6 +3,7 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 #endregion
@@ -12,62 +13,42 @@ namespace RvtLock3r
   [Transaction(TransactionMode.Manual)]
   public class CmdGroundTruth : IExternalCommand
   {
-    /// <summary>
-    /// Create ground truth for given document.
-    /// </summary>
-    public static void CreateGroundTruthFor(Document doc)
-    {
-      //string rvtpath = doc.PathName;
-      //string txtpath = rvtpath.Replace(".rvt", ".lock3r");
-
-      FilteredElementCollector wallTypes
-        = new FilteredElementCollector(doc)
-          .OfClass(typeof(WallType));
+    ///// <summary>
+    ///// Create ground truth for given document.
+    ///// </summary>
+    //public static void CreateGroundTruthFor(Document doc)
+    //{
+    //        var data = Util.GroundTruthListData(doc);
 
 
-            //string s = string.Empty;
-           
-            foreach (Element e in wallTypes)
-            {
-                //s += Util.GroundTruthData(e);
-                Util.GroundTruthSchemaEntity(e);
-               
-            }
+    // }
 
-
-            //if (File.Exists(txtpath))
-            //{
-            //    File.Delete(txtpath);
-            //}
-            //File.WriteAllText(txtpath, s);
-        }
-
-        /// <summary>
-        /// This method is purely for my testing, attempting to read the data that I have written to the e-store, will be deleting it soon
-        /// </summary>
-        /// <param name="doc"></param>
-        public static void ReadGroundTruthFor(Document doc)
-        {
+    //    /// <summary>
+    //    /// This method is purely for my testing, attempting to read the data that I have written to the e-store, will be deleting it soon
+    //    /// </summary>
+    //    /// <param name="doc"></param>
+    //    public static void ReadGroundTruthFor(Document doc)
+    //    {
             
 
-            FilteredElementCollector wallTypes
-              = new FilteredElementCollector(doc)
-                .OfClass(typeof(WallType));
+    //        FilteredElementCollector wallTypes
+    //          = new FilteredElementCollector(doc)
+    //            .OfClass(typeof(WallType));
 
        
 
-            WallType wallType = null;
+    //        WallType wallType = null;
          
 
-            foreach (Element e in wallTypes)
-            {
-                wallType = e as WallType;
+    //        foreach (Element e in wallTypes)
+    //        {
+    //            wallType = e as WallType;
 
-                Util.ExtractDataFromExternalStorage(e);
+    //            Util.ExtractDataFromExternalStorage(e);
 
-            }
+    //        }
 
-        }
+    //    }
 
         public Result Execute(
       ExternalCommandData commandData,
@@ -78,13 +59,64 @@ namespace RvtLock3r
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
-            Transaction trans = new Transaction(doc);
-            trans.Start("GroundTruth");
 
-      CreateGroundTruthFor( doc);
-            trans.Commit();
+            Result rslt = Result.Failed;
 
-            ReadGroundTruthFor(doc);
+            //CreateGroundTruthFor(doc);
+
+            string name = "Ground_Truth_Identifier";
+            string description = "Ground Truth Data set successfully";
+            Guid named_guid;
+            //IDictionary < ElementId, Dictionary<Guid, string> > tr;
+
+            bool rc = NamedGroundTruthStorage.Get(doc,
+              name, out named_guid, out string gtStringdata, false);
+
+            if (rc)
+            {
+                Util.InfoMsg(string.Format(
+                  "This document already has a project "
+                  + "identifier: {0} = {1}",
+                  name, gtStringdata));
+                Util.InfoMsg(string.Format(
+                      "Created a new project identifier "
+                      + "for this document: {0} = {1}",
+                      name, description));
+
+                rslt = Result.Succeeded;
+            }
+            else
+            {
+                rc = NamedGroundTruthStorage.Get(doc,
+                  name, out named_guid, out gtStringdata, true);
+
+                if (rc)
+                {
+                    Util.InfoMsg(string.Format(
+                      "Created a new project identifier "
+                      + "for this document: {0} = {1}",
+                      name, description));
+                    Util.InfoMsg(string.Format(
+                      "Created a new project identifier "
+                      + "for this document: {0} = {1}",
+                      name, gtStringdata));
+
+
+                    rslt = Result.Succeeded;
+                }
+                else
+                {
+                    Util.ErrorMsg("Something went wrong");
+                }
+            }
+            return rslt;
+            //Transaction trans = new Transaction(doc);
+            //trans.Start("GroundTruth");
+
+            //CreateGroundTruthFor( doc);
+            //trans.Commit();
+
+            //ReadGroundTruthFor(doc);
 
             //string rvtpath = doc.PathName;
 

@@ -84,34 +84,11 @@ namespace RvtLock3r
     private void OnDocumentOpened(object sender, DocumentOpenedEventArgs e)
     {
       Document doc = e.Document;
-      CmdGroundTruth.CreateGroundTruthFor(doc);
 
-      //var docGroundTruth = new CmdGroundTruth();
+      //CmdGroundTruth.CreateGroundTruthFor(doc);
 
-      // no need to instantiate an instance!
-      // use a static method instead.
 
-      //generates the groud truth tripples data on DocumentUpened Event
-
-      // triples is spelled with a single 'p'.
-
-      // no need for a complex method, no need to duplicate Execute.
-
-      //if (sender is UIApplication)
-      //  docGroundTruth.Execute(sender as UIApplication);
-      //else
-      //  docGroundTruth.Execute(new UIApplication(sender as Application));
-
-      // initializes the CmdCloseDocument
-      //the command forcefully closes the active document
-      //if the ground truth data have been tampered with
-
-      // wow. that looks kind of wild. very forceful indeed.
-      // i doubt that the end user will like this.
-      // i also think this is a very risky thing to try to do.
-      // i would recommend a safer and simpler approach.
-
-      var docClose = new CmdCloseDocument();
+      //var docClose = new CmdCloseDocument();
 
       /*
        *this code is only used for DMU approach:
@@ -142,10 +119,10 @@ namespace RvtLock3r
         //doc.Close();
         //ErrorDialog(doc);
         //forcefully closes current data if the ground truth is modified
-        if (sender is UIApplication)
-          docClose.Execute(sender as UIApplication);
-        else
-          docClose.Execute(new UIApplication(sender as Application));
+        //if (sender is UIApplication)
+        //  docClose.Execute(sender as UIApplication);
+        //else
+        //  docClose.Execute(new UIApplication(sender as Application));
 
 
       }
