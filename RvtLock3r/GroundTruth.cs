@@ -11,86 +11,81 @@ namespace RvtLock3r
   class GroundTruth : Dictionary<ElementId, Dictionary<Guid, string>>
   {
     /// <summary>
+    /// Initialise ground truth from string
+    /// containing triples of element id, shared parameter 
+    /// guid and parameter value checksum.
+    /// </summary>
+
+    void InitialiseFromString(string data, char separator)
+    {
+      string[] lines = data.Split(separator);
+
+      for (int j = 0; j < lines.Length - 1; j++)
+      {
+        string[] triple = lines[j].Split(null);
+        string id = triple[0];
+        int i = int.Parse(triple[0]);
+
+        ElementId eid = new ElementId(i);
+        Guid pid = new Guid(triple[1]);
+
+        if (!ContainsKey(eid))
+        {
+          Add(eid, new Dictionary<Guid, string>());
+        }
+        if (!this[eid].ContainsKey(pid))
+        {
+          this[eid].Add(pid, triple[2]);
+        }
+      }
+    }
+
+    /// <summary>
     /// Initialise ground truth from external text file
     /// containing triples of element id, shared parameter 
     /// guid and parameter value checksum.
     /// </summary>
-    
-        void InitialiseFromTextFile(string filepath)
-        {
-            string[] lines = File.ReadAllLines(filepath);
 
-            for (int j = 0; j < lines.Length - 1; j++)
-            {
-                string[] triple = lines[j].Split(null);
-                string id = triple[0];
-                int i = int.Parse(triple[0]);
-
-                ElementId eid = new ElementId(i);
-                Guid pid = new Guid(triple[1]);
-
-                if (!ContainsKey(eid))
-                {
-                    Add(eid, new Dictionary<Guid, string>());
-                }
-                if (!this[eid].ContainsKey(pid))
-                {
-                    this[eid].Add(pid, triple[2]);
-                }
-            }
-        }
-
-         void  InitialiseFromDataStorage(Document doc)
-        {
-            var data = Util.GroundTruthData(doc);
-            string[] lines = data.Split(',');
-
-
-            foreach (string line in lines)
-            {
-                string[] triple = line.Split(null);
-                string id = triple[0];
-                int i = int.Parse(triple[0]);
-
-                ElementId eid = new ElementId(i);
-                Guid pid = new Guid(triple[1]);
-
-                if (!ContainsKey(eid))
-                {
-                    Add(eid, new Dictionary<Guid, string>());
-                }
-                if (!this[eid].ContainsKey(pid))
-                {
-                    this[eid].Add(pid, triple[2]);
-                }
-
-            }
-        }
-
-        /// <summary>
-        /// Instantiate ground truth for given RVT document.
-        /// </summary>
-        public GroundTruth(Document doc)
+    void InitialiseFromTextFile(string filepath)
     {
-            //string path = doc.PathName;
-            //path = path.Replace(".rte", ".lock3r");
-            //InitialiseFromTextFile(path);
-            InitialiseFromDataStorage(doc);
-        }
-        //public static GroundTruth GroundTruthObjectData(Document doc)
-        //{
-        //    //string path = doc.PathName;
-        //    //path = path.Replace(".rte", ".lock3r");
-        //    //InitialiseFromTextFile(path);
-        //    GroundTruth t = new GroundTruth(doc);
-        //    var data = t.InitialiseFromGroundTruthListList(doc);
-        //    return data;
-        //}
+      string data = File.ReadAllText(filepath);
+      InitialiseFromString(data, '\r');
+    }
 
-        /// <summary>
-        /// Instantiate ground truth from external text file.
-        /// </summary>
-        public GroundTruth(string filepath)
+    void InitialiseFromDataStorageFile(Document doc)
+    {
+      var data = Util.GroundTruthData(doc);
+      InitialiseFromString(data, ',');
+    }
+
+    /// <summary>
+    /// Instantiate ground truth for given RVT document.
+    /// </summary>
+    public GroundTruth(Document doc)
+    {
+      //string path = doc.PathName;
+      //path = path.Replace(".rte", ".lock3r");
+      //InitialiseFromTextFile(path);
+      //InitialiseFromDataStorage(doc);
+      string data;
+      NamedGroundTruthStorage.Get(doc, out data, false);
+      InitialiseFromString(data, ',');
+    }
+
+    //public static GroundTruth GroundTruthObjectData(Document doc)
+    //{
+    //    //string path = doc.PathName;
+    //    //path = path.Replace(".rte", ".lock3r");
+    //    //InitialiseFromTextFile(path);
+    //    GroundTruth t = new GroundTruth(doc);
+    //    var data = t.InitialiseFromGroundTruthListList(doc);
+    //    return data;
+    //}
+
+    /// <summary>
+    /// Instantiate ground truth from external text file.
+    /// </summary>
+    public GroundTruth(string filepath)
     {
       InitialiseFromTextFile(filepath);
     }

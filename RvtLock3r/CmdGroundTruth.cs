@@ -64,42 +64,41 @@ namespace RvtLock3r
 
       //CreateGroundTruthFor(doc);
 
-      string name = "Ground_Truth_Identifier";
       string description = "Ground Truth Data set successfully";
-      Guid named_guid;
+
+      //Guid named_guid;
       //IDictionary < ElementId, Dictionary<Guid, string> > tr;
 
-      bool rc = NamedGroundTruthStorage.Get(doc,
-        name, out named_guid, out string gtStringdata, false);
+      bool rc = NamedGroundTruthStorage.Get(doc, out string gtStringdata, false);
 
       if (rc)
       {
         Util.InfoMsg(string.Format(
           "This document already has a project "
           + "identifier: {0} = {1}",
-          name, gtStringdata));
+          gtStringdata));
         Util.InfoMsg(string.Format(
               "Created a new project identifier "
               + "for this document: {0} = {1}",
-              name, description));
+               description));
 
         rslt = Result.Succeeded;
       }
       else
       {
         rc = NamedGroundTruthStorage.Get(doc,
-          name, out named_guid, out gtStringdata, true);
+          out gtStringdata, true);
 
         if (rc)
         {
           Util.InfoMsg(string.Format(
             "Created a new project identifier "
             + "for this document: {0} = {1}",
-            name, description));
+             description));
           Util.InfoMsg(string.Format(
             "Created a new project identifier "
             + "for this document: {0} = {1}",
-            name, gtStringdata));
+             gtStringdata));
 
 
           rslt = Result.Succeeded;

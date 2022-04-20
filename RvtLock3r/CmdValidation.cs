@@ -25,7 +25,7 @@ namespace RvtLock3r
     {
       UIApplication uiapp = commandData.Application;
       UIDocument uidoc = uiapp.ActiveUIDocument;
-            Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
+      Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
       Document doc = uidoc.Document;
       GroundTruth truth = new GroundTruth(doc);
 
@@ -61,7 +61,7 @@ namespace RvtLock3r
     {
       UIApplication uiapp = commandData.Application;
       UIDocument uidoc = uiapp.ActiveUIDocument;
-            Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
+      Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
       string rvtpath = doc.PathName;
@@ -124,48 +124,48 @@ namespace RvtLock3r
     }
   }
 
-    [Transaction(TransactionMode.ReadOnly)]
-    class CmdCloseDocument : IExternalCommand
+  [Transaction(TransactionMode.ReadOnly)]
+  class CmdCloseDocument : IExternalCommand
+  {
+    public Result Execute(
+      ExternalCommandData commandData,
+      ref string message,
+      ElementSet elements)
     {
-        public Result Execute(
-          ExternalCommandData commandData,
-          ref string message,
-          ElementSet elements)
-        {
-            Document pDoc = commandData.Application
-              .ActiveUIDocument.Document;
+      Document pDoc = commandData.Application
+        .ActiveUIDocument.Document;
 
-            ThreadPool.QueueUserWorkItem(
-              new WaitCallback(CloseDocProc));
+      ThreadPool.QueueUserWorkItem(
+        new WaitCallback(CloseDocProc));
 
-            return Result.Succeeded;
-        }
-        public Result Execute(UIApplication uiapp)
-        {
-            Document pDoc = uiapp.ActiveUIDocument.Document;
-
-            ThreadPool.QueueUserWorkItem(
-              new WaitCallback(CloseDocProc));
-
-            return Result.Succeeded;
-
-        }
-
-        static void CloseDocProc(object stateInfo)
-        {
-            try
-            {
-                // maybe we need some checks for the right 
-                // document, but this is a simple sample...
-
-                SendKeys.SendWait("^{F4}");
-            }
-            catch (Exception ex)
-            {
-                TaskDialog.Show("Error", ex.Message);
-                //Util.ErrorMsg(ex.Message);
-            }
-        }
+      return Result.Succeeded;
     }
+    public Result Execute(UIApplication uiapp)
+    {
+      Document pDoc = uiapp.ActiveUIDocument.Document;
+
+      ThreadPool.QueueUserWorkItem(
+        new WaitCallback(CloseDocProc));
+
+      return Result.Succeeded;
+
+    }
+
+    static void CloseDocProc(object stateInfo)
+    {
+      try
+      {
+        // maybe we need some checks for the right 
+        // document, but this is a simple sample...
+
+        SendKeys.SendWait("^{F4}");
+      }
+      catch (Exception ex)
+      {
+        TaskDialog.Show("Error", ex.Message);
+        //Util.ErrorMsg(ex.Message);
+      }
+    }
+  }
 }
 
