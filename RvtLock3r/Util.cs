@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web.Script.Serialization;
+//using System.Web.Script.Serialization;
 using WinForms = System.Windows.Forms;
 
 namespace RvtLock3r
