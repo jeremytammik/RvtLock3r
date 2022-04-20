@@ -62,25 +62,15 @@ namespace RvtLock3r
 
       Result rslt = Result.Failed;
 
-      //CreateGroundTruthFor(doc);
 
-      string description = "Ground Truth Data set successfully";
-
-      //Guid named_guid;
-      //IDictionary < ElementId, Dictionary<Guid, string> > tr;
 
       bool rc = NamedGroundTruthStorage.Get(doc, out string gtStringdata, false);
 
       if (rc)
       {
         Util.InfoMsg(string.Format(
-          "This document already has a project "
-          + "identifier: {0} = {1}",
-          gtStringdata));
-        Util.InfoMsg(string.Format(
-              "Created a new project identifier "
-              + "for this document: {0} = {1}",
-               description));
+          "Success!  Data Saving in Extensive Storage Successful" ));
+       
 
         rslt = Result.Succeeded;
       }
@@ -91,17 +81,11 @@ namespace RvtLock3r
 
         if (rc)
         {
-          Util.InfoMsg(string.Format(
-            "Created a new project identifier "
-            + "for this document: {0} = {1}",
-             description));
-          Util.InfoMsg(string.Format(
-            "Created a new project identifier "
-            + "for this document: {0} = {1}",
-             gtStringdata));
+                    Util.InfoMsg(string.Format(
+                   "Success!  Data Saving in Extensive Storage Successful"));
 
 
-          rslt = Result.Succeeded;
+                    rslt = Result.Succeeded;
         }
         else
         {

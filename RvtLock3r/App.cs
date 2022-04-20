@@ -114,19 +114,11 @@ namespace RvtLock3r
       if (!gt.Validate(doc))
       {
         // present a useful error message to the user to explain the probloem
-        //e.Cancel();
         TaskDialog.Show("Corrupted File!",
           "This file is corrupted. "
           + "The original vendor data has been modified "
           + "and the authenticity compromised.");
-        //doc.Close();
-        //ErrorDialog(doc);
-        //forcefully closes current data if the ground truth is modified
-        //if (sender is UIApplication)
-        //  docClose.Execute(sender as UIApplication);
-        //else
-        //  docClose.Execute(new UIApplication(sender as Application));
-
+     
 
       }
     }
@@ -138,7 +130,6 @@ namespace RvtLock3r
       if (!gt.Validate(doc))
       {
         // present a useful error message to the user to explain the probloem
-
         TaskDialog.Show("Permission Denied!", 
           "You are not alowed to modify this parameter value.");
         e.Cancel();

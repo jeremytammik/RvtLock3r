@@ -72,15 +72,7 @@ namespace RvtLock3r
       InitialiseFromString(data, ',');
     }
 
-    //public static GroundTruth GroundTruthObjectData(Document doc)
-    //{
-    //    //string path = doc.PathName;
-    //    //path = path.Replace(".rte", ".lock3r");
-    //    //InitialiseFromTextFile(path);
-    //    GroundTruth t = new GroundTruth(doc);
-    //    var data = t.InitialiseFromGroundTruthListList(doc);
-    //    return data;
-    //}
+   
 
     /// <summary>
     /// Instantiate ground truth from external text file.

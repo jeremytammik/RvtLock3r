@@ -22,9 +22,7 @@ namespace RvtLock3r
   {
         private const string _caption = "Ground Truth Data";
 
-        static Guid schemaGuid = new Guid(
-
-          "0DC954AE-ADEF-41c1-8D38-EB5B8465D255");
+    
         /// <summary>
         /// Return string representation of ground truth triples 
         /// to be saved on an an external file for later validation.
@@ -34,7 +32,7 @@ namespace RvtLock3r
             FilteredElementCollector wallTypes
                 = new FilteredElementCollector(doc)
                 .OfClass(typeof(WallType));
-            string ss = string.Empty;
+            string allData = string.Empty;
 
             foreach (Element e in wallTypes)
             {
@@ -67,11 +65,11 @@ namespace RvtLock3r
                     }
 
                 }
-                ss += s;
+                allData += s;
 
             }
 
-            return ss;
+            return allData;
 
         }
 
@@ -125,117 +123,7 @@ namespace RvtLock3r
 
             return groundTruthData;
         }
-        /// <summary>
-        /// Defines the shcema entity to set the ground truth data,
-        /// </summary>
-        /// <param name="e"></param>
-  
-        private static Schema GroundTruthSchema()
-        {
-            // Create a schema builder
-
-            SchemaBuilder builder = new SchemaBuilder(schemaGuid);
-
-            // Set read and write access levels
-
-            builder.SetReadAccessLevel(AccessLevel.Public);
-
-            builder.SetWriteAccessLevel(AccessLevel.Public);
-
-            // Note: if this was set as vendor or application,
-
-            // we would have addtionally required to use SetVendorId
-
-            // Set name to this schema builder
-
-            builder.SetSchemaName("GroundTruthData");
-
-            builder.SetDocumentation(
-
-              "Data store for Ground Truth");
-
-            // Create field1 as a string storing the Element Id
-
-            FieldBuilder fieldBuilder1 =
-
-              builder.AddSimpleField("ElementId", typeof(String));
-
-            
-
-            // Add documentation (optional)
-
-            // Create field2 as a string storing the paramater Guid
-
-            FieldBuilder fieldBuilder2 =
-
-              builder.AddSimpleField("ParamGuid", typeof(String));
-
-            // Create field2 as a string storing the paramater Value checksum
-
-            FieldBuilder fieldBuilder3 =
-
-              builder.AddSimpleField("Checksum", typeof(String));
-
-            Schema schema = builder.Finish();
-
-            return schema;
-        }
-        /// <summary>
-        /// Test method to ry readin e-stored data, for testing purposes only. 
-        /// I have had alot of issues here, each entity mapped to passes element in 
-        /// a loop just returns one record, I dont know maybe the last to be set.
-        /// How can I be able to iterate or maybe the data was not written to the e-store.
-        /// </summary>
-        /// <param name="e"></param>
-        public static void ExtractDataFromExternalStorage(Element e)
-        {
-
-            Schema ourSchema = Schema.Lookup(schemaGuid);
-            // Now let us extract the value for the field we created
-            //IList<Field> fields = ourSchema.ListFields();
-
-            //foreach (Field fld in fields)
-
-            //{
-
-            //    TaskDialog.Show(
-
-            //      "Field Details", "Field Name: " + fld.FieldName);
-
-            //}
-
-            Entity wallSchemaEnt = e.GetEntity(Schema.Lookup(schemaGuid));
-
-            if (wallSchemaEnt.Schema != null)
-            {
-                String ElementTypeId = wallSchemaEnt.Get<String>(
-
-                  Schema.Lookup(schemaGuid).GetField("ElementId"));
-
-                TaskDialog.Show("ElementId",
-
-                  "ElementId: " + ElementTypeId);
-
-
-
-                String parameterGuid = wallSchemaEnt.Get<String>(
-
-                  Schema.Lookup(schemaGuid).GetField("ParamGuid"));
-
-                TaskDialog.Show(
-
-                  "ParamGuid", "ParamGuid: " + parameterGuid);
-
-                String paramvalueChecksum = wallSchemaEnt.Get<String>(
-
-                  Schema.Lookup(schemaGuid).GetField("Checksum"));
-
-                TaskDialog.Show(
-
-                  "Checksum", "Checksum: " + paramvalueChecksum);
-            }
-        }
-
+       
         /// <summary>
         /// Return string representation of parameter value
         /// </summary>

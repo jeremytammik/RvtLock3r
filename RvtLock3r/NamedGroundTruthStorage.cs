@@ -44,17 +44,10 @@ namespace RvtLock3r
           schemaBuilder.SetSchemaName(
             "GroundTruthStorage");
 
-          //schemaBuilder.AddSimpleField(
-          //  "Guid", typeof(Guid));
-
+          
           schemaBuilder.AddSimpleField("GroundTruth", typeof(string));
 
-          //schemaBuilder.AddSimpleField(
-          //  "GroundTruth", typeof(List<>));
-          //schemaBuilder.AddArrayField("GroundTruth", typeof(GroundTruthTripples));
-          //schemaBuilder.AddArrayField("GroundTruth", typeof(int));
-
-          //schemaBuilder.AddMapField("GroundTruth", typeof(ElementId), typeof(Dictionary<Guid, string>));
+          
 
           schema = schemaBuilder.Finish();
         }
@@ -70,16 +63,11 @@ namespace RvtLock3r
     /// </summary>
     public static bool Get(
       Document doc,
-      //string name,
-      //out Guid guid,
-      //out IDictionary<ElementId, Dictionary<Guid, string>> gtTriples,
       out string data,
       bool create = true)
     {
       bool rc = false;
 
-      //guid = Guid.Empty;
-      //gtTriples = new Dictionary<ElementId, Dictionary<Guid, string>>();
       data = string.Empty;
 
       // Retrieve a DataStorage element with our
@@ -116,20 +104,10 @@ namespace RvtLock3r
             Entity entity = new Entity(
               NamedGroundTruthSchema.GetSchema());
 
-            //entity.Set("Guid", guid = Guid.NewGuid());
 
             data = Util.GroundTruthData(doc);
             entity.Set("GroundTruth", data);
 
-            //IList<GroundTruthTripples> list = Util.GroundTruthListData(doc);
-            //IList<int> list = new List<int>() { 111, 222, 333 };
-
-            //entity.Set<IList<int>>("GroundTruth", list);
-            //GroundTruth gt = new GroundTruth(doc);
-
-
-            //IDictionary<ElementId, Dictionary<Guid, string>> dict = GroundTruth.GroundTruthObjectData(doc);
-            //entity.Set<IDictionary<ElementId, Dictionary<Guid, string>>>("GroundTruth", dict);
 
 
 
@@ -155,25 +133,10 @@ namespace RvtLock3r
 
         if (entity.IsValid())
         {
-          //guid = entity.Get<Guid>("Guid");
 
           data = entity.Get<string>("GroundTruth");
 
-          ////gtTriples = entity.Get<List<GroundTruthTripples>>("GroundTruth");
-          //IDictionary<ElementId, Dictionary<Guid, string>> dict = entity.Get<IDictionary<ElementId, Dictionary<Guid, string>>>("GroundTruth");
-          //string info = "List data:\n";
-          ////IDictionary<int, string> dict = ent.Get<IDictionary<int, string>>("FieldTest7");
-          //foreach (var e in dict)
-          //{
-          //    info += string.Format("\t{0} : {1}\n", e.Key, e.Value);
-          //}
-          //string path = doc.PathName;
-          //string filePath = path.Replace(".rte", ".lock4r");
-          //if (File.Exists(filePath))
-          //{
-          //    File.Delete(filePath);
-          //}
-          //File.WriteAllText(filePath, info);
+         
 
           rc = true;
         }
