@@ -63,6 +63,7 @@
     <Compile Include="CmdGroundTruth.cs" />
     <Compile Include="GroundTruth.cs" />
     <Compile Include="GroundTruthLookup.cs" />
+    <Compile Include="GroundTruthTriples.cs" />
     <Compile Include="NamedGroundTruthStorage.cs" />
     <Compile Include="ParamValueValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
