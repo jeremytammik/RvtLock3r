@@ -1,5 +1,4 @@
 #region Namespaces
-using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -17,10 +16,9 @@ namespace RvtLock3r
     {
       UIApplication uiapp = commandData.Application;
       UIDocument uidoc = uiapp.ActiveUIDocument;
-      Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
-      bool rc = NamedGroundTruthStorage.Get(doc, out string gtStringdata, false);
+      bool rc = NamedGroundTruthStorage.Get(doc, out string data, false);
 
       if (rc)
       {
@@ -30,12 +28,11 @@ namespace RvtLock3r
       }
       else
       {
-        rc = NamedGroundTruthStorage.Get(doc,
-          out gtStringdata, true);
+        rc = NamedGroundTruthStorage.Get(doc, out data, true);
 
         if (rc)
         {
-          Util.InfoMsg2("Ground truth data already stored in model.");
+          Util.InfoMsg2("Success: Ground truth data stored in model.");
         }
         else
         {
