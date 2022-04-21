@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
-using WinForms = System.Windows.Forms;
 
 namespace RvtLock3r
 {

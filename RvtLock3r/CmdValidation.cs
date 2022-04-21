@@ -1,13 +1,10 @@
 #region Namespaces
-using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
-using System.Windows.Forms;
 #endregion
 
 namespace RvtLock3r
@@ -124,48 +121,48 @@ namespace RvtLock3r
     }
   }
 
-  [Transaction(TransactionMode.ReadOnly)]
-  class CmdCloseDocument : IExternalCommand
-  {
-    public Result Execute(
-      ExternalCommandData commandData,
-      ref string message,
-      ElementSet elements)
-    {
-      Document pDoc = commandData.Application
-        .ActiveUIDocument.Document;
+  //[Transaction(TransactionMode.ReadOnly)]
+  //class CmdCloseDocument : IExternalCommand
+  //{
+  //  public Result Execute(
+  //    ExternalCommandData commandData,
+  //    ref string message,
+  //    ElementSet elements)
+  //  {
+  //    Document pDoc = commandData.Application
+  //      .ActiveUIDocument.Document;
 
-      ThreadPool.QueueUserWorkItem(
-        new WaitCallback(CloseDocProc));
+  //    ThreadPool.QueueUserWorkItem(
+  //      new WaitCallback(CloseDocProc));
 
-      return Result.Succeeded;
-    }
-    public Result Execute(UIApplication uiapp)
-    {
-      Document pDoc = uiapp.ActiveUIDocument.Document;
+  //    return Result.Succeeded;
+  //  }
+  //  public Result Execute(UIApplication uiapp)
+  //  {
+  //    Document pDoc = uiapp.ActiveUIDocument.Document;
 
-      ThreadPool.QueueUserWorkItem(
-        new WaitCallback(CloseDocProc));
+  //    ThreadPool.QueueUserWorkItem(
+  //      new WaitCallback(CloseDocProc));
 
-      return Result.Succeeded;
+  //    return Result.Succeeded;
 
-    }
+  //  }
 
-    static void CloseDocProc(object stateInfo)
-    {
-      try
-      {
-        // maybe we need some checks for the right 
-        // document, but this is a simple sample...
+  //  //static void CloseDocProc(object stateInfo)
+  //  //{
+  //  //  try
+  //  //  {
+  //  //    // maybe we need some checks for the right 
+  //  //    // document, but this is a simple sample...
 
-        SendKeys.SendWait("^{F4}");
-      }
-      catch (Exception ex)
-      {
-        TaskDialog.Show("Error", ex.Message);
-        //Util.ErrorMsg(ex.Message);
-      }
-    }
-  }
+  //  //    SendKeys.SendWait("^{F4}");
+  //  //  }
+  //  //  catch (Exception ex)
+  //  //  {
+  //  //    TaskDialog.Show("Error", ex.Message);
+  //  //    //Util.ErrorMsg(ex.Message);
+  //  //  }
+  //  //}
+  //}
 }
 
