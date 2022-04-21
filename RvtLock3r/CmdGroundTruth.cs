@@ -17,8 +17,9 @@ namespace RvtLock3r
       UIApplication uiapp = commandData.Application;
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Document doc = uidoc.Document;
+      string data;
 
-      bool rc = NamedGroundTruthStorage.Get(doc, out string data, false);
+      bool rc = NamedGroundTruthStorage.Get(doc, out data, false);
 
       if (rc)
       {
