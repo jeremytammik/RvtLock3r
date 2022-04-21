@@ -1,4 +1,5 @@
-﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,8 +11,18 @@ namespace RvtLock3r
 {
   public class Util
   {
-    private const string _caption = "Ground Truth Data";
+    private const string _caption = "RvtLock3r";
 
+    public static void InfoMsg2(
+        string instruction,
+        string content=null)
+    {
+      Debug.WriteLine($"{instruction}\r\n{content}");
+      var d = new TaskDialog(_caption);
+      d.MainInstruction = instruction;
+      if (null != content) { d.MainContent = content; }
+      d.Show();
+    }
 
     /// <summary>
     /// Return string representation of ground truth triples 
@@ -48,19 +59,14 @@ namespace RvtLock3r
             }
 
             Debug.Print("elementid: " + e.Id.ToString()
-    + "parameter GUID: " + param.GUID
-    + "Parmeter Value: " + val
-    + "Checksum:" + checksum);
-
+              + "parameter GUID: " + param.GUID
+              + "Parmeter Value: " + val
+              + "Checksum:" + checksum);
           }
-
         }
         allData += s;
-
       }
-
       return allData;
-
     }
 
     /// <summary>
@@ -222,24 +228,6 @@ namespace RvtLock3r
         elementSet.Insert(e);
       }
       return elementSet;
-    }
-
-    public static void InfoMsg(string msg)
-    {
-      Debug.WriteLine(msg);
-      WinForms.MessageBox.Show(msg,
-          _caption,
-          WinForms.MessageBoxButtons.OK,
-          WinForms.MessageBoxIcon.Information);
-    }
-
-    public static void ErrorMsg(string msg)
-    {
-      Debug.WriteLine(msg);
-      WinForms.MessageBox.Show(msg,
-          _caption,
-          WinForms.MessageBoxButtons.OK,
-          WinForms.MessageBoxIcon.Error);
     }
   }
 }

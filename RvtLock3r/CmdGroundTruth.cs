@@ -1,11 +1,8 @@
-﻿#region Namespaces
+#region Namespaces
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using System;
-using System.Collections.Generic;
-using System.IO;
 #endregion
 
 namespace RvtLock3r
@@ -13,66 +10,23 @@ namespace RvtLock3r
   [Transaction(TransactionMode.Manual)]
   public class CmdGroundTruth : IExternalCommand
   {
-    ///// <summary>
-    ///// Create ground truth for given document.
-    ///// </summary>
-    //public static void CreateGroundTruthFor(Document doc)
-    //{
-    //        var data = Util.GroundTruthListData(doc);
-
-
-    // }
-
-    //    /// <summary>
-    //    /// This method is purely for my testing, attempting to read the data that I have written to the e-store, will be deleting it soon
-    //    /// </summary>
-    //    /// <param name="doc"></param>
-    //    public static void ReadGroundTruthFor(Document doc)
-    //    {
-
-
-    //        FilteredElementCollector wallTypes
-    //          = new FilteredElementCollector(doc)
-    //            .OfClass(typeof(WallType));
-
-
-
-    //        WallType wallType = null;
-
-
-    //        foreach (Element e in wallTypes)
-    //        {
-    //            wallType = e as WallType;
-
-    //            Util.ExtractDataFromExternalStorage(e);
-
-    //        }
-
-    //    }
-
     public Result Execute(
-  ExternalCommandData commandData,
-  ref string message,
-  ElementSet elements)
+      ExternalCommandData commandData,
+      ref string message,
+      ElementSet elements)
     {
       UIApplication uiapp = commandData.Application;
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
-      Result rslt = Result.Failed;
-
-
-
       bool rc = NamedGroundTruthStorage.Get(doc, out string gtStringdata, false);
 
       if (rc)
       {
-        Util.InfoMsg(string.Format(
-          "Success!  Data Saving in Extensive Storage Successful" ));
-       
-
-        rslt = Result.Succeeded;
+        Util.InfoMsg2(
+          "Ground truth data already stored in model.",
+          "Why are you calling this command twice?");
       }
       else
       {
@@ -81,29 +35,14 @@ namespace RvtLock3r
 
         if (rc)
         {
-                    Util.InfoMsg(string.Format(
-                   "Success!  Data Saving in Extensive Storage Successful"));
-
-
-                    rslt = Result.Succeeded;
+          Util.InfoMsg2("Ground truth data already stored in model.");
         }
         else
         {
-          Util.ErrorMsg("Something went wrong");
+          message = "Failure attempting to store ground truth data in model.";
         }
       }
-      return rslt;
-      //Transaction trans = new Transaction(doc);
-      //trans.Start("GroundTruth");
-
-      //CreateGroundTruthFor( doc);
-      //trans.Commit();
-
-      //ReadGroundTruthFor(doc);
-
-      //string rvtpath = doc.PathName;
-
-      //return Result.Succeeded;
+      return rc ? Result.Succeeded : Result.Failed;
     }
   }
 }
