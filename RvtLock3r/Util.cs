@@ -68,57 +68,7 @@ namespace RvtLock3r
       return allData;
     }
 
-    /// <summary>
-    /// Generates a list of Ground Truth tripples 
-    /// to be saved in in the schema for e-store
-    /// </summary>
-    /// <param name="e"></param>
-    /// <returns></returns>
-    public static List<GroundTruthTriples> GroundTruthListData(Document doc)
-
-    {
-      FilteredElementCollector wallTypes
-          = new FilteredElementCollector(doc)
-          .OfClass(typeof(WallType));
-
-      List<GroundTruthTriples> groundTruthData = new List<GroundTruthTriples>();
-
-      foreach (Element e in wallTypes)
-      {
-        List<GroundTruthTriples> GroundTruthTriples = new List<GroundTruthTriples>();
-
-        foreach (Parameter param in e.Parameters)
-        {
-          if (param.IsShared)
-          {
-            string name = param.Definition.Name;
-
-            string val = ParameterToString(param);
-
-            string checksum = string.IsNullOrEmpty(val) ? null : ComputeChecksum(val);
-
-            if (!string.IsNullOrEmpty(val))
-            {
-              GroundTruthTriples gtTripples = new GroundTruthTriples();
-              gtTripples.ElementId = e.Id.ToString();
-
-              gtTripples.ParamGuid = param.GUID.ToString();
-              gtTripples.Checksum = checksum;
-              GroundTruthTriples.Add(gtTripples);
-
-
-            }
-
-          }
-
-
-        }
-        groundTruthData.AddRange(GroundTruthTriples);
-      }
-
-      return groundTruthData;
-    }
-
+ 
     /// <summary>
     /// Return string representation of parameter value
     /// </summary>
