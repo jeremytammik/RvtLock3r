@@ -121,48 +121,5 @@ namespace RvtLock3r
     }
   }
 
-  //[Transaction(TransactionMode.ReadOnly)]
-  //class CmdCloseDocument : IExternalCommand
-  //{
-  //  public Result Execute(
-  //    ExternalCommandData commandData,
-  //    ref string message,
-  //    ElementSet elements)
-  //  {
-  //    Document pDoc = commandData.Application
-  //      .ActiveUIDocument.Document;
-
-  //    ThreadPool.QueueUserWorkItem(
-  //      new WaitCallback(CloseDocProc));
-
-  //    return Result.Succeeded;
-  //  }
-  //  public Result Execute(UIApplication uiapp)
-  //  {
-  //    Document pDoc = uiapp.ActiveUIDocument.Document;
-
-  //    ThreadPool.QueueUserWorkItem(
-  //      new WaitCallback(CloseDocProc));
-
-  //    return Result.Succeeded;
-
-  //  }
-
-  //  //static void CloseDocProc(object stateInfo)
-  //  //{
-  //  //  try
-  //  //  {
-  //  //    // maybe we need some checks for the right 
-  //  //    // document, but this is a simple sample...
-
-  //  //    SendKeys.SendWait("^{F4}");
-  //  //  }
-  //  //  catch (Exception ex)
-  //  //  {
-  //  //    TaskDialog.Show("Error", ex.Message);
-  //  //    //Util.ErrorMsg(ex.Message);
-  //  //  }
-  //  //}
-  //}
 }
 
