@@ -79,9 +79,9 @@ namespace RvtLock3r
       {
         // present a useful error message to the user to explain the probloem
         TaskDialog.Show("Corrupted File!",
-          "This file is corrupted. "
-          + "The original vendor data has been modified "
-          + "and the authenticity compromised.");
+          "This model is corrupted. "
+          + "The original model properties has been modified "
+          + "and the authenticity compromised. You may contact the vendor.");
      
 
       }
@@ -95,7 +95,7 @@ namespace RvtLock3r
       {
         // present a useful error message to the user to explain the probloem
         TaskDialog.Show("Permission Denied!", 
-          "You are not alowed to modify this parameter value.");
+          "You are not allowed to modify this model property.");
         e.Cancel();
       }
     }
