@@ -19,16 +19,13 @@ namespace RvtLock3r
   {
     const string _resource_path = "pack://application:,,,/RvtLock3r;component/Resources/";
 
-
-    //public object Session { get; private set; }
-
     public Result OnStartup(UIControlledApplication application)
     {
       string path = Assembly.GetExecutingAssembly().Location;
       string tabName = "Lock3r";
       string panelName = "Validation";
 
-      //creating bitimages
+      //create bitmap images
       BitmapImage groundTruthImage = new BitmapImage(new Uri(_resource_path + "gtfile1.png"));
       BitmapImage validateImage = new BitmapImage(new Uri(_resource_path + "check3.png"));
 
@@ -40,26 +37,21 @@ namespace RvtLock3r
 
       //create buttons
 
-      var grdTruthButton = new PushButtonData("Ground Truth Button", "Ground Truth", path, "RvtLock3r.CmdGroundTruth");
+      var grdTruthButton = new PushButtonData("CmdGroundTruthButton", "Ground Truth", path, "RvtLock3r.CmdGroundTruth");
       grdTruthButton.ToolTip = "Export Ground Truth Data";
-      grdTruthButton.LongDescription = "Export ground truth triple data of the original model to an en external text file located in the same directory as the Revit model";
+      grdTruthButton.LongDescription = "Store ground truth data of the original protected model properties in the Revit model";
       grdTruthButton.LargeImage = groundTruthImage;
-      //add the button1 to panel
       var grdTruthBtn = lock3rPanel.AddItem(grdTruthButton) as PushButton;
 
-      var validateButton = new PushButtonData("My Test Button2", "Validate", path, "RvtLock3r.CmdValidation");
+      var validateButton = new PushButtonData("CmdValidationButton", "Validate", path, "RvtLock3r.CmdValidation");
       validateButton.ToolTip = "Validate";
-      validateButton.LongDescription = "Validate the open model with the ground truth data. Throw an error if any protected parameter value was modified.";
+      validateButton.LongDescription = "Validate the open model with the ground truth data. Throw an exception if any protected parameter value was modified.";
       validateButton.LargeImage = validateImage;
-
-      //add stacked buttons
       var validateBtn = lock3rPanel.AddItem(validateButton) as PushButton;
       
-
       application.ControlledApplication.DocumentOpened += OnDocumentOpened;
       application.ControlledApplication.DocumentSaving += OnDocumentSaving;
       //application.ControlledApplication.DocumentOpening += OnDocumentOpening;
-
 
       return Result.Succeeded;
     }
@@ -73,17 +65,14 @@ namespace RvtLock3r
     {
       Document doc = e.Document;
 
-
       GroundTruth gt = new GroundTruth(doc);
       if (!gt.Validate(doc))
       {
         // present a useful error message to the user to explain the probloem
         TaskDialog.Show("Corrupted File!",
           "This model is corrupted. "
-          + "The original model properties has been modified "
-          + "and the authenticity compromised. You may contact the vendor.");
-     
-
+          + "The original protected model properties have been modified "
+          + "and the authenticity compromised. Please contact the vendor.");
       }
     }
     private void OnDocumentSaving(object sender, DocumentSavingEventArgs e)
@@ -95,23 +84,14 @@ namespace RvtLock3r
       {
         // present a useful error message to the user to explain the probloem
         TaskDialog.Show("Permission Denied!", 
-          "You are not allowed to modify this model property.");
+          "Sorry, you are not allowed to modify protected model properties.");
         e.Cancel();
       }
     }
 
     public Result OnShutdown(UIControlledApplication a)
     {
-      // remove the event.
       return Result.Succeeded;
     }
-
-    /// <summary>
-    /// Adds toggling buttons on Lock3r ribbon tab for switching the updater On and Off
-    /// </summary>
-    /// <param name="panel"></param>
-  
   }
-
- 
 }
