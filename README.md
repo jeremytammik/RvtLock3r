@@ -2,12 +2,7 @@
 
 Revit .NET C# add-in to validate that certain BIM element properties have not been modified.
 
-- [Checksum](https://en.wikipedia.org/wiki/Checksum) + encryption
-- [.NET MD5 Class](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.md5?view=net-6.0)
-- [forge.wpf-csharp](https://github.com/Autodesk-Forge/forge.wpf.csharp/tree/secure-dev)
-- For more security and harder hacking, you can grab the values, calculate the checksum, aka signature, rotate a couple of bytes, breaking the signature, and implement the algorithm to know how to restore the proper order before decrypting, 
-- Original sample model: <i>Z:/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en.rvt</i>
-- Revit 2022 sample: <i>/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en_2022.rvt</i>
+- [End user documentation](doc/Rvtlock3r_user_manual.md)
 
 ## Motivation
 
@@ -159,7 +154,7 @@ Otherwise, maybe, a ribbon tab with buttons to launch each command might be suit
   choose validation strategy: command / opening and closing events / DMU
 - Migrate to Forge Design Automation for Revit 
 
-## Partially Obsolete Original Plan
+## Obsolete Original Plan
 
 Proposal:
 
@@ -196,6 +191,15 @@ The final real-life command will read and decrypt the external ground truth file
  
 Once it works, we can trigger the validation command automatically via an event instead of manually via an external command, e.g., using the [DocumentOpening](https://www.revitapidocs.com/2022/99a0bcc4-fede-b66b-198d-a53f46ecf149.htm) and
 [DocumentClosing](https://www.revitapidocs.com/2022/2f0a7a6f-ed8b-0518-c5f8-edb14b321296.htm) events.
+
+### Obsolete Early Notes
+
+- [Checksum](https://en.wikipedia.org/wiki/Checksum) + encryption
+- [.NET MD5 Class](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.md5?view=net-6.0)
+- [forge.wpf-csharp](https://github.com/Autodesk-Forge/forge.wpf.csharp/tree/secure-dev)
+- For more security and harder hacking, you can grab the values, calculate the checksum, aka signature, rotate a couple of bytes, breaking the signature, and implement the algorithm to know how to restore the proper order before decrypting, 
+- Original sample model: <i>Z:/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en.rvt</i>
+- Revit 2022 sample: <i>/Users/jta/a/special/gypsum/test/british-gypsum-bim-a206a167-en_2022.rvt</i>
 
 ## Authors
 
