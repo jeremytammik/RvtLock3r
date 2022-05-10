@@ -39,7 +39,3 @@ Case 2.  During interaction with the model, the consumer may intentionally or un
 In case the consumer decides to close Revit with open unsaved modifications, an optional dialog box is provided for the consumer’s decision to save or not save the model.
 
 If the consumer chooses `Yes`, the model is saved; if `No`, it remains unchanged.
-
-Last updated: May 5, 2022 
-
- 
