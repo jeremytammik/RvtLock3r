@@ -19,18 +19,23 @@ They make use of two external commands in the Revit ribbon tab _Lock3r_ in the p
 - Ground Truth: this command generates the ground truth data and saves it in the Revit BIM. 
 - Validate: this command checks if any protected properties have been modified.
 
-The application will run successfully without any error if the model is original or is not modified. In case any of the protected properties were modified, the application throws an error with a message and a list of element ids of the modified elements. (See the image below)
+The validation command runs successfully and completes silently with no error if the model is in its original state and no protected parameter values have been modified.
+In case any of the protected properties were modified, it returns an error code with a message and a list of element ids of the modified elements:
+
+img
 
 The vendor can manually validate a given model to check if any prohibited property has been modified using the 
 
 
-Consumer 
+## Consumer 
 
-The consumer will use the elements that have read-only properties that the vendor has provided. The consumer can interact with modelthe model however they wish. The interaction is based on trust that they will not interfere with prohibited properties. The consumer may see warning dialogs from RvtLock3r in the following two scenarios:  
+The consumer makes use of the elements equipped with the veendor's read-only properties.
+They can interact with the model however they wish.
+The interaction is based on trust that they will not interfere with prohibited properties.
+The consumer will see a warning message from RvtLock3r in the following two scenarios:  
 
-The consumer opens a model containing modified properties 
-
-The consumer tried to save a model containing modified properties 
+- The consumer opens a model containing modified properties 
+- The consumer tried to save a model containing modified properties 
 
 Case 1.  In case the consumer opens a model containing modified properties from whichever source, an informational dialog box is provided to inform the user that the protected properties have been tampered with. They may choose to proceed with the tampered model or contact the vendor for the original data.
 
