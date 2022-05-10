@@ -10,13 +10,17 @@ There are two types of end users for RvtLock3r:
 
 ## Vendor 
 
-The vendor defines the ground truth of the BIM elements’ properties he/she wants to protect. There are two commands under Ribbon tab “Lock3r” >> panel “Validation”:  
+The vendor defines the BIM elements properties they want to protect, also known as _ground truth_.
 
- Ground Truth: this command provides the functionality to generates the ground truth data and  savingsave it in the Revit (Extensible) storage. 
+They make use of two external commands in the Revit ribbon tab _Lock3r_ in the panel _Validation_:  
 
-The vendor may manually validate a given model to check if any prohibited property was modified. 
+- Ground Truth: this command generates the ground truth data and saves it in the Revit BIM. 
+- Validate: this command checks if any protected properties have been modified.
 
-Validate: this command checks if any protected properties are modified. The application will run successfully without any error if the model is original or is not modified. In case any of the protected properties were modified, the application throws an error with a message and a list of element ids of the modified elements. (See the image below)
+The application will run successfully without any error if the model is original or is not modified. In case any of the protected properties were modified, the application throws an error with a message and a list of element ids of the modified elements. (See the image below)
+
+The vendor can manually validate a given model to check if any prohibited property has been modified using the 
+
 
 Consumer 
 
