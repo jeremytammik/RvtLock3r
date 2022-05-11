@@ -22,25 +22,40 @@ They make use of two external commands in the Revit ribbon tab _Lock3r_ in the p
 The validation command runs successfully and completes silently with no error if the model is in its original state and no protected parameter values have been modified.
 In case any of the protected properties were modified, it returns an error code with a message and a list of element ids of the modified elements:
 
-img
-
-The vendor can manually validate a given model to check if any prohibited property has been modified using the 
-
+<center>
+<img src="img/1.png" alt="Validation error" title="Validation error" width="600"/> <!-- 1189 -->
+</center>
 
 ## Consumer 
 
 The consumer makes use of the elements equipped with the veendor's read-only properties.
 They can interact with the model however they wish.
-The interaction is based on trust that they will not interfere with prohibited properties.
+The interaction is based on trust that they will not interfere with the protected properties.
 The consumer will see a warning message from RvtLock3r in the following two scenarios:  
 
 - The consumer opens a model containing modified properties 
-- The consumer tried to save a model containing modified properties 
+- The consumer saves a model containing modified properties 
 
-Case 1.  In case the consumer opens a model containing modified properties from whichever source, an informational dialog box is provided to inform the user that the protected properties have been tampered with. They may choose to proceed with the tampered model or contact the vendor for the original data.
+<u>Open:</u> On opening a model containing modified properties from whichever source, an informational message is displayed to inform the user that the protected properties have been tampered with.
+They may choose to proceed with the tampered model or contact the vendor for the original data.
 
-Case 2.  During interaction with the model, the consumer may intentionally or unintentionally modify a protected property. When they try to save, an informational dialog box is provided informing the user that the property is read-onlyread-only, and they are not allowed to modify it.
+<center>
+<img src="img/2.png" alt="Validation error" title="Validation error" width="400"/> <!-- 915 -->
+</center>
 
-In case the consumer decides to close Revit with open unsaved modifications, an optional dialog box is provided for the consumer’s decision to save or not save the model.
+<u>Save:</u> During interaction with the model, the consumer may intentionally or unintentionally modify a protected property.
+In that case, when saving the model, an informational message is displayed informing the user that the property is read-only, and they are not allowed to modify it.
 
-If the consumer chooses `Yes`, the model is saved; if `No`, it remains unchanged.
+
+<center>
+<img src="img/3.png" alt="Validation error" title="Validation error" width="400"/> <!-- 908 -->
+<p/>
+<img src="img/4.png" alt="Validation error" title="Validation error" width="300"/> <!-- 632 -->
+</center>
+
+In case the consumer decides to close Revit with open unsaved modifications, a message is displayed asking whether to save or not:
+
+<center>
+<img src="img/5.png" alt="Validation error" title="Validation error" width="400"/> <!-- 907 -->
+</center>
+
