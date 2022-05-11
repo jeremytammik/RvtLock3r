@@ -34,14 +34,13 @@ The consumer will see a warning message from RvtLock3r in the following two scen
 - Opening a model containing modified properties 
 - Saving a model containing modified properties 
 
-___Open:___ On opening a model containing modified properties from whichever source, an informational message is displayed to inform the user that the protected properties have been tampered with.
+***Open:*** On opening a model containing modified properties from whichever source, an informational message is displayed to inform the user that the protected properties have been tampered with.
 They may choose to proceed with the tampered model or contact the vendor for the original data.
 
 <img src="img/2.png" alt="Validation error" title="Validation error" width="400"/> <!-- 915 -->
 
 ***Save:*** During interaction with the model, the consumer may intentionally or unintentionally modify a protected property.
 In that case, when saving the model, an informational message is displayed informing the user that the property is read-only, and they are not allowed to modify it.
-
 
 <img src="img/3.png" alt="Validation error" title="Validation error" width="400"/> <!-- 908 -->
 
