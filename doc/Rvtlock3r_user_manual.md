@@ -2,6 +2,21 @@
 
 [online](https://myshare.autodesk.com/:w:/g/personal/mikako_harada_autodesk_com/EXbZYeXRuZ9Kr_E5RH7u-h0B70L7kd2dDIjXjmaKM-7p8g?e=X5Bqp9)
 
+<!--
+
+to print PDF:
+
+https://stackoverflow.com/questions/9998337/how-to-print-from-github
+
+Here's a super simple solution:
+Simply select all the text in the readme that you want to print, then print and choose "Only selected text".
+This worked perfectly in Chrome (including images) and required no javascript or external sites or downloading or building software.
+
+Nice! The option in Chrome is now called More settings -- Selection only.
+It supports the formatting and doesn't require additional software or downloading the markdown file.
+
+-->
+ 
 Currently, Revit does not provide any built-in functionality to prevent the user from modifying parameter values.
 RvtLock3r is a Revit add-in that you can use to verify whether parameter values have been changed. 
 
