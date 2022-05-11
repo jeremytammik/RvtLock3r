@@ -50,12 +50,12 @@ In that case, when saving the model, an informational message is displayed infor
 <center>
 <img src="img/3.png" alt="Validation error" title="Validation error" width="400"/> <!-- 908 -->
 <p/>
-<img src="img/4.png" alt="Validation error" title="Validation error" width="300"/> <!-- 632 -->
+<img src="img/4.jpg" alt="Validation error" title="Validation error" width="300"/> <!-- 632 -->
 </center>
 
 In case the consumer decides to close Revit with open unsaved modifications, a message is displayed asking whether to save or not:
 
 <center>
-<img src="img/5.png" alt="Validation error" title="Validation error" width="400"/> <!-- 907 -->
+<img src="img/5.jpg" alt="Validation error" title="Validation error" width="400"/> <!-- 907 -->
 </center>
 
