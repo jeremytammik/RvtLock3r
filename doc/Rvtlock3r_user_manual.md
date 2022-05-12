@@ -36,7 +36,7 @@ The Ground Truth command sets up the ground truth data and saves it in the BIM e
 
 <img src="img/8.JPG" alt="Successful Ground Truth Setup" title="Ground Truth Setup" width="600"/> <!-- 1189 -->
 
-In case, the goeund truth set up was done successfully and the vendor unintentionally runs the same command. Below information dialog message is provided
+In case, the ground truth data set up was done successfully and the vendor unintentionally runs the same command. Below information dialog message is provided
 
 <img src="img/7.JPG" alt="Successful Ground Truth Setup" title="Ground Truth Setup" width="600"/> <!-- 1189 -->
 
