@@ -32,6 +32,14 @@ The vendor defines the BIM elements properties they want to protect, also known 
 They make use of two external commands in the Revit ribbon tab _Lock3r_ in the panel _Validation_:  
 
 - Ground Truth: this command generates the ground truth data and saves it in the Revit BIM. 
+The Ground Truth command sets up the ground truth data and saves it in the BIM extensible storage. On successful setup, Revit provides a success dialog message below.
+
+<img src="img/8.JPG" alt="Successful Ground Truth Setup" title="Ground Truth Setup" width="600"/> <!-- 1189 -->
+
+In case, the ground truth data set up was done successfully and the vendor unintentionally runs the same command. Below information dialog message is provided
+
+<img src="img/7.JPG" alt="Successful Ground Truth Setup" title="Ground Truth Setup" width="600"/> <!-- 1189 -->
+
 - Validate: this command checks if any protected properties have been modified.
 
 The validation command runs successfully and completes silently with no error if the model is in its original state and no protected parameter values have been modified.
@@ -57,7 +65,7 @@ They may choose to proceed with the tampered model or contact the vendor for the
 ***Save:*** During interaction with the model, the consumer may intentionally or unintentionally modify a protected property.
 In that case, when saving the model, an informational message is displayed informing the user that the property is read-only, and they are not allowed to modify it.
 
-<img src="img/3.png" alt="Validation error" title="Validation error" width="400"/> <!-- 908 -->
+<img src="img/6.JPG" alt="Validation error" title="Validation error" width="400"/> <!-- 908 -->
 
 <img src="img/4.jpg" alt="Validation error" title="Validation error" width="400"/> <!-- 632 -->
 
