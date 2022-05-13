@@ -34,11 +34,11 @@ They make use of two external commands in the Revit ribbon tab _Lock3r_ in the p
 - Ground Truth: this command generates the ground truth data and saves it in the Revit BIM. 
 The Ground Truth command sets up the ground truth data and saves it in the BIM extensible storage. On successful setup, Revit provides a success dialog message below.
 
-<img src="img/8.JPG" alt="Successful ground truth setup" title="Successful ground truth setup" width="300"/>
+<img src="img/8.JPG" alt="Successful ground truth setup" title="Successful ground truth setup" width="400"/>
 
 In case, the ground truth data set up was done successfully and the vendor unintentionally runs the same command. Below information dialog message is provided
 
-<img src="img/7.JPG" alt="Successful Ground Truth Setup" title="Ground Truth Setup" width="300"/>
+<img src="img/7.JPG" alt="Successful Ground Truth Setup" title="Ground Truth Setup" width="400"/>
 
 - Validate: this command checks if any protected properties have been modified.
 
