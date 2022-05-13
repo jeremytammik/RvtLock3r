@@ -4,7 +4,7 @@
 
 <!--
 
-to print PDF:
+to print PDF from MD:
 
 https://stackoverflow.com/questions/9998337/how-to-print-from-github
 
