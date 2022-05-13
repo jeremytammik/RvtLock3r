@@ -4,7 +4,7 @@
 
 <!--
 
-to print PDF from MD:
+to print PDF:
 
 https://stackoverflow.com/questions/9998337/how-to-print-from-github
 
@@ -72,4 +72,3 @@ In that case, when saving the model, an informational message is displayed infor
 In case the consumer decides to close Revit with open unsaved modifications, a message is displayed asking whether to save or not:
 
 <img src="img/5.jpg" alt="Validation error" title="Validation error" width="400"/> <!-- 907 -->
-
